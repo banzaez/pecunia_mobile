@@ -47,18 +47,12 @@ class SQLController extends BaseController {
     );
   }
 
-  Future<void> walletAdd({
-    required Wallet wallet,
-  }) async =>
-      await database.insert(
+  Future<void> walletAdd({required Wallet wallet}) async => await database.insert(
         tableWallets,
         wallet.toJson() as Map<String, Object?>,
       );
 
-  Future<void> walletUpdate({
-    required Wallet wallet,
-  }) async =>
-      await database.update(
+  Future<void> walletUpdate({required Wallet wallet}) async => await database.update(
         tableWallets,
         wallet.toJson() as Map<String, Object?>,
         where: 'id = ?',
