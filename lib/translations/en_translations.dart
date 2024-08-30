@@ -2,9 +2,12 @@ final Map<String, String> en = {
   "yes": "yes",
   "no": "no",
 
+  "light": "light",
+  "dark": "dark",
+
   "home_current_wallet": "current wallet",
 
-  "home_button_summa": "Summa",
+  "home_button_summa": "Amount",
   "home_button_category": "Category",
   "home_button_income": "Income",
   "home_button_expense": "Expense",
@@ -17,6 +20,7 @@ final Map<String, String> en = {
   "home_bottom_sheet_button_save": "Save",
 
   "profile_title": "Profile settings",
+  "profile_button_add_wallet": "add wallet",
   "profile_my_wallets": "my wallets",
   "profile_theme": "theme",
   "profile_support": "support",

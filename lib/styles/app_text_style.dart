@@ -10,7 +10,7 @@ class AppTextStyle {
     FontWeight? fontWeight,
   }) =>
       GoogleFonts.openSans(
-        color: color ?? Colors.white,
+        color: color,
         fontSize: fontSize,
         fontWeight: fontWeight ?? FontWeight.normal,
       );

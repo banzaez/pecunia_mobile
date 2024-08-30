@@ -2,6 +2,9 @@ final Map<String, String> ru = {
   "yes": "да",
   "no": "нет",
 
+  "light": "светлая",
+  "dark": "темная",
+
   "home_current_wallet": "текущий кошелек",
 
   "home_button_summa": "Сумма",
@@ -17,6 +20,7 @@ final Map<String, String> ru = {
   "home_bottom_sheet_button_save": "Cохранить",
 
   "profile_title": "Настройки профиля",
+  "profile_button_add_wallet": "добавить кошелек",
   "profile_my_wallets": "мои кошельки",
   "profile_theme": "тема",
   "profile_support": "поддержка",
