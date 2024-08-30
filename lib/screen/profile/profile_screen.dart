@@ -5,6 +5,7 @@ import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_constants.dart';
 import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/widgets/fields/bool_switch.dart';
+import 'package:pecunia/widgets/flex_builder.dart';
 import 'package:pecunia/widgets/switch_language.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -12,14 +13,16 @@ class ProfileScreen extends GetView<ProfileController> {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) =>
+      Scaffold(
         appBar: _appBar(),
         body: _body(),
       );
 
   // --------------------------------------------------------------------------------------------
 
-  AppBar _appBar() => AppBar(
+  AppBar _appBar() =>
+      AppBar(
         leading: IconButton(
           onPressed: Get.back,
           icon: const Icon(Icons.arrow_back_ios_new),
@@ -27,7 +30,8 @@ class ProfileScreen extends GetView<ProfileController> {
         title: Text("profile_title".tr),
       );
 
-  Widget _body() => SingleChildScrollView(
+  Widget _body() =>
+      SingleChildScrollView(
         child: Column(
           children: [
             TextButton.icon(
@@ -38,6 +42,10 @@ class ProfileScreen extends GetView<ProfileController> {
                 style: AppTextStyle.text14w400(),
               ),
             ),
+            Obx(() => FlexBuilder(
+                itemCount: controller.wallets.length,
+                itemBuilder: (_, index) => Text(controller.wallets[index].name),
+              )),
             Text("profile_my_wallets".tr),
             AppSpaces.v16,
             BoolSwitch(

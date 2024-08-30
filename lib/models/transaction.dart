@@ -4,17 +4,17 @@ part 'transaction.g.dart';
 
 @JsonSerializable()
 class Transaction {
-  @JsonKey()
+  @JsonKey(name: "_id")
   final int id;
-  final int? walletId;
-  final double? amount;
-  final String? category;
+  final int walletId;
+  final double amount;
+  final String category;
 
   const Transaction({
     required this.id,
-    this.walletId,
-    this.amount,
-    this.category,
+    required this.walletId,
+    required this.amount,
+    required this.category,
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) => _$TransactionFromJson(json);
