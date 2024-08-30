@@ -69,10 +69,7 @@ class SQLController extends BaseController {
       ],
     );
 
-    return List.generate(
-      maps.length,
-      (index) => Wallet.fromJson(maps[index]),
-    );
+    return List.generate(maps.length, (index) => Wallet.fromJson(maps[index]));
   }
 }
 
