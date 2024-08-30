@@ -6,7 +6,7 @@ part 'wallet.g.dart';
 @JsonSerializable()
 class Wallet {
   @JsonKey(name: "_id")
-  final int id;
+  final int id = 0;
   final String name;
   final String currency;
   final String description;
@@ -16,7 +16,6 @@ class Wallet {
   final bool isRoundUp;
 
   const Wallet({
-    required this.id,
     required this.name,
     required this.currency,
     required this.description,

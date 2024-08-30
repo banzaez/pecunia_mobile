@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/screen/home/home_controller.dart';
-import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
+import 'package:pecunia/widgets/app_botton_sheet.dart';
 import 'package:pecunia/widgets/fields/base_field.dart';
 import 'package:pecunia/widgets/fields/bool_switch.dart';
 import 'package:pecunia/widgets/fields/dropdown_field.dart';
@@ -91,48 +91,38 @@ class HomeScreen extends GetView<HomeController> {
 
   // --------------------------------------------------------------------------------------------
 
-  Future<T?> _setting<T>() => Get.bottomSheet(
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AppSpaces.v8,
-            Text("home_bottom_sheet_title".tr, style: AppTextStyle.text22w400()),
-            AppSpaces.v16,
-            BaseField(
-                //labelText: "NAME WALLET",
-                ),
-            Text("home_bottom_sheet_name".tr),
-            AppSpaces.v16,
-            DropdownField(items: [], hint: "hint"),
-            Text("home_bottom_sheet_currency".tr),
-            AppSpaces.v16,
-            BoolSwitch(
-              onChange: (value) {},
-              textPrimary: "no".tr,
-              textSecond: "yes".tr,
-              value: false,
-              width: 256,
-            ),
-            Text("home_bottom_sheet_show_balance".tr),
-            AppSpaces.v16,
-            BoolSwitch(
-              onChange: (value) {},
-              textPrimary: "no".tr,
-              textSecond: "yes".tr,
-              value: false,
-              width: 256,
-            ),
-            Text("home_bottom_sheet_round".tr),
-            AppSpaces.v32,
-            ElevatedButton(onPressed: () {}, child: Text("home_bottom_sheet_button_save".tr)),
-          ],
-        ).paddingAll(16),
-        backgroundColor: AppColors.background,
-        barrierColor: Colors.white10,
-        shape: const RoundedRectangleBorder(
-          side: BorderSide(color: Colors.white10, width: 0.5),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
-        ),
-        isScrollControlled: true,
+  Future<void> _setting() async => appBottomSheet(
+        children: [
+          AppSpaces.v8,
+          Text("home_bottom_sheet_title".tr, style: AppTextStyle.text22w400()),
+          AppSpaces.v16,
+          BaseField(
+              //labelText: "NAME WALLET",
+              ),
+          Text("home_bottom_sheet_name".tr),
+          AppSpaces.v16,
+          DropdownField(items: [], hint: "hint"),
+          Text("home_bottom_sheet_currency".tr),
+          AppSpaces.v16,
+          BoolSwitch(
+            onChange: (value) {},
+            textPrimary: "no".tr,
+            textSecond: "yes".tr,
+            value: false,
+            width: 256,
+          ),
+          Text("home_bottom_sheet_show_balance".tr),
+          AppSpaces.v16,
+          BoolSwitch(
+            onChange: (value) {},
+            textPrimary: "no".tr,
+            textSecond: "yes".tr,
+            value: false,
+            width: 256,
+          ),
+          Text("home_bottom_sheet_round".tr),
+          AppSpaces.v32,
+          ElevatedButton(onPressed: () {}, child: Text("home_bottom_sheet_button_save".tr)),
+        ],
       );
 }

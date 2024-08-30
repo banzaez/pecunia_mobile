@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/screen/profile/profile_controller.dart';
-import 'package:pecunia/styles/app_text_style.dart';
+import 'package:pecunia/screen/profile/widgets/button_add_wallet.dart';
 import 'package:pecunia/util/app_constants.dart';
 import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/widgets/fields/bool_switch.dart';
@@ -34,14 +34,7 @@ class ProfileScreen extends GetView<ProfileController> {
       SingleChildScrollView(
         child: Column(
           children: [
-            TextButton.icon(
-              onPressed: controller.addWallet,
-              icon: const Icon(Icons.add_circle),
-              label: Text(
-                "profile_button_add_wallet".tr,
-                style: AppTextStyle.text14w400(),
-              ),
-            ),
+            const ButtonAddWallet(),
             Obx(() => FlexBuilder(
                 itemCount: controller.wallets.length,
                 itemBuilder: (_, index) => Text(controller.wallets[index].name),

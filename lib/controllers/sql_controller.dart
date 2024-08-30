@@ -18,8 +18,8 @@ class SQLController extends BaseController {
     var databasesPath = await getDatabasesPath();
     String path = '$databasesPath/pecunia.db';
 
-    // Delete the database
-    await deleteDatabase(path);
+    // // Delete the database
+    // await deleteDatabase(path);
 
     if (io.File(path).existsSync()) return;
 
