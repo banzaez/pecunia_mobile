@@ -59,27 +59,29 @@ class HomeScreen extends GetView<HomeController> {
               controller.swipeWallet(dx.sign.toInt());
             }
           },
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: controller.transactions.length,
-            itemBuilder: (_, index) => TransactionItem(transaction: controller.transactions[index]),
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              ListView.builder(
+                itemCount: controller.transactions.length,
+                itemBuilder: (_, index) =>
+                    TransactionItem(transaction: controller.transactions[index]),
+              ),
+              _dots(),
+            ],
           ),
         ),
       );
 
-  Widget _bottom() => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Wrap(
-            children: List.generate(
-                controller.wallets.length,
-                (index) => Icon(
-                    controller.currentIndex == index
-                        ? Icons.fiber_manual_record
-                        : Icons.fiber_manual_record_outlined,
-                    size: 18)),
-          ).paddingAll(8),
-          const AppAddTransaction(),
-        ],
-      );
+  Widget _dots() => Wrap(
+        children: List.generate(
+            controller.wallets.length,
+            (index) => Icon(
+                controller.currentIndex == index
+                    ? Icons.fiber_manual_record
+                    : Icons.fiber_manual_record_outlined,
+                size: 18)),
+      ).paddingAll(8);
+
+  Widget _bottom() => const AppAddTransaction();
 }

@@ -15,20 +15,16 @@ class AppAddTransaction extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             _bottomRow(children: [
-              Expanded(
-                child: NumberField(
-                  controller: controller.controllerAmount,
-                  labelText: "home_button_summa".tr,
-                  errorText: controller.errorAmount.value,
-                ),
+              NumberField(
+                controller: controller.controllerAmount,
+                labelText: "home_button_summa".tr,
+                errorText: controller.errorAmount.value,
               ),
               AppSpaces.h8,
-              Expanded(
-                child: BaseField(
-                  controller: controller.controllerCategory,
-                  labelText: "home_button_category".tr,
-                  errorText: controller.errorCategory.value,
-                ),
+              BaseField(
+                controller: controller.controllerCategory,
+                labelText: "home_button_category".tr,
+                errorText: controller.errorCategory.value,
               ),
             ]),
             AppSpaces.v8,
