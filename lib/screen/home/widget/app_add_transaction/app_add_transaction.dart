@@ -14,21 +14,23 @@ class AppAddTransaction extends StatelessWidget {
         builder: (controller) => Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Obx(() => SizedBox(
-                  child: _bottomRow(children: [
-                    NumberField(
-                      controller: controller.controllerAmount,
-                      labelText: "home_button_summa".tr,
-                      errorText: controller.errorAmount.value,
-                    ),
-                    AppSpaces.h8,
-                    BaseField(
-                      controller: controller.controllerCategory,
-                      labelText: "home_button_category".tr,
-                      errorText: controller.errorCategory.value,
-                    ),
-                  ]),
-                )),
+            _bottomRow(children: [
+              Expanded(
+                child: NumberField(
+                  controller: controller.controllerAmount,
+                  labelText: "home_button_summa".tr,
+                  errorText: controller.errorAmount.value,
+                ),
+              ),
+              AppSpaces.h8,
+              Expanded(
+                child: BaseField(
+                  controller: controller.controllerCategory,
+                  labelText: "home_button_category".tr,
+                  errorText: controller.errorCategory.value,
+                ),
+              ),
+            ]),
             AppSpaces.v8,
             _bottomRow(children: [
               ElevatedButton(
@@ -49,7 +51,7 @@ class AppAddTransaction extends StatelessWidget {
             ]),
           ],
         ),
-      ).paddingOnly(bottom: 16);
+      ).paddingOnly(bottom: 32);
 
   // ---------------------------------------------------------------------------------------------
 

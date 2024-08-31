@@ -25,6 +25,8 @@ class HomeController extends BaseController {
 
   bool get isInitializing => _currentWallet.value == null;
 
+  int get currentIndex => _walletController.wallets.indexWhere((e) => e.id == currentWallet.id);
+
   // ----------INIT-------------------------------------------------------------------------------
 
   @override
@@ -46,7 +48,7 @@ class HomeController extends BaseController {
   // ----------SWIPE-LIFT-RIGHT------------------------------------------------------------------
 
   void swipeWallet(int offset) {
-    var index = _walletController.wallets.indexWhere((e) => e.id == currentWallet.id) - offset;
+    var index = currentIndex - offset;
     index = max(0, index);
     index = min(index, _walletController.wallets.length - 1);
     currentWallet = _walletController.wallets[index];

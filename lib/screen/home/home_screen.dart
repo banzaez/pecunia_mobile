@@ -17,7 +17,7 @@ class HomeScreen extends GetView<HomeController> {
       : Scaffold(
           appBar: _appBar(),
           body: _body(),
-          bottomSheet: _bottom(),
+          // bottomSheet: _bottom(),
         ));
 
   // --------------------------------------------------------------------------------------------
@@ -42,21 +42,44 @@ class HomeScreen extends GetView<HomeController> {
 
   // --------------------------------------------------------------------------------------------
 
-  Widget _body() => GestureDetector(
-        onHorizontalDragEnd: (details) {
-          final dx = details.velocity.pixelsPerSecond.dx;
-          if (dx > 150 || dx < -150) {
-            controller.swipeWallet(dx.sign.toInt());
-          }
-        },
-        child: Obx(() => ListView.builder(
-              itemCount: controller.transactions.length,
-              itemBuilder: (_, index) =>
-                  TransactionItem(transaction: controller.transactions[index]),
-            )),
+  Widget _body() => Column(
+        children: [
+          _list(),
+          _bottom(),
+        ],
       );
 
   // --------------------------------------------------------------------------------------------
 
-  Widget _bottom() => const AppAddTransaction();
+  Widget _list() => Expanded(
+        child: GestureDetector(
+          onHorizontalDragEnd: (details) {
+            final dx = details.velocity.pixelsPerSecond.dx;
+            if (dx > 150 || dx < -150) {
+              controller.swipeWallet(dx.sign.toInt());
+            }
+          },
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: controller.transactions.length,
+            itemBuilder: (_, index) => TransactionItem(transaction: controller.transactions[index]),
+          ),
+        ),
+      );
+
+  Widget _bottom() => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Wrap(
+            children: List.generate(
+                controller.wallets.length,
+                (index) => Icon(
+                    controller.currentIndex == index
+                        ? Icons.fiber_manual_record
+                        : Icons.fiber_manual_record_outlined,
+                    size: 18)),
+          ).paddingAll(8),
+          const AppAddTransaction(),
+        ],
+      );
 }
