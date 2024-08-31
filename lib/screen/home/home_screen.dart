@@ -17,7 +17,7 @@ class HomeScreen extends GetView<HomeController> {
       : Scaffold(
           appBar: _appBar(),
           body: _body(),
-          bottomSheet: const AppAddTransaction(),
+          bottomSheet: _bottom(),
         ));
 
   // --------------------------------------------------------------------------------------------
@@ -55,4 +55,8 @@ class HomeScreen extends GetView<HomeController> {
                   TransactionItem(transaction: controller.transactions[index]),
             )),
       );
+
+  // --------------------------------------------------------------------------------------------
+
+  Widget _bottom() => const AppAddTransaction();
 }
