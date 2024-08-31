@@ -17,7 +17,6 @@ class HomeScreen extends GetView<HomeController> {
       : Scaffold(
           appBar: _appBar(),
           body: _body(),
-          // bottomSheet: _bottom(),
         ));
 
   // --------------------------------------------------------------------------------------------
@@ -52,24 +51,16 @@ class HomeScreen extends GetView<HomeController> {
   // --------------------------------------------------------------------------------------------
 
   Widget _list() => Expanded(
-        child: GestureDetector(
-          onHorizontalDragEnd: (details) {
-            final dx = details.velocity.pixelsPerSecond.dx;
-            if (dx > 150 || dx < -150) {
-              controller.swipeWallet(dx.sign.toInt());
-            }
-          },
-          child: Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              ListView.builder(
-                itemCount: controller.transactions.length,
-                itemBuilder: (_, index) =>
-                    TransactionItem(transaction: controller.transactions[index]),
-              ),
-              _dots(),
-            ],
-          ),
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            ListView.builder(
+              itemCount: controller.transactions.length,
+              itemBuilder: (_, index) =>
+                  TransactionItem(transaction: controller.transactions[index]),
+            ),
+            _dots(),
+          ],
         ),
       );
 
@@ -83,5 +74,13 @@ class HomeScreen extends GetView<HomeController> {
                 size: 18)),
       ).paddingAll(4);
 
-  Widget _bottom() => const AppAddTransaction();
+  Widget _bottom() => GestureDetector(
+        onHorizontalDragEnd: (details) {
+          final dx = details.velocity.pixelsPerSecond.dx;
+          if (dx > 150 || dx < -150) {
+            controller.swipeWallet(dx.sign.toInt());
+          }
+        },
+        child: const AppAddTransaction(),
+      );
 }

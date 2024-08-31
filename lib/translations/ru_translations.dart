@@ -40,4 +40,8 @@ final Map<String, String> ru = {
   "transaction_item_expense": "расходы на",
   "transaction_item_error_amount": "Введите сумму",
   "transaction_item_error_category": "Введите категорию",
+  "transaction_item_dialog_button_title": "Подтверждать",
+  "transaction_item_dialog_button_content": "Вы уверены, что хотите удалить этот элемент?",
+  "transaction_item_dialog_button_delete": "Удалить",
+  "transaction_item_dialog_button_cancel": "Отменить",
 };
