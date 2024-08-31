@@ -4,7 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pecunia/controllers/app_controller.dart';
-import 'package:pecunia/controllers/sql_controller.dart';
+import 'package:pecunia/provider/sql_provider.dart';
 import 'package:pecunia/screen/home/home_binding.dart';
 import 'package:pecunia/screen/home/home_screen.dart';
 import 'package:pecunia/screen/profile/profile_binding.dart';
@@ -19,7 +19,7 @@ void main() async {
 
   initializeDateFormatting('Ru_ru', null);
 
-  final sqlController = Get.put(SQLController(), permanent: true);
+  final sqlController = Get.put(SQLProvider(), permanent: true);
   await sqlController.initAsync();
 
   Get.put(AppTranslations(), permanent: true);

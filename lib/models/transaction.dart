@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:pecunia/controllers/sql_controller.dart';
+import 'package:pecunia/util/sql_fun.dart';
 
 part 'transaction.g.dart';
 

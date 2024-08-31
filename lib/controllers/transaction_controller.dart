@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 import 'package:pecunia/controllers/base_controller.dart';
-import 'package:pecunia/controllers/sql_controller.dart';
 import 'package:pecunia/models/transaction.dart';
+import 'package:pecunia/provider/sql_provider.dart';
 
 class TransactionController extends BaseController {
-  final SQLController _sqlController = Get.find();
+  final SQLProvider _sqlController = Get.find();
 
   final RxInt _walletId = RxInt(0);
 

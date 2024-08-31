@@ -1,16 +1,16 @@
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:pecunia/controllers/base_controller.dart';
 import 'package:pecunia/controllers/transaction_controller.dart';
 import 'package:pecunia/controllers/wallet_controller.dart';
 import 'package:pecunia/models/transaction.dart';
 import 'package:pecunia/models/wallet.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
-class SQLController extends BaseController {
+class SQLProvider {
   late final sql.Database _database;
   late final _SQLTableWallets tableWallets;
   late final _SQLTableTransactions tableTransactions;
+
+  bool isLoading = false;
 
   Future<void> initAsync() async {
     isLoading = true;
@@ -151,16 +151,9 @@ class _SQLTableTransactions {
           columnCreatedAt,
         ],
         where: "$columnWalletId = ?",
-        whereArgs: [walletId]);
+        whereArgs: [walletId],
+        orderBy: "$columnCreatedAt DESC");
 
     return List.generate(maps.length, (index) => Transaction.fromJson(maps[index]));
   }
 }
-
-bool toBoolean(str) => str != 0 || str != '0' && str != 'false' && str != '';
-
-String fromBoolean(value) => value ? "1" : "0";
-
-DateTime toDateTime(value) => DateTime.parse(value);
-
-String fromDateTime(DateTime value) => DateFormat("yyyy-MM-ddTHH:mm:ssZ").format(value);
