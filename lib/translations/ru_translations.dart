@@ -5,8 +5,6 @@ final Map<String, String> ru = {
   "light": "светлая",
   "dark": "темная",
 
-  "home_current_wallet": "текущий кошелек",
-
   "home_button_summa": "Сумма",
   "home_button_category": "Категория",
   "home_button_income": "Доход",
@@ -30,4 +28,7 @@ final Map<String, String> ru = {
 
   "wallet_item_name": "название",
   "wallet_item_description": "описание",
+
+  "current_wallet_title": "текущий кошелек",
+  "current_wallet_bottom_title": "ваши кошельки",
 };

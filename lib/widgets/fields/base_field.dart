@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pecunia/styles/app_border_style.dart';
 import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 
@@ -34,16 +35,16 @@ class BaseField extends TextFormField {
             alignLabelWithHint: true,
             contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             border: const OutlineInputBorder(
-              borderSide: BorderSide(color: AppColors.borderColor, width: 2),
-              borderRadius: BorderRadius.all(Radius.circular(8)),
+              borderSide: AppBorderStyle.borderSide,
+              borderRadius: AppBorderStyle.borderRadius,
             ),
             enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: AppColors.borderColor, width: 2),
-              borderRadius: BorderRadius.all(Radius.circular(8)),
+              borderSide: AppBorderStyle.borderSideEnabled,
+              borderRadius: AppBorderStyle.borderRadius,
             ),
             errorBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: AppColors.error, width: 2),
-              borderRadius: BorderRadius.all(Radius.circular(8)),
+              borderSide: AppBorderStyle.borderSideError,
+              borderRadius: AppBorderStyle.borderRadius,
             ),
             prefix: prefix,
             prefixIcon: prefixIcon,

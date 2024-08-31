@@ -14,6 +14,8 @@ class HomeController extends BaseController {
 
   final Rxn<Wallet> currentWallet = Rxn<Wallet>();
 
+  List<Wallet> get wallets => _walletController.wallets.value;
+
   // ----------INIT-------------------------------------------------------------------------------
 
   @override

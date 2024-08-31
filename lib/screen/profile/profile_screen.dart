@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/screen/profile/profile_controller.dart';
 import 'package:pecunia/screen/profile/widgets/setting_wallet/setting_wallet.dart';
-import 'package:pecunia/screen/profile/widgets/wallet_item.dart';
+import 'package:pecunia/widgets/wallet_item.dart';
 import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_constants.dart';
@@ -64,6 +64,7 @@ class ProfileScreen extends GetView<ProfileController> {
                 itemCount: controller.wallets.length,
                 itemBuilder: (_, index) => WalletItem(
                       wallet: controller.wallets[index],
+                      isEditing: controller.isEditing.isTrue,
                     ))),
             AppSpaces.v16,
             Text("profile_support".tr),

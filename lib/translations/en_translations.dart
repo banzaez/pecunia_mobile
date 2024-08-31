@@ -5,8 +5,6 @@ final Map<String, String> en = {
   "light": "light",
   "dark": "dark",
 
-  "home_current_wallet": "current wallet",
-
   "home_button_summa": "Amount",
   "home_button_category": "Category",
   "home_button_income": "Income",
@@ -30,4 +28,7 @@ final Map<String, String> en = {
 
   "wallet_item_name": "name",
   "wallet_item_description": "description",
+
+  "current_wallet_title": "current wallet",
+  "current_wallet_bottom_title": "your wallets",
 };

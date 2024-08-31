@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/screen/home/home_controller.dart';
+import 'package:pecunia/screen/home/widget/current_wallet.dart';
 import 'package:pecunia/screen/profile/widgets/setting_wallet/setting_wallet.dart';
-import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/widgets/fields/base_field.dart';
 import 'package:pecunia/widgets/fields/number_field.dart';
@@ -19,7 +19,7 @@ class HomeScreen extends GetView<HomeController> {
 
   // --------------------------------------------------------------------------------------------
 
-  Widget _leading() => Obx(() => SettingWallet(update: controller.currentWallet()));
+  Widget _leading() => Obx(() => SettingWallet(update: controller.currentWallet.value));
 
   Widget _profile() => IconButton(
         onPressed: controller.goToProfile,
@@ -28,15 +28,7 @@ class HomeScreen extends GetView<HomeController> {
 
   AppBar _appBar() => AppBar(
         leading: _leading(),
-        title: Column(
-          children: [
-            Obx(() => Text(controller.currentWallet()?.name ?? "")),
-            Text(
-              "home_current_wallet".tr,
-              style: AppTextStyle.text12w400(),
-            ),
-          ],
-        ),
+        title: const CurrentWallet(),
         actions: [
           _profile(),
         ],
@@ -44,15 +36,9 @@ class HomeScreen extends GetView<HomeController> {
 
   // --------------------------------------------------------------------------------------------
 
-  // Widget _listItem(Translations transaction) => ListTile(
-  //       title: Text(transaction.name),
-  //     );
-
   Widget _body() => ListView.builder(
         itemCount: 0,
         itemBuilder: (_, index) => SizedBox(),
-
-        ///_listItem(controller.wallets[index]),
       );
 
   Widget _bottomRow({required List<Widget> children}) => Row(

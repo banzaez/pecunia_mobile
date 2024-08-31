@@ -1,3 +1,4 @@
+import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/controllers/base_controller.dart';
@@ -11,8 +12,8 @@ class SettingWalletController extends BaseController {
   final WalletController _walletController = Get.find();
 
   final nameController = TextEditingController();
-  final currencyController = TextEditingController();
   final descriptionController = TextEditingController();
+  final currency = Rxn<Currency>();
   final showBalance = RxBool(true);
   final isRoundUp = RxBool(true);
 
@@ -26,7 +27,7 @@ class SettingWalletController extends BaseController {
 
     nameController.text = wallet!.name;
     descriptionController.text = wallet!.description;
-    currencyController.text = wallet!.currency;
+    currency.value = CurrencyService().findByCode(wallet!.currency);
     showBalance.value = wallet!.showBalance;
     isRoundUp.value = wallet!.isRoundUp;
   }
@@ -34,7 +35,7 @@ class SettingWalletController extends BaseController {
   void updateValues(Wallet wallet) {
     wallet.name = nameController.text;
     wallet.description = descriptionController.text;
-    wallet.currency = currencyController.text;
+    wallet.currency = currency.value!.code;
     wallet.showBalance = showBalance.value;
     wallet.isRoundUp = isRoundUp.value;
   }
