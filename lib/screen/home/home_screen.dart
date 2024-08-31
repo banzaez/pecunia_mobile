@@ -81,7 +81,7 @@ class HomeScreen extends GetView<HomeController> {
                     ? Icons.fiber_manual_record
                     : Icons.fiber_manual_record_outlined,
                 size: 18)),
-      ).paddingAll(8);
+      ).paddingAll(4);
 
   Widget _bottom() => const AppAddTransaction();
 }
