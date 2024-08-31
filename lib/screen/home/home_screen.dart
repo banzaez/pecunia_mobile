@@ -10,35 +10,29 @@ class HomeScreen extends GetView<HomeController> {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) =>
-      Obx(() =>
-      controller.isInitializing
-          ? const Material(
-        child: Center(child: CircularProgressIndicator()),
-      )
-          : Scaffold(
-        appBar: _appBar(),
-        body: _body(),
-        bottomSheet: const AppAddTransaction(),
-      ));
+  Widget build(BuildContext context) => Obx(() => controller.isInitializing
+      ? const Material(
+          child: Center(child: CircularProgressIndicator()),
+        )
+      : Scaffold(
+          appBar: _appBar(),
+          body: _body(),
+          bottomSheet: const AppAddTransaction(),
+        ));
 
   // --------------------------------------------------------------------------------------------
 
-  Widget _leading() =>
-      Obx(() =>
-          SettingWallet(
-            onChange: (value) => controller.refreshWallet(),
-            update: controller.currentWallet,
-          ));
+  Widget _leading() => Obx(() => SettingWallet(
+        onChange: (value) => controller.refreshWallet(),
+        update: controller.currentWallet,
+      ));
 
-  Widget _profile() =>
-      IconButton(
+  Widget _profile() => IconButton(
         onPressed: controller.goToProfile,
         icon: const Icon(Icons.account_box),
       );
 
-  AppBar _appBar() =>
-      AppBar(
+  AppBar _appBar() => AppBar(
         leading: _leading(),
         title: const CurrentWallet(),
         actions: [
@@ -48,8 +42,7 @@ class HomeScreen extends GetView<HomeController> {
 
   // --------------------------------------------------------------------------------------------
 
-  Widget _body() =>
-      GestureDetector(
+  Widget _body() => GestureDetector(
         onHorizontalDragEnd: (details) {
           final dx = details.velocity.pixelsPerSecond.dx;
           if (dx > 150 || dx < -150) {
@@ -57,9 +50,9 @@ class HomeScreen extends GetView<HomeController> {
           }
         },
         child: Obx(() => ListView.builder(
-            itemCount: controller.transactions.length,
-            itemBuilder: (_, index) => TransactionItem(transaction: controller.transactions[index]),
-          )),
+              itemCount: controller.transactions.length,
+              itemBuilder: (_, index) =>
+                  TransactionItem(transaction: controller.transactions[index]),
+            )),
       );
-
 }
