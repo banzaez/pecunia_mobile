@@ -36,10 +36,18 @@ class HomeScreen extends GetView<HomeController> {
 
   // --------------------------------------------------------------------------------------------
 
-  Widget _body() => ListView.builder(
-        itemCount: 0,
-        itemBuilder: (_, index) => SizedBox(),
-      );
+  Widget _body() => GestureDetector(
+    onHorizontalDragEnd: (details) {
+      final dx = details.velocity.pixelsPerSecond.dx;
+      if(dx > 100 || dx < -100) {
+        controller.swipeWallet(dx.sign.toInt());
+      }
+    },
+    child: ListView.builder(
+          itemCount: 0,
+          itemBuilder: (_, index) => SizedBox(),
+        ),
+  );
 
   Widget _bottomRow({required List<Widget> children}) => Row(
         children: [
