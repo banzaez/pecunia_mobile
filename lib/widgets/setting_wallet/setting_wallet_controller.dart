@@ -35,6 +35,8 @@ class SettingWalletController extends BaseController {
     isRoundUp.value = wallet!.isRoundUp;
   }
 
+  // ----------VALUES----------------------------------------------------------------------------
+
   void updateValues(Wallet wallet) {
     wallet.name = nameController.text;
     wallet.description = descriptionController.text;

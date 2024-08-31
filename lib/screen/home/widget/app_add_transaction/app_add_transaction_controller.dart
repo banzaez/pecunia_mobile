@@ -6,21 +6,33 @@ import 'package:pecunia/models/transaction.dart';
 class AppAddTransactionController extends GetxController {
   final TransactionController _transactionController = Get.find();
 
-  final TextEditingController controllerSumma = TextEditingController();
+  final TextEditingController controllerAmount = TextEditingController();
   final TextEditingController controllerCategory = TextEditingController();
+
+  final errorAmount = RxnString();
+  final errorCategory = RxnString();
+
+  bool get hasError => errorAmount.value != null || errorCategory.value != null;
 
   // ----------VALUES----------------------------------------------------------------------------
 
   void cleanValues() {
-    controllerSumma.clear();
+    controllerAmount.clear();
     controllerCategory.clear();
   }
 
   void updateValues(Transaction transaction) {
     transaction.walletId = _transactionController.walletId;
-    transaction.amount = double.tryParse(controllerSumma.text) ?? 0;
+    transaction.amount = double.tryParse(controllerAmount.text) ?? 0;
     transaction.category = controllerCategory.text;
     transaction.createdAt = DateTime.now();
+  }
+
+  bool isOk() {
+    errorAmount.value = controllerAmount.text.isEmpty ? "transaction_item_error_amount".tr : null;
+    errorCategory.value = controllerCategory.text.isEmpty ? "transaction_item_error_category".tr : null;
+
+    return !hasError;
   }
 
   // ----------SQL-------------------------------------------------------------------------------

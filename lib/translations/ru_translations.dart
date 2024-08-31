@@ -38,4 +38,6 @@ final Map<String, String> ru = {
   "transaction_item_yesterday": "вчера",
   "transaction_item_income": "доходы от",
   "transaction_item_expense": "расходы на",
+  "transaction_item_error_amount": "Введите сумму",
+  "transaction_item_error_category": "Введите категорию",
 };

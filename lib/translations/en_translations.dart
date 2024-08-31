@@ -38,4 +38,6 @@ final Map<String, String> en = {
   "transaction_item_yesterday": "yesterday",
   "transaction_item_income": "income from",
   "transaction_item_expense": "expenses on",
+  "transaction_item_error_amount": "Enter the amount",
+  "transaction_item_error_category": "Enter the category",
 };

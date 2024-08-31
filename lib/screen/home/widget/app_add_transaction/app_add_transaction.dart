@@ -14,26 +14,36 @@ class AppAddTransaction extends StatelessWidget {
         builder: (controller) => Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _bottomRow(children: [
-              NumberField(
-                controller: controller.controllerSumma,
-                labelText: "home_button_summa".tr,
-              ),
-              AppSpaces.h8,
-              BaseField(
-                controller: controller.controllerCategory,
-                labelText: "home_button_category".tr,
-              ),
-            ]),
+            Obx(() => SizedBox(
+                  child: _bottomRow(children: [
+                    NumberField(
+                      controller: controller.controllerAmount,
+                      labelText: "home_button_summa".tr,
+                      errorText: controller.errorAmount.value,
+                    ),
+                    AppSpaces.h8,
+                    BaseField(
+                      controller: controller.controllerCategory,
+                      labelText: "home_button_category".tr,
+                      errorText: controller.errorCategory.value,
+                    ),
+                  ]),
+                )),
             AppSpaces.v8,
             _bottomRow(children: [
               ElevatedButton(
-                onPressed: () => controller.add(1),
+                onPressed: () {
+                  if (!controller.isOk()) return;
+                  controller.add(1);
+                },
                 child: Text("home_button_income".tr),
               ),
               AppSpaces.h8,
               ElevatedButton(
-                onPressed: () => controller.add(-1),
+                onPressed: () {
+                  if (!controller.isOk()) return;
+                  controller.add(-1);
+                },
                 child: Text("home_button_expense".tr),
               ),
             ]),
@@ -44,6 +54,7 @@ class AppAddTransaction extends StatelessWidget {
   // ---------------------------------------------------------------------------------------------
 
   Widget _bottomRow({required List<Widget> children}) => Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           for (Widget widget in children) widget is SizedBox ? widget : Expanded(child: widget),
         ],
