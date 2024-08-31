@@ -37,9 +37,9 @@ class TransactionItem extends StatelessWidget {
 
   Widget _date() {
     if (transaction.createdAt.isToday) {
-      return Text("transaction_item_today".tr);
+      return Text("${"transaction_item_today".tr} ${transaction.createdAt.formatHourMin}");
     } else if (transaction.createdAt.isYesterday) {
-      return Text("transaction_item_yesterday".tr);
+      return Text("${"transaction_item_yesterday".tr} ${transaction.createdAt.formatHourMin}");
     } else {
       return Text(transaction.createdAt.formatDDMMSYYYY);
     }
