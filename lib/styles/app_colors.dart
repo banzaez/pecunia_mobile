@@ -6,6 +6,7 @@ class AppColors{
   static const Color background = Colors.black;
   static const Color disable = Colors.grey;
   static const Color error = Colors.red;
+  static const Color edit = Colors.red;
 
   static const MaterialColor primary = Colors.blue;
 

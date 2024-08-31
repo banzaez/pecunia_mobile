@@ -14,12 +14,14 @@ import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/translations/app_translations.dart';
 import 'package:pecunia/util/app_constants.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   initializeDateFormatting('Ru_ru', null);
 
-  Get.put(SQLController(), permanent: true);
+  final sqlController = Get.put(SQLController(), permanent: true);
+  await sqlController.initAsync();
+
   Get.put(AppTranslations(), permanent: true);
   Get.put(AppController(), permanent: true);
 

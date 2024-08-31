@@ -6,22 +6,31 @@ part 'wallet.g.dart';
 @JsonSerializable()
 class Wallet {
   @JsonKey(name: "_id")
-  final int id = 0;
-  final String name;
-  final String currency;
-  final String description;
+  int id;
+  String name;
+  String currency;
+  String description;
   @JsonKey(fromJson: toBoolean, toJson: fromBoolean)
-  final bool showBalance;
+  bool showBalance;
   @JsonKey(fromJson: toBoolean, toJson: fromBoolean)
-  final bool isRoundUp;
+  bool isRoundUp;
 
-  const Wallet({
+  Wallet({
+    this.id = 0,
     required this.name,
     required this.currency,
     required this.description,
     required this.showBalance,
     required this.isRoundUp,
   });
+
+  factory Wallet.empty() => Wallet(
+        name: "",
+        currency: "",
+        description: "",
+        showBalance: false,
+        isRoundUp: false,
+      );
 
   factory Wallet.fromJson(Map<String, dynamic> json) => _$WalletFromJson(json);
 

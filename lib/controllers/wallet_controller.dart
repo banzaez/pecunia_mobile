@@ -1,26 +1,41 @@
 import 'package:get/get.dart';
+import 'package:pecunia/controllers/base_controller.dart';
 import 'package:pecunia/controllers/sql_controller.dart';
 import 'package:pecunia/models/wallet.dart';
 
-class WalletController extends GetxController {
+class WalletController extends BaseController {
   final SQLController sqlController = Get.find<SQLController>();
 
   final RxList<Wallet> wallets = RxList();
 
-  Future<void> addWallet() async {
-    var newWallet = Wallet(
-      name: "Новый",
-      description: "",
-      currency: "1",
-      showBalance: true,
-      isRoundUp: true,
-    );
+  // -----------INIT-----------------------------------------------------------------------------
 
-    await sqlController.walletAdd(wallet: newWallet);
+  @override
+  void onInit() {
+    super.onInit();
 
-    wallets.value = await sqlController.walletList();
+    refreshWallets();
   }
 
-  Future<void> updateWallet() async => wallets.value = await sqlController.walletList();
+  // -----------SQL------------------------------------------------------------------------------
 
+  Future<void> addSQL(Wallet wallet) async {
+    await sqlController.tableWallets.add(wallet: wallet);
+
+    refreshWallets();
+  }
+
+  Future<void> updateSQL(Wallet wallet) async {
+    await sqlController.tableWallets.update(wallet: wallet);
+
+    refreshWallets();
+  }
+
+  Future<void> deleteSQL(int id) async {
+    await sqlController.tableWallets.delete(id: id);
+
+    refreshWallets();
+  }
+
+  Future<void> refreshWallets() async => wallets.value = await sqlController.tableWallets.getList();
 }

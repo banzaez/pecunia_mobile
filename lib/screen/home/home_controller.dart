@@ -2,14 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/controllers/app_controller.dart';
 import 'package:pecunia/controllers/base_controller.dart';
+import 'package:pecunia/controllers/wallet_controller.dart';
+import 'package:pecunia/models/wallet.dart';
 
 class HomeController extends BaseController {
-  AppController appController = Get.find<AppController>();
+  final AppController _appController = Get.find();
+  final WalletController _walletController = Get.find();
 
-  TextEditingController controllerSumma = TextEditingController();
-  TextEditingController controllerCategory = TextEditingController();
+  final TextEditingController controllerSumma = TextEditingController();
+  final TextEditingController controllerCategory = TextEditingController();
 
-  RxList items = RxList();
+  final Rxn<Wallet> currentWallet = Rxn<Wallet>();
 
   // ----------INIT-------------------------------------------------------------------------------
 
@@ -17,10 +20,11 @@ class HomeController extends BaseController {
   void onInit() {
     super.onInit();
 
+    currentWallet.value = _walletController.wallets.first;
   }
 
   // ----------NAVIGATION------------------------------------------------------------------------
 
-  void goToProfile() => appController.goToScreen(AppScreens.profile);
+  void goToProfile() => _appController.goToScreen(AppScreens.profile);
 
 }

@@ -1,82 +1,60 @@
+import 'package:get/get.dart';
 import 'package:pecunia/controllers/base_controller.dart';
+import 'package:pecunia/controllers/wallet_controller.dart';
 import 'package:pecunia/models/wallet.dart';
-import 'package:sqflite/sqflite.dart';
-import 'dart:io' as io;
+import 'package:sqflite/sqflite.dart' as sql;
 
 class SQLController extends BaseController {
-  late Database _database;
+  late final sql.Database _database;
+  late final _SQLTableWallets tableWallets;
 
-  @override
-  void onInit() {
-    super.onInit();
+  Future<void> initAsync() async {
+    isLoading = true;
 
-    _onInitAsync();
-  }
-
-  Future<void> _onInitAsync() async {
     // Get a location using getDatabasesPath
-    var databasesPath = await getDatabasesPath();
+    var databasesPath = await sql.getDatabasesPath();
     String path = '$databasesPath/pecunia.db';
 
     // // Delete the database
     // await deleteDatabase(path);
 
-    if (io.File(path).existsSync()) return;
-
     // open the database
-    _database = await openDatabase(
+    await sql.openDatabase(
       path,
       version: 1,
-      onCreate: (Database db, int version) async {
-        await db.execute('CREATE TABLE ${SQLTableWallets.name} ('
-            '${SQLTableWallets.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,'
-            '${SQLTableWallets.columnName} TEXT,'
-            '${SQLTableWallets.columnCurrency} TEXT,'
-            '${SQLTableWallets.columnDescription} TEXT,'
-            '${SQLTableWallets.columnShowBalance} BOOLEAN,'
-            '${SQLTableWallets.columnRound} BOOLEAN)');
-        await db.execute('CREATE TABLE ${SQLTableTransactions.name} ('
-            '${SQLTableTransactions.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,'
-            '${SQLTableTransactions.columnWalletId} INTEGER,'
-            '${SQLTableTransactions.columnAmount} DOUBLE,'
-            '${SQLTableTransactions.columnCategory} TEXT)');
+      onCreate: (sql.Database db, int version) async {
+        await db.execute('CREATE TABLE ${_SQLTableWallets.table} ('
+            '${_SQLTableWallets.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,'
+            '${_SQLTableWallets.columnName} TEXT,'
+            '${_SQLTableWallets.columnCurrency} TEXT,'
+            '${_SQLTableWallets.columnDescription} TEXT,'
+            '${_SQLTableWallets.columnShowBalance} BOOLEAN,'
+            '${_SQLTableWallets.columnRound} BOOLEAN)');
+        await db.execute('CREATE TABLE ${_SQLTableTransactions.table} ('
+            '${_SQLTableTransactions.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,'
+            '${_SQLTableTransactions.columnWalletId} INTEGER,'
+            '${_SQLTableTransactions.columnAmount} DOUBLE,'
+            '${_SQLTableTransactions.columnCategory} TEXT)');
+      },
+      onConfigure: (db) {
+        _database = db;
+
+        tableWallets = _SQLTableWallets(_database);
+
+        Get.put(WalletController());
       },
     );
-  }
 
-  Future<void> walletAdd({required Wallet wallet}) async => await _database.insert(
-        SQLTableWallets.name,
-        wallet.toJson()..remove("_id"),
-      );
-
-  Future<void> walletUpdate({required Wallet wallet}) async => await _database.update(
-        SQLTableWallets.name,
-        wallet.toJson(),
-        where: '${SQLTableWallets.columnId} = ?',
-        whereArgs: [wallet.id],
-      );
-
-  Future<List<Wallet>> walletList() async {
-    List<Map<String, Object?>> maps = await _database.query(
-      SQLTableWallets.name,
-      columns: [
-        SQLTableWallets.columnId,
-        SQLTableWallets.columnName,
-        SQLTableWallets.columnCurrency,
-        SQLTableWallets.columnDescription,
-        SQLTableWallets.columnShowBalance,
-        SQLTableWallets.columnRound,
-      ],
-    );
-
-    return List.generate(maps.length, (index) => Wallet.fromJson(maps[index]));
+    isLoading = false;
   }
 }
 
-class SQLTableWallets {
-  SQLTableWallets._();
+class _SQLTableWallets {
+  _SQLTableWallets(this._database);
 
-  static const String name = "wallets";
+  final sql.Database _database;
+
+  static const String table = "wallets";
 
   static const String columnId = '_id';
   static const String columnName = 'name';
@@ -84,12 +62,44 @@ class SQLTableWallets {
   static const String columnDescription = 'description';
   static const String columnShowBalance = 'showBalance';
   static const String columnRound = 'isRoundUp';
+
+  Future<void> add({required Wallet wallet}) async => await _database.insert(
+        table,
+        wallet.toJson()..remove("_id"),
+      );
+
+  Future<void> update({required Wallet wallet}) async => await _database.update(
+        table,
+        wallet.toJson(),
+        where: '$columnId = ?',
+        whereArgs: [wallet.id],
+      );
+
+  Future<void> delete({required int id}) async => await _database.delete(
+        table,
+        where: '$columnId = ?',
+        whereArgs: [id],
+      );
+
+  Future<List<Wallet>> getList() async {
+    List<Map<String, Object?>> maps = await _database.query(
+      table,
+      columns: [
+        columnId,
+        columnName,
+        columnCurrency,
+        columnDescription,
+        columnShowBalance,
+        columnRound,
+      ],
+    );
+
+    return List.generate(maps.length, (index) => Wallet.fromJson(maps[index]));
+  }
 }
 
-class SQLTableTransactions {
-  SQLTableTransactions._();
-
-  static const name = "transactions";
+abstract class _SQLTableTransactions {
+  static const table = "transactions";
 
   static const String columnId = '_id';
   static const String columnWalletId = 'walletId';

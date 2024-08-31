@@ -12,16 +12,22 @@ final Map<String, String> en = {
   "home_button_income": "Income",
   "home_button_expense": "Expense",
 
-  "home_bottom_sheet_title": "Current wallet settings",
-  "home_bottom_sheet_name": "wallet name",
-  "home_bottom_sheet_currency": "wallet currency",
-  "home_bottom_sheet_show_balance": "show balance on main",
-  "home_bottom_sheet_round": "round amounts to whole numbers",
-  "home_bottom_sheet_button_save": "Save",
-
   "profile_title": "Profile settings",
-  "profile_button_add_wallet": "add wallet",
   "profile_my_wallets": "my wallets",
   "profile_theme": "theme",
   "profile_support": "support",
+  "profile_edit": "edit",
+
+  "setting_wallet_title_add": "Create a wallet",
+  "setting_wallet_title_update": "Current wallet settings",
+  "setting_wallet_name": "name",
+  "setting_wallet_description": "description",
+  "setting_wallet_currency": "currency",
+  "setting_wallet_show_balance": "show balance on main",
+  "setting_wallet_is_round_up": "round amounts to whole numbers",
+  "setting_wallet_button_add": "add wallet",
+  "setting_wallet_button_save": "Save",
+
+  "wallet_item_name": "name",
+  "wallet_item_description": "description",
 };

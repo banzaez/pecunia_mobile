@@ -32,8 +32,8 @@ class BoolSwitch extends StatelessWidget {
         width: width ?? double.infinity,
         child: Row(
           children: [
-            _button(textPrimary, value == true),
-            _button(textSecond, value == false),
+            _button(textPrimary, value == false),
+            _button(textSecond, value == true),
           ],
         ),
       );

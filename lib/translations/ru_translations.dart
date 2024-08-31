@@ -12,16 +12,22 @@ final Map<String, String> ru = {
   "home_button_income": "Доход",
   "home_button_expense": "Расход",
 
-  "home_bottom_sheet_title": "Настройки текущего кошелька",
-  "home_bottom_sheet_name": "название кошелька",
-  "home_bottom_sheet_currency": "валюта кошелька",
-  "home_bottom_sheet_show_balance": "показывать баланс на главной",
-  "home_bottom_sheet_round": "округлять суммы до целых",
-  "home_bottom_sheet_button_save": "Cохранить",
-
   "profile_title": "Настройки профиля",
-  "profile_button_add_wallet": "добавить кошелек",
   "profile_my_wallets": "мои кошельки",
   "profile_theme": "тема",
   "profile_support": "поддержка",
+  "profile_edit": "редактировать",
+
+  "setting_wallet_title_add": "Создать кошелек",
+  "setting_wallet_title_update": "Настройки текущего кошелька",
+  "setting_wallet_name": "название",
+  "setting_wallet_description": "описание",
+  "setting_wallet_currency": "валюта",
+  "setting_wallet_show_balance": "показывать баланс на главной",
+  "setting_wallet_is_round_up": "округлять суммы до целых",
+  "setting_wallet_button_add": "добавить кошелек",
+  "setting_wallet_button_save": "Cохранить",
+
+  "wallet_item_name": "название",
+  "wallet_item_description": "описание",
 };

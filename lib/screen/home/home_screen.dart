@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/screen/home/home_controller.dart';
+import 'package:pecunia/screen/profile/widgets/setting_wallet/setting_wallet.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
-import 'package:pecunia/widgets/app_botton_sheet.dart';
 import 'package:pecunia/widgets/fields/base_field.dart';
-import 'package:pecunia/widgets/fields/bool_switch.dart';
-import 'package:pecunia/widgets/fields/dropdown_field.dart';
 import 'package:pecunia/widgets/fields/number_field.dart';
 
 class HomeScreen extends GetView<HomeController> {
@@ -21,10 +19,7 @@ class HomeScreen extends GetView<HomeController> {
 
   // --------------------------------------------------------------------------------------------
 
-  Widget _leading() => IconButton(
-        onPressed: _setting,
-        icon: const Icon(Icons.settings),
-      );
+  Widget _leading() => Obx(() => SettingWallet(update: controller.currentWallet()));
 
   Widget _profile() => IconButton(
         onPressed: controller.goToProfile,
@@ -35,7 +30,7 @@ class HomeScreen extends GetView<HomeController> {
         leading: _leading(),
         title: Column(
           children: [
-            Text("Кошелек"),
+            Obx(() => Text(controller.currentWallet()?.name ?? "")),
             Text(
               "home_current_wallet".tr,
               style: AppTextStyle.text12w400(),
@@ -49,9 +44,15 @@ class HomeScreen extends GetView<HomeController> {
 
   // --------------------------------------------------------------------------------------------
 
+  // Widget _listItem(Translations transaction) => ListTile(
+  //       title: Text(transaction.name),
+  //     );
+
   Widget _body() => ListView.builder(
-        itemCount: controller.items.length,
-        itemBuilder: (_, index) => ListView(),
+        itemCount: 0,
+        itemBuilder: (_, index) => SizedBox(),
+
+        ///_listItem(controller.wallets[index]),
       );
 
   Widget _bottomRow({required List<Widget> children}) => Row(
@@ -88,41 +89,4 @@ class HomeScreen extends GetView<HomeController> {
           ]),
         ],
       ).paddingOnly(bottom: 16);
-
-  // --------------------------------------------------------------------------------------------
-
-  Future<void> _setting() async => appBottomSheet(
-        children: [
-          AppSpaces.v8,
-          Text("home_bottom_sheet_title".tr, style: AppTextStyle.text22w400()),
-          AppSpaces.v16,
-          BaseField(
-              //labelText: "NAME WALLET",
-              ),
-          Text("home_bottom_sheet_name".tr),
-          AppSpaces.v16,
-          DropdownField(items: [], hint: "hint"),
-          Text("home_bottom_sheet_currency".tr),
-          AppSpaces.v16,
-          BoolSwitch(
-            onChange: (value) {},
-            textPrimary: "no".tr,
-            textSecond: "yes".tr,
-            value: false,
-            width: 256,
-          ),
-          Text("home_bottom_sheet_show_balance".tr),
-          AppSpaces.v16,
-          BoolSwitch(
-            onChange: (value) {},
-            textPrimary: "no".tr,
-            textSecond: "yes".tr,
-            value: false,
-            width: 256,
-          ),
-          Text("home_bottom_sheet_round".tr),
-          AppSpaces.v32,
-          ElevatedButton(onPressed: () {}, child: Text("home_bottom_sheet_button_save".tr)),
-        ],
-      );
 }
