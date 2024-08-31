@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/models/wallet.dart';
-import 'package:pecunia/screen/profile/widgets/setting_wallet/setting_wallet_controller.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/widgets/app_bottom_sheet.dart';
 import 'package:pecunia/widgets/fields/base_field.dart';
 import 'package:pecunia/widgets/fields/bool_switch.dart';
 import 'package:pecunia/widgets/fields/currency_field.dart';
+import 'package:pecunia/widgets/setting_wallet/setting_wallet_controller.dart';
 
 class SettingWallet extends StatelessWidget {
-  const SettingWallet({super.key, this.update});
+  const SettingWallet({super.key, this.update, this.onChange});
 
+  final ValueChanged? onChange;
   final Wallet? update;
 
   @override
@@ -41,6 +42,7 @@ class SettingWallet extends StatelessWidget {
               AppSpaces.v16,
               BaseField(
                 controller: controller.nameController,
+                errorText: controller.errorName.value,
               ),
               Text("setting_wallet_name".tr),
               AppSpaces.v16,
@@ -52,6 +54,7 @@ class SettingWallet extends StatelessWidget {
               CurrencyField(
                 onChange: (value) => controller.currency.value = value,
                 currency: controller.currency.value,
+                errorText: controller.errorCurrency.value,
               ),
               Text("setting_wallet_currency".tr),
               AppSpaces.v16,
@@ -84,10 +87,13 @@ class SettingWallet extends StatelessWidget {
       ));
 
   void _save(SettingWalletController controller) {
+    if (!controller.isOk()) return;
+
     if (update == null) {
       controller.addSettings();
     } else {
       controller.updateSettings(update!);
+      onChange?.call(update!);
     }
     Get.close();
   }

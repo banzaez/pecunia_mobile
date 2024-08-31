@@ -4,9 +4,11 @@ import 'package:pecunia/controllers/sql_controller.dart';
 import 'package:pecunia/models/wallet.dart';
 
 class WalletController extends BaseController {
-  final SQLController sqlController = Get.find<SQLController>();
+  final SQLController _sqlController = Get.find();
 
   final RxList<Wallet> wallets = RxList();
+
+  final List<Function(String type)> _listeners = [];
 
   // -----------INIT-----------------------------------------------------------------------------
 
@@ -14,28 +16,45 @@ class WalletController extends BaseController {
   void onInit() {
     super.onInit();
 
-    refreshWallets();
+    onInitAsync();
+  }
+
+  void onInitAsync() async {
+    await refreshWallets();
+    notifyListenersSQL("init");
+  }
+
+  // -----------LISTENERS-SQL--------------------------------------------------------------------
+
+  void addListenerSQL(Function(String type) listener) => _listeners.add(listener);
+
+  void notifyListenersSQL(String type) {
+    for(var listener in _listeners) {
+      listener.call(type);
+    }
   }
 
   // -----------SQL------------------------------------------------------------------------------
 
   Future<void> addSQL(Wallet wallet) async {
-    await sqlController.tableWallets.add(wallet: wallet);
-
-    refreshWallets();
+    await _sqlController.tableWallets.add(value: wallet);
+    await refreshWallets();
+    notifyListenersSQL("add");
   }
 
   Future<void> updateSQL(Wallet wallet) async {
-    await sqlController.tableWallets.update(wallet: wallet);
-
-    refreshWallets();
+    await _sqlController.tableWallets.update(value: wallet);
+    await refreshWallets();
+    notifyListenersSQL("update");
   }
 
   Future<void> deleteSQL(int id) async {
-    await sqlController.tableWallets.delete(id: id);
-
-    refreshWallets();
+    if(wallets.length == 1) return;
+    await _sqlController.tableWallets.delete(id: id);
+    await refreshWallets();
+    notifyListenersSQL("delete");
   }
 
-  Future<void> refreshWallets() async => wallets.value = await sqlController.tableWallets.getList();
+  Future<void> refreshWallets() async =>
+      wallets.value = await _sqlController.tableWallets.selectAll();
 }

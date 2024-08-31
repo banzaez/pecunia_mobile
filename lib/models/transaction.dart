@@ -1,23 +1,35 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:pecunia/controllers/sql_controller.dart';
 
 part 'transaction.g.dart';
 
 @JsonSerializable()
 class Transaction {
   @JsonKey(name: "_id")
-  final int id;
-  final int walletId;
-  final double amount;
-  final String category;
+  int id;
+  @JsonKey(name: "wallet_id")
+  int walletId;
+  double amount;
+  String category;
+  @JsonKey(name: "created_at", fromJson: toDateTime, toJson: fromDateTime)
+  DateTime createdAt;
 
-  const Transaction({
-    required this.id,
+  Transaction({
+    this.id = 0,
     required this.walletId,
     required this.amount,
     required this.category,
+    required this.createdAt,
   });
+
+  factory Transaction.empty() =>
+      Transaction(walletId: 0, amount: 0, category: "", createdAt: DateTime.now());
 
   factory Transaction.fromJson(Map<String, dynamic> json) => _$TransactionFromJson(json);
 
   Map<String, dynamic> toJson() => _$TransactionToJson(this);
+
+  @override
+  String toString() =>
+      "id: $id, walletId: $walletId, amount: $amount, category: $category, createdAt: $createdAt, createdAt";
 }

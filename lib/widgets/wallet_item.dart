@@ -5,7 +5,7 @@ import 'package:pecunia/models/wallet.dart';
 import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 
-class WalletItem extends GetWidget<WalletController> {
+class WalletItem extends StatelessWidget {
   const WalletItem({super.key, required this.wallet, required this.isEditing});
 
   final Wallet wallet;
@@ -25,15 +25,15 @@ class WalletItem extends GetWidget<WalletController> {
             TextSpan(text: wallet.name),
           ],
         )),
-        subtitle: Text.rich(TextSpan(
+        subtitle: wallet.description.isNotEmpty ? Text.rich(TextSpan(
           children: [
             TextSpan(text: "${"wallet_item_description".tr}: ", style: AppTextStyle.text12w400()),
             TextSpan(text: wallet.description),
           ],
-        )),
+        )) : null,
         trailing: isEditing
             ? IconButton(
-                onPressed: () => controller.deleteSQL(wallet.id),
+                onPressed: () => Get.find<WalletController>().deleteSQL(wallet.id),
                 icon: const Icon(Icons.close, color: AppColors.edit),
               )
             : null,

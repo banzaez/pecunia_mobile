@@ -18,17 +18,24 @@ final Map<String, String> ru = {
 
   "setting_wallet_title_add": "Создать кошелек",
   "setting_wallet_title_update": "Настройки текущего кошелька",
-  "setting_wallet_name": "название",
+  "setting_wallet_name": "название*",
   "setting_wallet_description": "описание",
-  "setting_wallet_currency": "валюта",
+  "setting_wallet_currency": "валюта*",
   "setting_wallet_show_balance": "показывать баланс на главной",
   "setting_wallet_is_round_up": "округлять суммы до целых",
   "setting_wallet_button_add": "добавить кошелек",
   "setting_wallet_button_save": "Cохранить",
+  "setting_wallet_error_name": "Введите название",
+  "setting_wallet_error_currency": "Введите описание",
 
   "wallet_item_name": "название",
   "wallet_item_description": "описание",
 
   "current_wallet_title": "текущий кошелек",
   "current_wallet_bottom_title": "ваши кошельки",
+
+  "transaction_item_today": "сегодня",
+  "transaction_item_yesterday": "вчера",
+  "transaction_item_income": "доходы от",
+  "transaction_item_expense": "расходы на",
 };

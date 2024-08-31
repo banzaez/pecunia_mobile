@@ -17,6 +17,9 @@ class SettingWalletController extends BaseController {
   final showBalance = RxBool(true);
   final isRoundUp = RxBool(true);
 
+  final errorName = RxnString();
+  final errorCurrency = RxnString();
+
   // ----------INIT------------------------------------------------------------------------------
 
   @override
@@ -38,6 +41,13 @@ class SettingWalletController extends BaseController {
     wallet.currency = currency.value!.code;
     wallet.showBalance = showBalance.value;
     wallet.isRoundUp = isRoundUp.value;
+  }
+
+  bool isOk() {
+    errorName.value = nameController.text.isEmpty ? "setting_wallet_error_name".tr : null;
+    errorCurrency.value = currency.value == null ? "setting_wallet_error_currency".tr : null;
+
+    return errorName.value == null && errorCurrency.value == null;
   }
 
   // ----------SQL-------------------------------------------------------------------------------

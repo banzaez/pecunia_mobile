@@ -1,32 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/screen/home/home_controller.dart';
+import 'package:pecunia/screen/home/widget/app_add_transaction/app_add_transaction.dart';
 import 'package:pecunia/screen/home/widget/current_wallet.dart';
-import 'package:pecunia/screen/profile/widgets/setting_wallet/setting_wallet.dart';
-import 'package:pecunia/util/app_spaces.dart';
-import 'package:pecunia/widgets/fields/base_field.dart';
-import 'package:pecunia/widgets/fields/number_field.dart';
+import 'package:pecunia/widgets/setting_wallet/setting_wallet.dart';
+import 'package:pecunia/widgets/transaction_item.dart';
 
 class HomeScreen extends GetView<HomeController> {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) =>
+      Obx(() =>
+      controller.isInitializing
+          ? const Material(
+        child: Center(child: CircularProgressIndicator()),
+      )
+          : Scaffold(
         appBar: _appBar(),
         body: _body(),
-        bottomSheet: _bottom(),
-      );
+        bottomSheet: const AppAddTransaction(),
+      ));
 
   // --------------------------------------------------------------------------------------------
 
-  Widget _leading() => Obx(() => SettingWallet(update: controller.currentWallet.value));
+  Widget _leading() =>
+      Obx(() =>
+          SettingWallet(
+            onChange: (value) => controller.refreshWallet(),
+            update: controller.currentWallet,
+          ));
 
-  Widget _profile() => IconButton(
+  Widget _profile() =>
+      IconButton(
         onPressed: controller.goToProfile,
         icon: const Icon(Icons.account_box),
       );
 
-  AppBar _appBar() => AppBar(
+  AppBar _appBar() =>
+      AppBar(
         leading: _leading(),
         title: const CurrentWallet(),
         actions: [
@@ -36,51 +48,18 @@ class HomeScreen extends GetView<HomeController> {
 
   // --------------------------------------------------------------------------------------------
 
-  Widget _body() => GestureDetector(
-    onHorizontalDragEnd: (details) {
-      final dx = details.velocity.pixelsPerSecond.dx;
-      if(dx > 100 || dx < -100) {
-        controller.swipeWallet(dx.sign.toInt());
-      }
-    },
-    child: ListView.builder(
-          itemCount: 0,
-          itemBuilder: (_, index) => SizedBox(),
-        ),
-  );
-
-  Widget _bottomRow({required List<Widget> children}) => Row(
-        children: [
-          for (Widget widget in children) widget is SizedBox ? widget : Expanded(child: widget),
-        ],
+  Widget _body() =>
+      GestureDetector(
+        onHorizontalDragEnd: (details) {
+          final dx = details.velocity.pixelsPerSecond.dx;
+          if (dx > 150 || dx < -150) {
+            controller.swipeWallet(dx.sign.toInt());
+          }
+        },
+        child: Obx(() => ListView.builder(
+            itemCount: controller.transactions.length,
+            itemBuilder: (_, index) => TransactionItem(transaction: controller.transactions[index]),
+          )),
       );
 
-  Widget _bottom() => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _bottomRow(children: [
-            NumberField(
-              controller: controller.controllerSumma,
-              labelText: "home_button_summa".tr,
-            ),
-            AppSpaces.h8,
-            BaseField(
-              controller: controller.controllerCategory,
-              labelText: "home_button_category".tr,
-            ),
-          ]),
-          AppSpaces.v8,
-          _bottomRow(children: [
-            ElevatedButton(
-              onPressed: () {},
-              child: Text("home_button_income".tr),
-            ),
-            AppSpaces.h8,
-            ElevatedButton(
-              onPressed: () {},
-              child: Text("home_button_expense".tr),
-            ),
-          ]),
-        ],
-      ).paddingOnly(bottom: 16);
 }

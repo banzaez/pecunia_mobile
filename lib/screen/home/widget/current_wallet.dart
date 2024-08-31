@@ -19,7 +19,7 @@ class CurrentWallet extends GetWidget<HomeController> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 AppSpaces.h24,
-                Obx(() => Text(controller.currentWallet()?.name ?? "")),
+                Obx(() => Text(controller.currentWallet.name)),
                 const Icon(Icons.arrow_drop_down, size: 24),
               ],
             ),
@@ -32,7 +32,7 @@ class CurrentWallet extends GetWidget<HomeController> {
 
   Widget _item(wallet) => GestureDetector(
         onTap: () {
-          controller.currentWallet.value = wallet;
+          controller.currentWallet = wallet;
           Get.close();
         },
         child: WalletItem(wallet: wallet, isEditing: false),

@@ -1,12 +1,16 @@
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:pecunia/controllers/base_controller.dart';
+import 'package:pecunia/controllers/transaction_controller.dart';
 import 'package:pecunia/controllers/wallet_controller.dart';
+import 'package:pecunia/models/transaction.dart';
 import 'package:pecunia/models/wallet.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
 class SQLController extends BaseController {
   late final sql.Database _database;
   late final _SQLTableWallets tableWallets;
+  late final _SQLTableTransactions tableTransactions;
 
   Future<void> initAsync() async {
     isLoading = true;
@@ -16,31 +20,38 @@ class SQLController extends BaseController {
     String path = '$databasesPath/pecunia.db';
 
     // // Delete the database
-    // await deleteDatabase(path);
+    // await sql.deleteDatabase(path);
 
     // open the database
     await sql.openDatabase(
       path,
       version: 1,
       onCreate: (sql.Database db, int version) async {
-        await db.execute('CREATE TABLE ${_SQLTableWallets.table} ('
-            '${_SQLTableWallets.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,'
-            '${_SQLTableWallets.columnName} TEXT,'
-            '${_SQLTableWallets.columnCurrency} TEXT,'
-            '${_SQLTableWallets.columnDescription} TEXT,'
-            '${_SQLTableWallets.columnShowBalance} BOOLEAN,'
-            '${_SQLTableWallets.columnRound} BOOLEAN)');
-        await db.execute('CREATE TABLE ${_SQLTableTransactions.table} ('
-            '${_SQLTableTransactions.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,'
-            '${_SQLTableTransactions.columnWalletId} INTEGER,'
-            '${_SQLTableTransactions.columnAmount} DOUBLE,'
-            '${_SQLTableTransactions.columnCategory} TEXT)');
+        await db.execute("CREATE TABLE ${_SQLTableWallets.table} ("
+            "${_SQLTableWallets.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,"
+            "${_SQLTableWallets.columnName} TEXT(100) DEFAULT 'New' NOT NULL,"
+            "${_SQLTableWallets.columnCurrency} TEXT(10) DEFAULT 'USD' NOT NULL,"
+            "${_SQLTableWallets.columnDescription} TEXT(250) DEFAULT '' NOT NULL,"
+            "${_SQLTableWallets.columnShowBalance} BOOLEAN DEFAULT '1' NOT NULL,"
+            "${_SQLTableWallets.columnRound} BOOLEAN DEFAULT '1' NOT NULL,"
+            "${_SQLTableWallets.columnSort} INTEGER DEFAULT '0' NOT NULL)");
+
+        await db.execute("CREATE TABLE ${_SQLTableTransactions.table} ("
+            "${_SQLTableTransactions.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,"
+            "${_SQLTableTransactions.columnWalletId} INTEGER NOT NULL,"
+            "${_SQLTableTransactions.columnAmount} DOUBLE NOT NULL,"
+            "${_SQLTableTransactions.columnCategory} TEXT(100) NOT NULL,"
+            "${_SQLTableTransactions.columnCreatedAt} TEXT DEFAULT CURRENT_TIMESTAMP)");
+
+        await db.execute("INSERT INTO ${_SQLTableWallets.table} DEFAULT VALUES");
       },
-      onConfigure: (db) {
+      onOpen: (db) {
         _database = db;
 
         tableWallets = _SQLTableWallets(_database);
+        tableTransactions = _SQLTableTransactions(_database);
 
+        Get.put(TransactionController());
         Get.put(WalletController());
       },
     );
@@ -62,17 +73,18 @@ class _SQLTableWallets {
   static const String columnDescription = 'description';
   static const String columnShowBalance = 'showBalance';
   static const String columnRound = 'isRoundUp';
+  static const String columnSort = 'sort';
 
-  Future<void> add({required Wallet wallet}) async => await _database.insert(
+  Future<void> add({required Wallet value}) async => await _database.insert(
         table,
-        wallet.toJson()..remove("_id"),
+        value.toJson()..remove("_id"),
       );
 
-  Future<void> update({required Wallet wallet}) async => await _database.update(
+  Future<void> update({required Wallet value}) async => await _database.update(
         table,
-        wallet.toJson(),
+        value.toJson(),
         where: '$columnId = ?',
-        whereArgs: [wallet.id],
+        whereArgs: [value.id],
       );
 
   Future<void> delete({required int id}) async => await _database.delete(
@@ -81,7 +93,7 @@ class _SQLTableWallets {
         whereArgs: [id],
       );
 
-  Future<List<Wallet>> getList() async {
+  Future<List<Wallet>> selectAll() async {
     List<Map<String, Object?>> maps = await _database.query(
       table,
       columns: [
@@ -98,15 +110,57 @@ class _SQLTableWallets {
   }
 }
 
-abstract class _SQLTableTransactions {
+class _SQLTableTransactions {
+  _SQLTableTransactions(this._database);
+
+  final sql.Database _database;
+
   static const table = "transactions";
 
   static const String columnId = '_id';
-  static const String columnWalletId = 'walletId';
+  static const String columnWalletId = 'wallet_id';
   static const String columnAmount = 'amount';
   static const String columnCategory = 'category';
+  static const String columnCreatedAt = 'created_at';
+
+  Future<void> add({required Transaction value}) async => await _database.insert(
+        table,
+        value.toJson()..remove("_id"),
+      );
+
+  Future<void> update({required Transaction value}) async => await _database.update(
+        table,
+        value.toJson(),
+        where: '$columnId = ?',
+        whereArgs: [value.id],
+      );
+
+  Future<void> delete({required int id}) async => await _database.delete(
+        table,
+        where: '$columnId = ?',
+        whereArgs: [id],
+      );
+
+  Future<List<Transaction>> selectAllByWalletId(int walletId) async {
+    List<Map<String, Object?>> maps = await _database.query(table,
+        columns: [
+          columnId,
+          columnWalletId,
+          columnAmount,
+          columnCategory,
+          columnCreatedAt,
+        ],
+        where: "$columnWalletId = ?",
+        whereArgs: [walletId]);
+
+    return List.generate(maps.length, (index) => Transaction.fromJson(maps[index]));
+  }
 }
 
 bool toBoolean(str) => str != 0 || str != '0' && str != 'false' && str != '';
 
 String fromBoolean(value) => value ? "1" : "0";
+
+DateTime toDateTime(value) => DateTime.parse(value);
+
+String fromDateTime(DateTime value) => DateFormat("yyyy-MM-ddTHH:mm:ssZ").format(value);

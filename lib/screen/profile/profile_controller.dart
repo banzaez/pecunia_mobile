@@ -3,12 +3,12 @@ import 'package:pecunia/controllers/wallet_controller.dart';
 import 'package:pecunia/models/wallet.dart';
 
 class ProfileController extends GetxController {
-  final WalletController walletController = Get.find<WalletController>();
+  final WalletController _walletController = Get.find();
 
   final RxBool darkTheme = RxBool(true);
   final RxBool isEditing = RxBool(false);
 
-  List<Wallet> get wallets => walletController.wallets.value;
+  List<Wallet> get wallets => _walletController.wallets.value;
 
   // -----------INIT-----------------------------------------------------------------------------
 
@@ -16,10 +16,6 @@ class ProfileController extends GetxController {
   void onInit() {
     super.onInit();
 
-    walletController.refreshWallets();
+    _walletController.refreshWallets();
   }
-
-  // -----------SQL------------------------------------------------------------------------------
-
-  void deleteWallet(int id) => walletController.deleteSQL(id);
 }
