@@ -14,6 +14,7 @@ class AppAddTransaction extends StatelessWidget {
         builder: (controller) => Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            AppSpaces.v8,
             _bottomRow(children: [
               NumberField(
                 controller: controller.controllerAmount,
