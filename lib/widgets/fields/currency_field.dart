@@ -19,7 +19,7 @@ class CurrencyField extends StatelessWidget {
           showSearchField: true,
           showCurrencyName: true,
           showCurrencyCode: true,
-          favorite: ['eur'],
+         // favorite: ['usd', 'eur'],
           onSelect: onChange,
         ),
         child: Column(
