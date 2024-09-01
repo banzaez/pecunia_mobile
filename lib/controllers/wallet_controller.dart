@@ -37,24 +37,24 @@ class WalletController extends BaseController {
   // -----------SQL------------------------------------------------------------------------------
 
   Future<void> addSQL(Wallet wallet) async {
-    await _sqlController.tableWallets.add(value: wallet);
+    await _sqlController.wallets.add(value: wallet);
     await refreshWallets();
     notifyListenersSQL("add");
   }
 
   Future<void> updateSQL(Wallet wallet) async {
-    await _sqlController.tableWallets.update(value: wallet);
+    await _sqlController.wallets.update(value: wallet);
     await refreshWallets();
     notifyListenersSQL("update");
   }
 
   Future<void> deleteSQL(int id) async {
     if(wallets.length == 1) return;
-    await _sqlController.tableWallets.delete(id: id);
+    await _sqlController.wallets.delete(id: id);
     await refreshWallets();
     notifyListenersSQL("delete");
   }
 
   Future<void> refreshWallets() async =>
-      wallets.value = await _sqlController.tableWallets.selectAll();
+      wallets.value = await _sqlController.wallets.selectAll();
 }
