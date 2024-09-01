@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
+import 'package:pecunia/controllers/analytics_controller.dart';
 import 'package:pecunia/controllers/transaction_controller.dart';
 import 'package:pecunia/controllers/wallet_controller.dart';
+import 'package:pecunia/models/analytics.dart';
 import 'package:pecunia/models/transaction.dart';
 import 'package:pecunia/models/wallet.dart';
 import 'package:sqflite/sqflite.dart' as sql;
@@ -48,7 +50,8 @@ class SQLProvider {
         await db.execute("INSERT INTO ${_SQLTableWallets.tableName} DEFAULT VALUES");
       },
       onConfigure: (db) {
-        //db.execute("ALTER TABLE ${_SQLTableTransactions.tableName} ADD COLUMN ${_SQLTableTransactions.columnDescription} TEXT(512) DEFAULT '' NOT NULL");
+        db.execute(
+            "ALTER TABLE ${_SQLTableTransactions.tableName} ADD COLUMN ${_SQLTableTransactions.columnDescription} TEXT(512) DEFAULT '' NOT NULL");
       },
       onOpen: (db) {
         _database = db;
@@ -56,6 +59,7 @@ class SQLProvider {
         wallets = _SQLTableWallets(_database);
         transactions = _SQLTableTransactions(_database);
 
+        Get.put(AnalyticsController());
         Get.put(TransactionController());
         Get.put(WalletController());
       },
@@ -164,5 +168,44 @@ class _SQLTableTransactions {
     );
 
     return List.generate(maps.length, (index) => Transaction.fromJson(maps[index]));
+  }
+
+  // ----------ANALYTICS-------------------------------------------------------------------------
+
+  Future<List<Analytics>> selectAnalyticsById(int walletId, String formatDate) async {
+    final maps = await _database.rawQuery("with preresult as ("
+        "SELECT"
+        "   strftime('$formatDate', created_at) as 'group',"
+        "   created_at as date,"
+        "   category,"
+        "   amount FROM transactions"
+        " WHERE wallet_id = $walletId)"
+        " "
+        "SELECT "
+        " result.'group', "
+        " date, "
+        " category, "
+        " SUM(amount) as amount, "
+        "(SELECT SUM(amount) FROM preresult WHERE preresult.`group` = result.`group`) as sum"
+        " FROM preresult as result"
+        " GROUP BY result.'group', category"
+        " ORDER BY result.'group' DESC"
+    );
+
+    return List.generate(maps.length, (index) => Analytics.fromJson(maps[index]));
+  }
+
+  Future<List<Analytics>> selectAllAnalyticsById(int walletId) async {
+    final results = await Future.wait([
+      selectAnalyticsById(walletId, "%Y"),
+      selectAnalyticsById(walletId, "%m"),
+      selectAnalyticsById(walletId, "%d"),
+    ]);
+
+    final years = results[0];
+    final month = results[1];
+    final days = results[2];
+
+    return [];
   }
 }

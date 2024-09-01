@@ -1,20 +1,24 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:pecunia/util/sql_fun.dart';
 
 part 'analytics.g.dart';
 
 @JsonSerializable()
 class Analytics {
-  final int? year;
-  final int? month;
-  final int? day;
+
+  @JsonKey(fromJson: toInt)
+  final int? group;
+  @JsonKey(defaultValue: [])
+  final List<Analytics>? subgroup;
   final String? category;
-  final int? sum;
+  final double? amount;
+  final double? sum;
 
   const Analytics({
-    this.year,
-    this.month,
-    this.day,
+    this.group,
+    this.subgroup,
     this.category,
+    this.amount,
     this.sum,
   });
 

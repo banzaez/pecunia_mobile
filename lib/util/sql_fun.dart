@@ -7,3 +7,6 @@ String fromBoolean(value) => value ? "1" : "0";
 DateTime toDateTime(value) => DateTime.parse(value);
 
 String fromDateTime(DateTime value) => DateFormat("yyyy-MM-ddTHH:mm:ssZ").format(value);
+
+int toInt(String value) => int.tryParse(value) ?? 0;
+
