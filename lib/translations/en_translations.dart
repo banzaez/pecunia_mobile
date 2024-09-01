@@ -5,10 +5,10 @@ final Map<String, String> en = {
   "light": "light",
   "dark": "dark",
 
-  "home_button_summa": "Amount",
-  "home_button_category": "Category",
-  "home_button_income": "Income",
-  "home_button_expense": "Expense",
+  "home_button_summa": "amount",
+  "home_button_category": "category",
+  "home_button_income": "income",
+  "home_button_expense": "expense",
 
   "profile_title": "Profile settings",
   "profile_my_wallets": "my wallets",
@@ -44,7 +44,4 @@ final Map<String, String> en = {
   "transaction_item_dialog_button_content": "Are you sure you wish to delete this item?",
   "transaction_item_dialog_button_delete": "Delete",
   "transaction_item_dialog_button_cancel": "Cancel",
-
-  "pick_date_apply": "apply",
-  "pick_date_cancel": "cancel",
 };

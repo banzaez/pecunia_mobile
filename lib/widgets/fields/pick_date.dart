@@ -17,7 +17,9 @@ class PickDate extends StatelessWidget {
     this.textStyle,
   })  : day = initDate?.day ?? 0,
         mouth = initDate?.month ?? 0,
-        year = initDate?.year ?? 0;
+        year = initDate?.year ?? 0,
+        hour = initDate?.hour ?? 0,
+        minute = initDate?.minute ?? 0;
 
   final ValueChanged<DateTime?> onChanged;
   final DateTime? initDate;
@@ -26,7 +28,8 @@ class PickDate extends StatelessWidget {
   final String formatMonth;
   final String formatYear;
 
-  final String formatTime = "HH : mm";
+  final String formatHour = "HH";
+  final String formatMinute = "mm";
 
   final TextStyle? textStyle;
 
@@ -36,6 +39,8 @@ class PickDate extends StatelessWidget {
   final int day;
   final int mouth;
   final int year;
+  final int hour;
+  final int minute;
 
   @override
   Widget build(BuildContext context) => Row(
@@ -46,8 +51,10 @@ class PickDate extends StatelessWidget {
           _field(format: formatMonth, values: _mouths()),
           AppSpaces.h8,
           _field(format: formatYear, values: _years()),
-          // AppSpaces.h8,
-          // _field(formatTime, 0, 59),
+          AppSpaces.h16,
+          _field(format: formatHour, values: _hours()),
+          AppSpaces.h8,
+          _field(format: formatMinute, values: _minutes()),
         ],
       );
 
@@ -97,7 +104,7 @@ class PickDate extends StatelessWidget {
       );
 
   Future<void> pickValue(List<Widget> values) =>
-      appBottomSheet(Wrap(children: values).paddingOnly(bottom: 32));
+      appBottomSheet(Wrap(children: values).paddingOnly(bottom: 64));
 
   // ----------GENERATED-------------------------------------------------------------------------
 
@@ -105,14 +112,16 @@ class PickDate extends StatelessWidget {
     final list = <PickDateValue>[];
 
     for (int i = initDate?.daysInMonth ?? 0; i > 0; --i) {
-      final date = checkDate(year, mouth, i);
+      final date = changeDate(day: i);
 
-      list.insert(0, PickDateValue(
-        string: date.toFormat(formatDay),
-        date: date,
-        value: 1,
-        active: day == i,
-      ));
+      list.insert(
+          0,
+          PickDateValue(
+            string: date.toFormat(formatDay),
+            date: date,
+            value: 1,
+            active: day == i,
+          ));
     }
     return list;
   }
@@ -121,14 +130,16 @@ class PickDate extends StatelessWidget {
     final list = <PickDateValue>[];
 
     for (int i = 12; i > 0; --i) {
-      final date = checkDate(year, i, day);
+      final date = changeDate(mouth: i);
 
-      list.insert(0, PickDateValue(
-        string: date.toFormat(formatMonth),
-        date: date,
-        value: i,
-        active: mouth == i,
-      ));
+      list.insert(
+          0,
+          PickDateValue(
+            string: date.toFormat(formatMonth),
+            date: date,
+            value: i,
+            active: mouth == i,
+          ));
     }
 
     return list;
@@ -138,7 +149,7 @@ class PickDate extends StatelessWidget {
     final list = <PickDateValue>[];
 
     for (int i = firstDate.year; i >= lastDate.year; --i) {
-      final date = checkDate(i, mouth, day);
+      final date = changeDate(year: i);
 
       list.add(PickDateValue(
         string: date.toFormat(formatYear),
@@ -151,9 +162,60 @@ class PickDate extends StatelessWidget {
     return list;
   }
 
-  DateTime checkDate(int year, int month, int day) {
-    DateTime dateTime = DateTime(year, month);
-    dateTime = DateTime(year, month, day > dateTime.daysInMonth ? dateTime.daysInMonth : day);
+  List<PickDateValue> _hours() {
+    final list = <PickDateValue>[];
+
+    for (int i = 23; i >= 0; --i) {
+      final date = changeDate(hour: i);
+
+      list.insert(
+          0,
+          PickDateValue(
+            string: date.toFormat(formatHour),
+            date: date,
+            value: i,
+            active: hour == i,
+          ));
+    }
+
+    return list;
+  }
+
+  List<PickDateValue> _minutes() {
+    final list = <PickDateValue>[];
+
+    for (int i = 59; i >= 0; --i) {
+      if(!(i % 5 == 0)) continue;
+      final date = changeDate(minute: i);
+
+      list.insert(
+          0,
+          PickDateValue(
+            string: date.toFormat(formatMinute),
+            date: date,
+            value: i,
+            active: minute == i,
+          ));
+    }
+
+    return list;
+  }
+
+  DateTime changeDate({
+    int? year,
+    int? mouth,
+    int? day,
+    int? hour,
+    int? minute,
+  }) {
+    DateTime dateTime = DateTime(year ?? this.year, mouth ?? this.mouth);
+    dateTime = DateTime(
+      year ?? this.year,
+      mouth ?? this.mouth,
+      (day ?? this.day) > dateTime.daysInMonth ? dateTime.daysInMonth : day ?? this.day,
+      hour ?? this.hour,
+      minute ?? this.minute,
+    );
     return dateTime;
   }
 }

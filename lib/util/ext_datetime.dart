@@ -19,19 +19,9 @@ extension DateTimeExtension on DateTime {
 
   String get formatYYYYMMDD => DateFormat("yyyy.MM.dd", _locale).format(this);
 
-  bool get isToday {
-    DateTime now = DateTime.now();
-    return DateTime(year, month, day)
-        .difference(DateTime(now.year, now.month, now.day))
-        .inDays == 0;
-  }
+  bool get isToday => DateTime.now().difference(this).inDays == 0;
 
-  bool get isYesterday {
-    DateTime now = DateTime.now();
-    return DateTime(year, month, day)
-        .difference(DateTime(now.year, now.month, now.day))
-        .inDays == 1;
-  }
+  bool get isYesterday => DateTime.now().difference(this).inDays == 1;
 
   int get daysInMonth => DateTime(year, month + 1, 0).day;
 

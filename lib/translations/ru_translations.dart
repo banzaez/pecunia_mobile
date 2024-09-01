@@ -5,10 +5,10 @@ final Map<String, String> ru = {
   "light": "светлая",
   "dark": "темная",
 
-  "home_button_summa": "Сумма",
-  "home_button_category": "Категория",
-  "home_button_income": "Доход",
-  "home_button_expense": "Расход",
+  "home_button_summa": "сумма",
+  "home_button_category": "категория",
+  "home_button_income": "доход",
+  "home_button_expense": "расход",
 
   "profile_title": "Настройки профиля",
   "profile_my_wallets": "мои кошельки",
@@ -44,7 +44,4 @@ final Map<String, String> ru = {
   "transaction_item_dialog_button_content": "Вы уверены, что хотите удалить этот элемент?",
   "transaction_item_dialog_button_delete": "Удалить",
   "transaction_item_dialog_button_cancel": "Отменить",
-
-  "pick_date_apply": "применить",
-  "pick_date_cancel": "отменить",
 };

@@ -8,12 +8,20 @@ class AppAddTransactionController extends GetxController {
 
   final TextEditingController controllerAmount = TextEditingController();
   final TextEditingController controllerCategory = TextEditingController();
-  final Rxn<DateTime> datetime = Rxn<DateTime>(DateTime.now());
+  final Rx<DateTime> datetime = Rx<DateTime>(DateTime.now());
+  final RxBool showDate = RxBool(false);
 
   final errorAmount = RxnString();
   final errorCategory = RxnString();
 
   bool get hasError => errorAmount.value != null || errorCategory.value != null;
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    showDate.addListener(() => datetime.value = DateTime.now());
+  }
 
   // ----------VALUES----------------------------------------------------------------------------
 
@@ -26,7 +34,7 @@ class AppAddTransactionController extends GetxController {
     transaction.walletId = _transactionController.walletId;
     transaction.amount = double.tryParse(controllerAmount.text) ?? 0;
     transaction.category = controllerCategory.text;
-    transaction.createdAt = DateTime.now();
+    transaction.createdAt = showDate.isTrue ? datetime.value : DateTime.now();
   }
 
   bool isOk() {
