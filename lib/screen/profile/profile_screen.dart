@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pecunia/screen/profile/profile_controller.dart';
+import 'package:pecunia/widgets/fields/app_switch.dart';
 import 'package:pecunia/widgets/setting_wallet/setting_wallet.dart';
 import 'package:pecunia/widgets/wallet_item.dart';
 import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_constants.dart';
 import 'package:pecunia/util/app_spaces.dart';
-import 'package:pecunia/widgets/fields/bool_switch.dart';
 import 'package:pecunia/widgets/flex_builder.dart';
 import 'package:pecunia/widgets/switch_language.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -36,10 +36,12 @@ class ProfileScreen extends GetView<ProfileController> {
 
   Widget _body() => Column(
     children: [
-      Obx(() => BoolSwitch(
+      Obx(() => AppSwitch<ThemeMode>(
             onChange: (value) => controller.darkTheme.value = value,
             textPrimary: "light".tr,
             textSecond: "dark".tr,
+            valuePrimary: ThemeMode.light,
+            valueSecond: ThemeMode.dark,
             value: controller.darkTheme.value,
           )),
       Text("profile_theme".tr),

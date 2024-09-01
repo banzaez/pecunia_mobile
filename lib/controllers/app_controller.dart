@@ -1,28 +1,10 @@
-import 'dart:ui';
-
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:pecunia/translations/app_translations.dart';
 
 class AppController extends GetxController {
 
   @override
   void onInit() {
     super.onInit();
-
-  }
-
-  //----------LOCALISATION-----------------------------------------------------------------------
-
-  Locale _appLocale = AppTranslations.localeDefault;
-
-  Locale get appLocale => _appLocale;
-
-  set appLocale(Locale locale) {
-    _appLocale = locale;
-
-    Get.updateLocale(locale);
-    GetStorage().write('locale', locale.languageCode);
   }
 
   //----------NAVIGATION-------------------------------------------------------------------------

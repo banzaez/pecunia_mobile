@@ -1,4 +1,4 @@
-import 'package:intl/date_symbol_data_local.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
@@ -17,10 +17,10 @@ import 'package:pecunia/util/app_constants.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  initializeDateFormatting('Ru_ru', null);
-
   final sqlController = Get.put(SQLProvider(), permanent: true);
   await sqlController.initAsync();
+
+  await GetStorage.init();
 
   Get.put(AppTranslations(), permanent: true);
   Get.put(AppController(), permanent: true);
@@ -33,24 +33,54 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) => GetMaterialApp(
-      debugShowCheckedModeBanner: !AppConstants.isProdServer,
-      supportedLocales: AppTranslations.localeList,
-      translations: Get.find<AppTranslations>(),
-      fallbackLocale: AppTranslations.localeDefault,
-      locale: Get.find<AppController>().appLocale,
-      localizationsDelegates: const [
-        GlobalCupertinoLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      theme: theme,
-      darkTheme: themeDark,
-      themeMode: ThemeMode.dark,
-      getPages: [
-        GetPage(name: '/', page: () => const HomeScreen(), binding: HomeBinding()),
-        GetPage(name: AppScreens.profile.route, page: () => const ProfileScreen(), binding: ProfileBinding()),
-      ]);
+  Widget build(BuildContext context) {
+    final AppTranslations appTranslations = Get.find();
+    return GetMaterialApp(
+        debugShowCheckedModeBanner: !AppConstants.isProdServer,
+        supportedLocales: appTranslations.localeList,
+        translations: appTranslations,
+        localizationsDelegates: const [
+          GlobalCupertinoLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        localeResolutionCallback: _localeResolutionCallback,
+        theme: theme,
+        darkTheme: themeDark,
+        themeMode: ThemeMode.dark,
+        getPages: [
+          GetPage(name: '/', page: () => const HomeScreen(), binding: HomeBinding()),
+          GetPage(
+              name: AppScreens.profile.route,
+              page: () => const ProfileScreen(),
+              binding: ProfileBinding()),
+        ]);
+  }
+
+  //----------SET-LOCALE-------------------------------------------------------------------------
+
+  Locale? _localeResolutionCallback(locale, supportedLocales) {
+    final GetStorage getStorage = GetStorage();
+
+    Locale currentLocale = supportedLocales.first;
+
+    for (final supportedLocale in supportedLocales) {
+      if (supportedLocale.languageCode == locale?.languageCode) {
+        currentLocale = supportedLocale;
+      }
+    }
+
+    if (Get.locale == null) {
+      final List? localeStorage = getStorage.read("locale")?.split("_");
+      currentLocale =
+          localeStorage == null ? currentLocale : Locale(localeStorage.first, localeStorage.last);
+      Get.updateLocale(currentLocale);
+    }
+
+    getStorage.write("locale", currentLocale.toString());
+
+    return currentLocale;
+  }
 
   //----------THEME------------------------------------------------------------------------------
 

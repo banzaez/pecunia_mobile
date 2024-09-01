@@ -3,24 +3,29 @@ import 'package:get/get.dart';
 import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 
-class BoolSwitch extends StatelessWidget {
-  const BoolSwitch({
+class AppSwitch<T> extends StatelessWidget {
+  const AppSwitch({
     super.key,
     required this.onChange,
     required this.textPrimary,
     required this.textSecond,
+    required this.valuePrimary,
+    required this.valueSecond,
     required this.value,
     this.width,
   });
 
-  final bool value;
-
   final String textPrimary;
   final String textSecond;
 
+  final T valuePrimary;
+  final T valueSecond;
+
+  final T value;
+
   final double? width;
 
-  final ValueChanged<bool> onChange;
+  final ValueChanged<T> onChange;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -32,13 +37,13 @@ class BoolSwitch extends StatelessWidget {
         width: width ?? double.infinity,
         child: Row(
           children: [
-            _button(textPrimary, value == false),
-            _button(textSecond, value == true),
+            _button(textPrimary, valuePrimary, value == valuePrimary),
+            _button(textSecond, valueSecond, value == valueSecond),
           ],
         ),
       );
 
-  Widget _button(String text, bool isActive) => Expanded(
+  Widget _button(String text, T value, bool isActive) => Expanded(
         child: isActive
             ? Container(
                 decoration: BoxDecoration(
@@ -55,7 +60,7 @@ class BoolSwitch extends StatelessWidget {
                 ),
               ).paddingAll(4)
             : GestureDetector(
-                onTap: () => onChange(!value),
+                onTap: () => onChange.call(value),
                 child: Text(
                   text,
                   style: AppTextStyle.text14w600(color: AppColors.disable),

@@ -4,8 +4,8 @@ import 'package:pecunia/models/wallet.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/widgets/app_bottom_sheet.dart';
+import 'package:pecunia/widgets/fields/app_switch.dart';
 import 'package:pecunia/widgets/fields/base_field.dart';
-import 'package:pecunia/widgets/fields/bool_switch.dart';
 import 'package:pecunia/widgets/fields/currency_field.dart';
 import 'package:pecunia/widgets/setting_wallet/setting_wallet_controller.dart';
 
@@ -58,19 +58,23 @@ class SettingWallet extends StatelessWidget {
               ),
               Text("setting_wallet_currency".tr),
               AppSpaces.v16,
-              BoolSwitch(
+              AppSwitch<bool>(
                 onChange: (value) => controller.showBalance.value = value,
                 textPrimary: "no".tr,
                 textSecond: "yes".tr,
+                valuePrimary: false,
+                valueSecond: true,
                 value: controller.showBalance.value,
                 width: 256,
               ),
               Text("setting_wallet_show_balance".tr),
               AppSpaces.v16,
-              BoolSwitch(
+              AppSwitch<bool>(
                 onChange: (value) => controller.isRoundUp.value = value,
                 textPrimary: "no".tr,
                 textSecond: "yes".tr,
+                valuePrimary: false,
+                valueSecond: true,
                 value: controller.isRoundUp.value,
                 width: 256,
               ),

@@ -14,20 +14,21 @@ class LocaleItem {
 }
 
 class AppTranslations extends Translations {
+
   //----->>>>>-----add-here----->>>>>------------------------------------------------------------
-  static List<LocaleItem> localeItems = [
+  List<LocaleItem> localeItems = [
     LocaleItem(name: "English", locale: const Locale('en', 'US'), flag: Flags.england),
     LocaleItem(name: "Русский", locale: const Locale('ru', 'RU'), flag: Flags.russia),
   ];
   //-----<<<<<-----add-here-----<<<<<------------------------------------------------------------
 
-  static List<Locale> get localeList => localeItems.map((e) => e.locale).toList();
+  List<Locale> get localeList => localeItems.map((e) => e.locale).toList();
 
-  static Locale get localeDefault => localeItems.first.locale;
+  void setLocale(Locale locale) => Get.updateLocale(locale);
 
   @override
   Map<String, Map<String, String>> get keys => {
-    'en': en,
-    'ru': ru,
-  };
+        'en': en,
+        'ru': ru,
+      };
 }
