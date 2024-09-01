@@ -66,10 +66,7 @@ class HomeScreen extends GetView<HomeController> {
       );
 
   Widget _dots() => GestureDetector(
-        onHorizontalDragEnd: (details) {
-          final dx = details.velocity.pixelsPerSecond.dx;
-          controller.swipeWallet(dx.sign.toInt());
-        },
+        onPanEnd: _swipeHorizontal,
         child: Container(
           color: Colors.transparent,
           width: double.infinity,
@@ -86,5 +83,15 @@ class HomeScreen extends GetView<HomeController> {
         ),
       );
 
-  Widget _bottom() => const AppAddTransaction();
+  Widget _bottom() => GestureDetector(
+        onPanEnd: _swipeHorizontal,
+        child: const AppAddTransaction(),
+      );
+
+// --------------------------------------------------------------------------------------------
+
+  void _swipeHorizontal(details) {
+    final dx = details.velocity.pixelsPerSecond.dx;
+    controller.swipeWallet(dx.sign.toInt());
+  }
 }
