@@ -65,23 +65,26 @@ class HomeScreen extends GetView<HomeController> {
         ),
       );
 
-  Widget _dots() => Wrap(
-        children: List.generate(
-            controller.wallets.length,
-            (index) => Icon(
-                controller.currentIndex == index
-                    ? Icons.fiber_manual_record
-                    : Icons.fiber_manual_record_outlined,
-                size: 18)),
-      ).paddingAll(4);
-
-  Widget _bottom() => GestureDetector(
+  Widget _dots() => GestureDetector(
         onHorizontalDragEnd: (details) {
           final dx = details.velocity.pixelsPerSecond.dx;
-          if (dx > 100 || dx < -100) {
-            controller.swipeWallet(dx.sign.toInt());
-          }
+          controller.swipeWallet(dx.sign.toInt());
         },
-        child: const AppAddTransaction(),
+        child: Container(
+          color: Colors.transparent,
+          width: double.infinity,
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            children: List.generate(
+                controller.wallets.length,
+                (index) => Icon(
+                    controller.currentIndex == index
+                        ? Icons.fiber_manual_record
+                        : Icons.fiber_manual_record_outlined,
+                    size: 18)),
+          ).paddingAll(16),
+        ),
       );
+
+  Widget _bottom() => const AppAddTransaction();
 }
