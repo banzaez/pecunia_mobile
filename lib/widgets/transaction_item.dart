@@ -27,10 +27,11 @@ class TransactionItem extends StatelessWidget {
           title: Text.rich(TextSpan(
             children: [
               TextSpan(
-                  text:
-                      "${transaction.amount > 0 ? "transaction_item_income".tr : "transaction_item_expense".tr}: ",
+                  text: transaction.amount > 0
+                      ? "transaction_item_income".tr
+                      : "transaction_item_expense".tr,
                   style: AppTextStyle.text12w400()),
-              TextSpan(text: " ${transaction.category}", style: AppTextStyle.text14w400()),
+              TextSpan(text: " ${transaction.category}", style: AppTextStyle.text14w600()),
             ],
           )),
           subtitle: Text(transaction.amount.formatSum, style: AppTextStyle.text16w400()),
