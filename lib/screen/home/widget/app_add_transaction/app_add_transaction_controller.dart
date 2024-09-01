@@ -28,6 +28,7 @@ class AppAddTransactionController extends GetxController {
   void cleanValues() {
     controllerAmount.clear();
     controllerCategory.clear();
+    showDate.value = false;
   }
 
   void updateValues(Transaction transaction) {

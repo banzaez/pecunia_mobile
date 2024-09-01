@@ -65,10 +65,7 @@ class PickDate extends StatelessWidget {
     required List<PickDateValue> values,
   }) =>
       GestureDetector(
-        onTap: () => pickValue(List.generate(
-          values.length,
-          (index) => valueItem(values[index]),
-        )),
+        onTap: () => pickValue(List.generate(values.length, (index) => valueItem(values[index]))),
         child: _style(format),
       );
 
@@ -185,7 +182,7 @@ class PickDate extends StatelessWidget {
     final list = <PickDateValue>[];
 
     for (int i = 59; i >= 0; --i) {
-      if(!(i % 5 == 0)) continue;
+      if (!(i % 5 == 0)) continue;
       final date = changeDate(minute: i);
 
       list.insert(
