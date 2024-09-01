@@ -4,7 +4,7 @@ import 'package:pecunia/models/transaction.dart';
 import 'package:pecunia/provider/sql_provider.dart';
 
 class TransactionController extends BaseController {
-  final SQLProvider _sqlController = Get.find();
+  final SQLProvider _sqlProvider = Get.find();
 
   final RxInt _walletId = RxInt(0);
 
@@ -32,24 +32,24 @@ class TransactionController extends BaseController {
 
   Future<void> addSQL(Transaction transaction) async {
     transaction.id = _walletId.value;
-    await _sqlController.tableTransactions.add(value: transaction);
+    await _sqlProvider.tableTransactions.add(value: transaction);
     await refreshTransactions();
     notifyListenersSQL("add");
   }
 
   Future<void> updateSQL(Transaction transaction) async {
     transaction.id = _walletId.value;
-    await _sqlController.tableTransactions.update(value: transaction);
+    await _sqlProvider.tableTransactions.update(value: transaction);
     await refreshTransactions();
     notifyListenersSQL("add");
   }
 
   Future<void> deleteSQL(int id) async {
-    await _sqlController.tableTransactions.delete(id: id);
+    await _sqlProvider.tableTransactions.delete(id: id);
     await refreshTransactions();
     notifyListenersSQL("add");
   }
 
   Future<void> refreshTransactions() async => transactions.value =
-      await _sqlController.tableTransactions.selectAllByWalletId(_walletId.value);
+      await _sqlProvider.tableTransactions.selectAllByWalletId(_walletId.value);
 }
