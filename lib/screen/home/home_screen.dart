@@ -66,9 +66,13 @@ class HomeScreen extends GetView<HomeController> {
       );
 
   Widget _dots() => GestureDetector(
-        onPanEnd: _swipeHorizontal,
+        onPanEnd: (details) {
+          final dx = details.velocity.pixelsPerSecond.dx;
+          controller.swipeWallet(dx.sign.toInt());
+        },
         child: Container(
           color: Colors.transparent,
+          padding: const EdgeInsets.all(16),
           width: double.infinity,
           child: Wrap(
             alignment: WrapAlignment.center,
@@ -79,19 +83,10 @@ class HomeScreen extends GetView<HomeController> {
                         ? Icons.fiber_manual_record
                         : Icons.fiber_manual_record_outlined,
                     size: 18)),
-          ).paddingAll(16),
+          ),
         ),
       );
 
-  Widget _bottom() => GestureDetector(
-        onPanEnd: _swipeHorizontal,
-        child: const AppAddTransaction(),
-      );
+  Widget _bottom() => const AppAddTransaction();
 
-// --------------------------------------------------------------------------------------------
-
-  void _swipeHorizontal(details) {
-    final dx = details.velocity.pixelsPerSecond.dx;
-    controller.swipeWallet(dx.sign.toInt());
-  }
 }

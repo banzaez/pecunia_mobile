@@ -42,9 +42,13 @@ class SQLProvider {
             "${_SQLTableTransactions.columnWalletId} INTEGER NOT NULL,"
             "${_SQLTableTransactions.columnAmount} DOUBLE NOT NULL,"
             "${_SQLTableTransactions.columnCategory} TEXT(100) NOT NULL,"
-            "${_SQLTableTransactions.columnCreatedAt} TEXT DEFAULT CURRENT_TIMESTAMP)");
+            "${_SQLTableTransactions.columnCreatedAt} TEXT DEFAULT CURRENT_TIMESTAMP,"
+            "${_SQLTableTransactions.columnDescription} TEXT(512) NOT NULL)");
 
         await db.execute("INSERT INTO ${_SQLTableWallets.tableName} DEFAULT VALUES");
+      },
+      onConfigure: (db) {
+        //db.execute("ALTER TABLE ${_SQLTableTransactions.tableName} ADD COLUMN ${_SQLTableTransactions.columnDescription} TEXT(512) DEFAULT '' NOT NULL");
       },
       onOpen: (db) {
         _database = db;
@@ -123,6 +127,7 @@ class _SQLTableTransactions {
   static const String columnAmount = 'amount';
   static const String columnCategory = 'category';
   static const String columnCreatedAt = 'created_at';
+  static const String columnDescription = 'description';
 
   Future<void> add({required Transaction value}) async => await _database.insert(
         tableName,
@@ -151,6 +156,7 @@ class _SQLTableTransactions {
         columnAmount,
         columnCategory,
         columnCreatedAt,
+        columnDescription,
       ],
       where: "$columnWalletId = ?",
       whereArgs: [walletId],

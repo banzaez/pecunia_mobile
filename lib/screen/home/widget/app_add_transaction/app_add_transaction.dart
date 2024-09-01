@@ -74,7 +74,7 @@ class AppAddTransaction extends StatelessWidget {
             ]),
           ],
         ),
-      ).paddingOnly(bottom: 32);
+      ).paddingOnly(bottom: 32).paddingSymmetric(horizontal: 8);
 
   // ---------------------------------------------------------------------------------------------
 

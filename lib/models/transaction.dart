@@ -13,6 +13,8 @@ class Transaction {
   String category;
   @JsonKey(name: "created_at", fromJson: toDateTime, toJson: fromDateTime)
   DateTime createdAt;
+  @JsonKey(defaultValue: "")
+  String description;
 
   Transaction({
     this.id = 0,
@@ -20,10 +22,11 @@ class Transaction {
     required this.amount,
     required this.category,
     required this.createdAt,
+    required this.description,
   });
 
   factory Transaction.empty() =>
-      Transaction(walletId: 0, amount: 0, category: "", createdAt: DateTime.now());
+      Transaction(walletId: 0, amount: 0, category: "", createdAt: DateTime.now(), description: "");
 
   factory Transaction.fromJson(Map<String, dynamic> json) => _$TransactionFromJson(json);
 

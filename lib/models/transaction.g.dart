@@ -12,6 +12,7 @@ Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction(
       amount: (json['amount'] as num).toDouble(),
       category: json['category'] as String,
       createdAt: toDateTime(json['created_at']),
+      description: json['description'] as String? ?? '',
     );
 
 Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
@@ -21,4 +22,5 @@ Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
       'amount': instance.amount,
       'category': instance.category,
       'created_at': fromDateTime(instance.createdAt),
+      'description': instance.description,
     };
