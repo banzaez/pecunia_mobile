@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pecunia/screen/profile/profile_controller.dart';
 import 'package:pecunia/widgets/setting_wallet/setting_wallet.dart';
 import 'package:pecunia/widgets/wallet_item.dart';
@@ -33,50 +34,60 @@ class ProfileScreen extends GetView<ProfileController> {
 
   // --------------------------------------------------------------------------------------------
 
-  Widget _body() => SingleChildScrollView(
-        child: Column(
-          children: [
-            Obx(() => BoolSwitch(
-                  onChange: (value) => controller.darkTheme.value = value,
-                  textPrimary: "light".tr,
-                  textSecond: "dark".tr,
-                  value: controller.darkTheme.value,
-                )),
-            Text("profile_theme".tr),
-            AppSpaces.v16,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const SettingWallet(),
-                TextButton.icon(
-                  onPressed: () => controller.isEditing.value = true,
-                  icon: const Icon(Icons.edit, color: AppColors.edit),
-                  label: Text(
-                    "profile_edit".tr,
-                    style: AppTextStyle.text14w600(color: AppColors.edit),
-                  ),
-                ),
-              ],
+  Widget _body() => Column(
+    children: [
+      Obx(() => BoolSwitch(
+            onChange: (value) => controller.darkTheme.value = value,
+            textPrimary: "light".tr,
+            textSecond: "dark".tr,
+            value: controller.darkTheme.value,
+          )),
+      Text("profile_theme".tr),
+      AppSpaces.v16,
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          const SettingWallet(),
+          TextButton.icon(
+            onPressed: () => controller.isEditing.value = true,
+            icon: const Icon(Icons.edit, color: AppColors.edit),
+            label: Text(
+              "profile_edit".tr,
+              style: AppTextStyle.text14w600(color: AppColors.edit),
             ),
-            Text("profile_my_wallets".tr),
-            AppSpaces.v16,
-            Obx(() => FlexBuilder(
-                itemCount: controller.wallets.length,
-                itemBuilder: (_, index) => Obx(() => WalletItem(
-                      wallet: controller.wallets[index],
-                      isEditing: controller.isEditing.isTrue,
-                    )))),
-            AppSpaces.v16,
-            Text("profile_support".tr),
-            TextButton(
-              onPressed: _launchUrl,
-              child: const Text(AppConstants.supportEmail),
-            ),
-            AppSpaces.v16,
-            SwitchLanguage(),
-          ],
-        ).paddingAll(16),
-      );
+          ),
+        ],
+      ),
+      Obx(() => FlexBuilder(
+          itemCount: controller.wallets.length,
+          itemBuilder: (_, index) => Obx(() => WalletItem(
+                wallet: controller.wallets[index],
+                isEditing: controller.isEditing.isTrue,
+              )))),
+      AppSpaces.v16,
+      Text("profile_my_wallets".tr),
+      AppSpaces.v16,
+      const Spacer(),
+      SwitchLanguage(),
+      const Spacer(),
+      Text("profile_support".tr),
+      TextButton(
+        onPressed: _launchUrl,
+        child: const Text(AppConstants.supportEmail),
+      ),
+      AppSpaces.v16,
+      FutureBuilder(
+        future: PackageInfo.fromPlatform(),
+        builder: (_, snapshot) => snapshot.hasData
+            ? Text(
+                "${snapshot.data!.packageName} ${snapshot.data!.version}",
+                style: AppTextStyle.text12w400(color: AppColors.disable),
+              )
+            : const SizedBox.shrink(),
+      ),
+      AppSpaces.v32,
+    ],
+  ).paddingAll(16);
 
   Future<void> _launchUrl() async {
     final Uri url = Uri.parse("mailto:${AppConstants.supportEmail}");

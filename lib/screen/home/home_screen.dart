@@ -34,6 +34,7 @@ class HomeScreen extends GetView<HomeController> {
   AppBar _appBar() => AppBar(
         leading: _leading(),
         title: const CurrentWallet(),
+        centerTitle: true,
         actions: [
           _profile(),
         ],
@@ -77,7 +78,7 @@ class HomeScreen extends GetView<HomeController> {
   Widget _bottom() => GestureDetector(
         onHorizontalDragEnd: (details) {
           final dx = details.velocity.pixelsPerSecond.dx;
-          if (dx > 150 || dx < -150) {
+          if (dx > 100 || dx < -100) {
             controller.swipeWallet(dx.sign.toInt());
           }
         },

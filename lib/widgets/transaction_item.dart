@@ -6,7 +6,7 @@ import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/ext_datetime.dart';
 import 'package:pecunia/util/ext_double.dart';
 
-class TransactionItem extends GetWidget<TransactionController> {
+class TransactionItem extends StatelessWidget {
   const TransactionItem({super.key, required this.transaction});
 
   final Transaction transaction;
@@ -14,7 +14,7 @@ class TransactionItem extends GetWidget<TransactionController> {
   @override
   Widget build(BuildContext context) => Dismissible(
         key: Key(transaction.id.toString()),
-        onDismissed: (direction) => controller.deleteSQL(transaction.id),
+        onDismissed: (direction) => Get.find<TransactionController>().deleteSQL(transaction.id),
         confirmDismiss: _confirmDismiss,
         background: Container(color: Colors.red),
         child: ListTile(
