@@ -8,6 +8,7 @@ class AppAddTransactionController extends GetxController {
 
   final TextEditingController controllerAmount = TextEditingController();
   final TextEditingController controllerCategory = TextEditingController();
+  final Rxn<DateTime> datetime = Rxn<DateTime>(DateTime.now());
 
   final errorAmount = RxnString();
   final errorCategory = RxnString();

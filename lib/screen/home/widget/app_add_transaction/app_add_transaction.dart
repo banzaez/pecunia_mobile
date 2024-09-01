@@ -4,6 +4,7 @@ import 'package:pecunia/screen/home/widget/app_add_transaction/app_add_transacti
 import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/widgets/fields/base_field.dart';
 import 'package:pecunia/widgets/fields/number_field.dart';
+import 'package:pecunia/widgets/fields/pick_date.dart';
 
 class AppAddTransaction extends StatelessWidget {
   const AppAddTransaction({super.key});
@@ -28,6 +29,11 @@ class AppAddTransaction extends StatelessWidget {
                 errorText: controller.errorCategory.value,
               ),
             ]),
+            AppSpaces.v8,
+            PickDate(
+              onChanged: (value) => controller.datetime.value = value,
+              initDate: controller.datetime.value,
+            ),
             AppSpaces.v8,
             _bottomRow(children: [
               ElevatedButton(

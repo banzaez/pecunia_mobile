@@ -28,8 +28,8 @@ class CurrencyField extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                borderRadius: AppBorderStyle.borderRadius,
                 border: AppBorderStyle.borderSideBox,
+                borderRadius: AppBorderStyle.borderRadius,
               ),
               padding: const EdgeInsets.symmetric(horizontal: 14),
               height: 48,

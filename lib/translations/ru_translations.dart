@@ -44,4 +44,7 @@ final Map<String, String> ru = {
   "transaction_item_dialog_button_content": "Вы уверены, что хотите удалить этот элемент?",
   "transaction_item_dialog_button_delete": "Удалить",
   "transaction_item_dialog_button_cancel": "Отменить",
+
+  "pick_date_apply": "применить",
+  "pick_date_cancel": "отменить",
 };

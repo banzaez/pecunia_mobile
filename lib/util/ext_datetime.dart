@@ -32,4 +32,8 @@ extension DateTimeExtension on DateTime {
         .difference(DateTime(now.year, now.month, now.day))
         .inDays == 1;
   }
+
+  int get daysInMonth => DateTime(year, month + 1, 0).day;
+
+  String toFormat(String format) => DateFormat(format, _locale).format(this);
 }

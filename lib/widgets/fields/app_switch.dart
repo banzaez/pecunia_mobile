@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pecunia/styles/app_border_style.dart';
 import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 
@@ -30,8 +31,8 @@ class AppSwitch<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.borderColor, width: 2),
-          borderRadius: BorderRadius.circular(8),
+          border: AppBorderStyle.borderSideBox,
+          borderRadius: AppBorderStyle.borderRadius,
         ),
         height: 48,
         width: width ?? double.infinity,
@@ -46,9 +47,9 @@ class AppSwitch<T> extends StatelessWidget {
   Widget _button(String text, T value, bool isActive) => Expanded(
         child: isActive
             ? Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(8)
+                  borderRadius: AppBorderStyle.borderRadius
                 ),
                 height: 40,
                 child: Center(
