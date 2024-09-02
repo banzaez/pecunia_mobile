@@ -56,9 +56,9 @@ class AppAddTransaction extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     if (!controller.isOk()) return;
-                    controller.add(1);
+                    controller.add(-1);
                   },
-                  child: Text("home_button_income".tr),
+                  child: Text("home_button_expense".tr),
                 ),
               ),
               AppSpaces.h8,
@@ -66,9 +66,9 @@ class AppAddTransaction extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     if (!controller.isOk()) return;
-                    controller.add(-1);
+                    controller.add(1);
                   },
-                  child: Text("home_button_expense".tr),
+                  child: Text("home_button_income".tr),
                 ),
               ),
             ]),

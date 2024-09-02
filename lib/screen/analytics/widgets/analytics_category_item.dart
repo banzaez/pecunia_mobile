@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/models/analytics.dart';
+import 'package:pecunia/styles/app_border_style.dart';
 import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/ext_double.dart';
@@ -12,8 +13,20 @@ class AnalyticsCategoryItem extends StatelessWidget {
   final int index;
 
   @override
-  Widget build(BuildContext context) => Card(
-        color: AppColors.backgroundContent,
+  Widget build(BuildContext context) => Container(
+        decoration: BoxDecoration(
+          border: AppBorderStyle.borderItemAnalytic,
+          borderRadius: AppBorderStyle.borderRadius,
+          gradient: LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              AppColors.analyticsItem,
+              analytics.amount > 0 ? Colors.green : Colors.red,
+            ],
+          ),
+        ),
+        margin: const EdgeInsets.all(4),
         child: ListTile(
           leading: Icon(
             Icons.fiber_manual_record,

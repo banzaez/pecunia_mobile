@@ -13,4 +13,7 @@ class AppColors{
   static const Color borderColor = Colors.grey;
 
   static const Color backgroundContent = Colors.white10;
+
+  static const Color analyticsItem = Colors.black12;
+  static const Color analyticsBorder = Colors.white24;
 }

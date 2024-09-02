@@ -76,12 +76,12 @@ class AnalyticsController extends GetxController {
       };
 
   List<Analytics> get category => switch (_type.value) {
-        AnalyticsType.year => _yearsCategory.where((e) => e.date.year == date.year).toList(),
-        AnalyticsType.month => _monthsCategory
-            .where((e) => e.date.year == date.year && e.date.month == date.month)
-            .toList(),
-        AnalyticsType.day => _daysCategory.where((e) => e.date == date).toList(),
-      };
+      AnalyticsType.year => _yearsCategory.where((e) => e.date.year == date.year).toList(),
+      AnalyticsType.month => _monthsCategory
+          .where((e) => e.date.year == date.year && e.date.month == date.month)
+          .toList(),
+      AnalyticsType.day => _daysCategory.where((e) => e.date == date).toList(),
+    };
 }
 
 enum AnalyticsType {
