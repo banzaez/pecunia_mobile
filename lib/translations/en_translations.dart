@@ -44,4 +44,6 @@ final Map<String, String> en = {
   "transaction_item_dialog_button_content": "Are you sure you wish to delete this item?",
   "transaction_item_dialog_button_delete": "Delete",
   "transaction_item_dialog_button_cancel": "Cancel",
+
+  "analytics_title": "Analytics",
 };

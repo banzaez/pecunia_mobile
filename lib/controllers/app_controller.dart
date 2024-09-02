@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 
 class AppController extends GetxController {
-
   @override
   void onInit() {
     super.onInit();
@@ -18,10 +17,12 @@ class AppController extends GetxController {
 
 enum AppScreens {
   home,
+  analytics,
   profile;
 
   String get route => switch (this) {
         home => "/",
         profile => "/profile",
+        analytics => "/analytics",
       };
 }

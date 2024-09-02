@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pecunia/controllers/app_controller.dart';
 import 'package:pecunia/provider/sql_provider.dart';
+import 'package:pecunia/screen/analytics/analitics_binding.dart';
+import 'package:pecunia/screen/analytics/analytics_screen.dart';
 import 'package:pecunia/screen/home/home_binding.dart';
 import 'package:pecunia/screen/home/home_screen.dart';
 import 'package:pecunia/screen/profile/profile_binding.dart';
@@ -50,10 +52,8 @@ class MyApp extends StatelessWidget {
         themeMode: ThemeMode.dark,
         getPages: [
           GetPage(name: '/', page: () => const HomeScreen(), binding: HomeBinding()),
-          GetPage(
-              name: AppScreens.profile.route,
-              page: () => const ProfileScreen(),
-              binding: ProfileBinding()),
+          GetPage(name: AppScreens.analytics.route, page: () => const AnalyticsScreen(), binding: AnalyticsBinding()),
+          GetPage(name: AppScreens.profile.route, page: () => const ProfileScreen(), binding: ProfileBinding()),
         ]);
   }
 

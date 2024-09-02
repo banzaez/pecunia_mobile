@@ -56,6 +56,8 @@ class HomeController extends BaseController {
 
   // ----------NAVIGATION------------------------------------------------------------------------
 
+  void goToAnalytics() => _appController.goToScreen(AppScreens.analytics);
+
   void goToProfile() => _appController.goToScreen(AppScreens.profile);
 
 }

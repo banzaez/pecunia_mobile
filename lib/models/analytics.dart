@@ -7,19 +7,16 @@ part 'analytics.g.dart';
 class Analytics {
 
   @JsonKey(fromJson: toInt)
-  final int? group;
-  @JsonKey(defaultValue: [])
-  final List<Analytics>? subgroup;
+  final int group;
   final String? category;
-  final double? amount;
-  final double? sum;
+  final double amount;
+  final DateTime date;
 
   const Analytics({
-    this.group,
-    this.subgroup,
+    required this.group,
     this.category,
-    this.amount,
-    this.sum,
+    required this.amount,
+    required this.date,
   });
 
   factory Analytics.fromJson(Map<String, dynamic> json) =>

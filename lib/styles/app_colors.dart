@@ -11,4 +11,6 @@ class AppColors{
   static const MaterialColor primary = Colors.blue;
 
   static const Color borderColor = Colors.grey;
+
+  static const Color backgroundContent = Colors.white10;
 }

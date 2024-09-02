@@ -5,7 +5,7 @@ import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/widgets/fields/base_field.dart';
 import 'package:pecunia/widgets/fields/number_field.dart';
-import 'package:pecunia/widgets/fields/pick_date.dart';
+import 'package:pecunia/widgets/fields/pick_date/pick_date.dart';
 
 class AppAddTransaction extends StatelessWidget {
   const AppAddTransaction({super.key});
@@ -46,7 +46,7 @@ class AppAddTransaction extends StatelessWidget {
             Visibility(
               visible: controller.showDate.isTrue,
               child: PickDate(
-                onChanged: (value) => controller.datetime.value = value!,
+                onChanged: (value, type) => controller.datetime.value = value!,
                 initDate: controller.datetime.value,
               ),
             ),
