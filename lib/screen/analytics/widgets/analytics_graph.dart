@@ -40,12 +40,13 @@ class AnalyticsGraph extends StatelessWidget {
         final background = Colors.primaries[index % Colors.primaries.length];
         return PieChartSectionData(
           color: background,
+          //borderSide: const BorderSide(color: Colors.white, width: 0.5),
           badgeWidget: _badge(name: data[index].category ?? "", color: background),
           badgePositionPercentageOffset: .98,
           showTitle: false,
           radius: 100,
           title: data[index].category,
-          value: data[index].amount,
+          value: data[index].amount.abs(),
         );
       });
 }
