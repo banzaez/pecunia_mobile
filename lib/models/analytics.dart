@@ -11,12 +11,15 @@ class Analytics {
   final String? category;
   final double amount;
   final DateTime date;
+  @JsonKey(name: "id")
+  final int count;
 
   const Analytics({
     required this.group,
     this.category,
     required this.amount,
     required this.date,
+    required this.count,
   });
 
   factory Analytics.fromJson(Map<String, dynamic> json) =>

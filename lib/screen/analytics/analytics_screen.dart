@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/screen/analytics/analytics_controller.dart';
+import 'package:pecunia/screen/analytics/widgets/analytics_category_item.dart';
+import 'package:pecunia/styles/app_text_style.dart';
+import 'package:pecunia/util/app_spaces.dart';
+import 'package:pecunia/util/ext_double.dart';
 import 'package:pecunia/widgets/fields/pick_date/pick_date.dart';
 
 class AnalyticsScreen extends GetView<AnalyticsController> {
@@ -27,14 +31,35 @@ class AnalyticsScreen extends GetView<AnalyticsController> {
 
   Widget _body() => Obx(() => Column(
         children: [
+          _amount(),
+          AppSpaces.v16,
+          _category(),
           PickDate(
-            onChanged: (value, type) => controller.setDateTime(value!, type),
-            initDate: controller.dateTime,
+            onChanged: (value, type) => controller.setDate(value!, type),
+            initDate: controller.date,
             enableTime: false,
             isYearSelected: controller.isYearSelected,
             isMonthSelected: controller.isMonthSelected,
             isDaySelected: controller.isDaySelected,
           ),
+          AppSpaces.v32,
         ],
       ));
+
+  // --------------------------------------------------------------------------------------------
+
+  Widget _amount() => Obx(() => Text(
+        controller.amount?.formatSum ?? "0",
+        style: AppTextStyle.text22w400(),
+      ));
+
+  Widget _category() => Expanded(
+        child: Obx(() => ListView.builder(
+              itemCount: controller.category.length,
+              itemBuilder: (_, index) => AnalyticsCategoryItem(
+                analytics: controller.category[index],
+                index: index,
+              ),
+            )),
+      );
 }

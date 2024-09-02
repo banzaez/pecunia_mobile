@@ -46,4 +46,6 @@ final Map<String, String> ru = {
   "transaction_item_dialog_button_cancel": "Отменить",
 
   "analytics_title": "Analytics",
+
+  "analytics_category_item_count" : "транзакций",
 };

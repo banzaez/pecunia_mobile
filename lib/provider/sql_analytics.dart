@@ -9,14 +9,16 @@ class SQLAnalytics {
   Future<List<Analytics>> analyticsById(int walletId, String formatDate) async {
     final maps = await _database.rawQuery("with preresult as ("
         "SELECT "
-        "strftime('%Y', created_at) as date_group, "
-        "created_at as date, "
+        "_id as id, "
+        "strftime('$formatDate', created_at) as date_group, "
+        "date(created_at, 'start of day') as date, "
         "amount FROM transactions "
-        "WHERE wallet_id = 1)"
+        "WHERE wallet_id = $walletId)"
         ""
         "SELECT "
         "date_group as 'group', "
         "MIN(date) as date, "
+        "COUNT(id) as id, "
         "SUM(amount) as amount "
         "FROM preresult "
         "GROUP BY date_group "
@@ -29,14 +31,17 @@ class SQLAnalytics {
   Future<List<Analytics>> analyticsCategoryById(int walletId, String formatDate) async {
     final maps = await _database.rawQuery("with preresult as ("
         "SELECT "
-        "strftime('%Y', created_at) as date_group, "
-        "created_at as date, category, "
+        "_id as id, "
+        "strftime('$formatDate', created_at) as date_group, "
+        "date(created_at, 'start of day') as date, "
+        "category, "
         "amount FROM transactions "
-        "WHERE wallet_id = 1)"
+        "WHERE wallet_id = $walletId)"
         ""
         "SELECT date_group as 'group', "
         "category, "
         "date, "
+        "COUNT(id) as id, "
         "SUM(amount) as amount "
         "FROM preresult "
         "GROUP BY date_group, category "
@@ -51,9 +56,9 @@ class SQLAnalytics {
       analyticsById(walletId, "%Y"),
       analyticsCategoryById(walletId, "%Y"),
       analyticsById(walletId, "%m"),
-      analyticsCategoryById(walletId, "%Y"),
+      analyticsCategoryById(walletId, "%m"),
       analyticsById(walletId, "%d"),
-      analyticsCategoryById(walletId, "%Y"),
+      analyticsCategoryById(walletId, "%d"),
     ]);
 
     return results;

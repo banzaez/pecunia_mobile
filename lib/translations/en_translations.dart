@@ -46,4 +46,6 @@ final Map<String, String> en = {
   "transaction_item_dialog_button_cancel": "Cancel",
 
   "analytics_title": "Analytics",
+
+  "analytics_category_item_count" : "transactions",
 };
