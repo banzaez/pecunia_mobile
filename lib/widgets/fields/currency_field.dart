@@ -1,6 +1,7 @@
 import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pecunia/controllers/storage_controller.dart';
 import 'package:pecunia/styles/app_border_style.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 
@@ -19,7 +20,9 @@ class CurrencyField extends StatelessWidget {
           showSearchField: true,
           showCurrencyName: true,
           showCurrencyCode: true,
-         // favorite: ['usd', 'eur'],
+          favorite: [
+            Get.find<StorageController>().currency?.code ?? "",
+          ],
           onSelect: onChange,
         ),
         child: Column(
@@ -33,10 +36,13 @@ class CurrencyField extends StatelessWidget {
               ),
               padding: const EdgeInsets.symmetric(horizontal: 14),
               height: 48,
-              width: double.infinity,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(currency?.name ?? ""),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(currency?.name ?? ""),
+                  Text(currency?.symbol ?? ""),
+                  Text(currency?.code ?? ""),
+                ],
               ),
             ),
             if (errorText != null)

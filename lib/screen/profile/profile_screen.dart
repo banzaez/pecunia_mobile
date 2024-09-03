@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pecunia/screen/profile/profile_controller.dart';
 import 'package:pecunia/widgets/fields/app_switch.dart';
+import 'package:pecunia/widgets/fields/currency_field.dart';
 import 'package:pecunia/widgets/setting_wallet/setting_wallet.dart';
 import 'package:pecunia/widgets/wallet_item.dart';
 import 'package:pecunia/styles/app_colors.dart';
@@ -46,6 +47,12 @@ class ProfileScreen extends GetView<ProfileController> {
                 value: controller.darkTheme.value,
               )),
           Text("profile_theme".tr),
+          AppSpaces.v16,
+          Obx(() => CurrencyField(
+                onChange: (value) => controller.currency = value,
+                currency: controller.currency,
+              )),
+          Text("profile_main_currency".tr),
           AppSpaces.v16,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

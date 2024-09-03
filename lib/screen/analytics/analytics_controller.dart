@@ -43,11 +43,19 @@ class AnalyticsController extends GetxController {
 
   bool get isDaySelected => _type.value == AnalyticsType.day;
 
+  List<int> get valuesYear => _years.map((e) => e.date.year).toList();
+
+  List<int> get valuesMonth =>
+      _months.where((e) => e.date.year == _date.value.year).map((e) => e.date.month).toList();
+
+  List<int> get valuesDay =>
+      _months.where((e) => e.date.year == _date.value.year).map((e) => e.date.month).toList();
+
   //----------INIT-------------------------------------------------------------------------------
 
   @override
-  void onReady() {
-    super.onReady();
+  void onInit() {
+    super.onInit();
 
     _refreshAnalytics();
   }
@@ -76,12 +84,12 @@ class AnalyticsController extends GetxController {
       };
 
   List<Analytics> get category => switch (_type.value) {
-      AnalyticsType.year => _yearsCategory.where((e) => e.date.year == date.year).toList(),
-      AnalyticsType.month => _monthsCategory
-          .where((e) => e.date.year == date.year && e.date.month == date.month)
-          .toList(),
-      AnalyticsType.day => _daysCategory.where((e) => e.date == date).toList(),
-    };
+        AnalyticsType.year => _yearsCategory.where((e) => e.date.year == date.year).toList(),
+        AnalyticsType.month => _monthsCategory
+            .where((e) => e.date.year == date.year && e.date.month == date.month)
+            .toList(),
+        AnalyticsType.day => _daysCategory.where((e) => e.date == date).toList(),
+      };
 }
 
 enum AnalyticsType {

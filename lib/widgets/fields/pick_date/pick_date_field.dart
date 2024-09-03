@@ -31,6 +31,7 @@ class PickDateField extends StatelessWidget {
         onTap: () => appBottomSheet(
           Wrap(children: _getValues(values: values)).paddingOnly(bottom: 64),
         ),
+        onLongPress: () => onChanged(initDate!),
         child: Container(
           decoration: BoxDecoration(
             color: isSelected ? AppColors.primary : AppColors.backgroundContent,

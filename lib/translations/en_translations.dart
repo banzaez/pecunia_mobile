@@ -13,6 +13,7 @@ final Map<String, String> en = {
   "profile_title": "Profile settings",
   "profile_my_wallets": "my wallets",
   "profile_theme": "theme",
+  "profile_main_currency": "main currency",
   "profile_support": "support",
   "profile_edit": "edit",
 

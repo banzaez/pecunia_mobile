@@ -1,10 +1,8 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/screen/analytics/analytics_controller.dart';
 import 'package:pecunia/screen/analytics/widgets/analytics_category_item.dart';
 import 'package:pecunia/screen/analytics/widgets/analytics_graph.dart';
-import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/util/ext_double.dart';
@@ -47,6 +45,9 @@ class AnalyticsScreen extends GetView<AnalyticsController> {
             isYearSelected: controller.isYearSelected,
             isMonthSelected: controller.isMonthSelected,
             isDaySelected: controller.isDaySelected,
+            valuesYear: controller.valuesYear,
+            valuesMonth: controller.valuesMonth,
+            valuesDay: controller.valuesMonth,
           ),
           AppSpaces.v32,
         ],

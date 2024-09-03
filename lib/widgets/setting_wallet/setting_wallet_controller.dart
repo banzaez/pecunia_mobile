@@ -2,11 +2,14 @@ import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/controllers/base_controller.dart';
+import 'package:pecunia/controllers/storage_controller.dart';
 import 'package:pecunia/controllers/wallet_controller.dart';
 import 'package:pecunia/models/wallet.dart';
 
 class SettingWalletController extends BaseController {
   SettingWalletController({required this.wallet});
+
+  final StorageController _storageController = Get.find();
 
   final Wallet? wallet;
   final WalletController _walletController = Get.find();
@@ -26,7 +29,10 @@ class SettingWalletController extends BaseController {
   void onInit() {
     super.onInit();
 
-    if(wallet == null) return;
+    if(wallet == null) {
+      currency.value = _storageController.currency;
+      return;
+    }
 
     nameController.text = wallet!.name;
     descriptionController.text = wallet!.description;

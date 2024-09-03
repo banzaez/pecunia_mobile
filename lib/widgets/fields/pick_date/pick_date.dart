@@ -17,11 +17,22 @@ class PickDate extends StatelessWidget {
     this.isYearSelected = false,
     this.isMonthSelected = false,
     this.isDaySelected = false,
+    List<int>? valuesYear,
+    List<int>? valuesMonth,
+    List<int>? valuesDay,
   }) {
-    valuesYear.fillOfRange(firstDate.year, start: lastDate.year);
-    valuesYear.sort((a, b) => (b.compareTo(a)));
-    valuesMonth.fillOfRange(12, start: 1);
-    valuesDay.fillOfRange(initDate?.daysInMonth ?? 0, start: 1);
+    valuesYear == null
+        ? this.valuesYear.fillOfRange(firstDate.year, start: lastDate.year)
+        : this.valuesYear.addAll(valuesYear);
+    this.valuesYear.sort((a, b) => (b.compareTo(a)));
+
+    valuesMonth == null
+        ? this.valuesMonth.fillOfRange(12, start: 1)
+        : this.valuesMonth.addAll(valuesMonth);
+    valuesDay == null
+        ? this.valuesDay.fillOfRange(initDate?.daysInMonth ?? 0, start: 1)
+        : this.valuesMonth.addAll(valuesDay);
+
     valuesHour.fillOfRange(23, start: 0);
     valuesMinute.fillOfRange(59, start: 0, step: 5);
   }

@@ -13,6 +13,7 @@ final Map<String, String> ru = {
   "profile_title": "Настройки профиля",
   "profile_my_wallets": "мои кошельки",
   "profile_theme": "тема",
+  "profile_main_currency": "основная валюта",
   "profile_support": "поддержка",
   "profile_edit": "редактировать",
 

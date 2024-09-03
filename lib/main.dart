@@ -1,9 +1,9 @@
-import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pecunia/controllers/app_controller.dart';
+import 'package:pecunia/controllers/storage_controller.dart';
 import 'package:pecunia/provider/sql_provider.dart';
 import 'package:pecunia/screen/analytics/analitics_binding.dart';
 import 'package:pecunia/screen/analytics/analytics_screen.dart';
@@ -19,10 +19,11 @@ import 'package:pecunia/util/app_constants.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final sqlController = Get.put(SQLProvider(), permanent: true);
-  await sqlController.initAsync();
+  final sql = Get.put(SQLProvider(), permanent: true);
+  await sql.initAsync();
 
-  await GetStorage.init();
+  final storage = Get.put(StorageController(), permanent: true);
+  await storage.initAsync();
 
   Get.put(AppTranslations(), permanent: true);
   Get.put(AppController(), permanent: true);
@@ -52,15 +53,21 @@ class MyApp extends StatelessWidget {
         themeMode: ThemeMode.dark,
         getPages: [
           GetPage(name: '/', page: () => const HomeScreen(), binding: HomeBinding()),
-          GetPage(name: AppScreens.analytics.route, page: () => const AnalyticsScreen(), binding: AnalyticsBinding()),
-          GetPage(name: AppScreens.profile.route, page: () => const ProfileScreen(), binding: ProfileBinding()),
+          GetPage(
+              name: AppScreens.analytics.route,
+              page: () => const AnalyticsScreen(),
+              binding: AnalyticsBinding()),
+          GetPage(
+              name: AppScreens.profile.route,
+              page: () => const ProfileScreen(),
+              binding: ProfileBinding()),
         ]);
   }
 
   //----------SET-LOCALE-------------------------------------------------------------------------
 
   Locale? _localeResolutionCallback(locale, supportedLocales) {
-    final GetStorage getStorage = GetStorage();
+    final StorageController storageController = Get.find();
 
     Locale currentLocale = supportedLocales.first;
 
@@ -71,13 +78,11 @@ class MyApp extends StatelessWidget {
     }
 
     if (Get.locale == null) {
-      final List? localeStorage = getStorage.read("locale")?.split("_");
-      currentLocale =
-          localeStorage == null ? currentLocale : Locale(localeStorage.first, localeStorage.last);
+      currentLocale = storageController.locale ?? currentLocale;
       Get.updateLocale(currentLocale);
     }
 
-    getStorage.write("locale", currentLocale.toString());
+    storageController.locale = currentLocale;
 
     return currentLocale;
   }
