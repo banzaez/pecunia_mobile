@@ -44,15 +44,23 @@ class AnalyticsScreen extends GetView<AnalyticsController> {
                   child: Column(
                     children: [
                       Text("analytics_category_period".tr.format([controller.periodStr])),
+                      AppSpaces.v16,
                       Flexible(
                         flex: 2,
-                        child: AnalyticsGraph(
-                          data: controller.category,
-                          isTotal: controller.filter == AnalyticsFilter.total,
+                        child: Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            AnalyticsGraph(
+                              data: controller.category,
+                              isTotal: controller.filter == AnalyticsFilter.total,
+                            ),
+                            Positioned(
+                              right: 38,
+                              child: _amount(),
+                            ),
+                          ],
                         ),
                       ),
-                      AppSpaces.v16,
-                      _amount(),
                       AppSpaces.v16,
                       Expanded(flex: 3, child: _category()),
                       AppSpaces.v16,
@@ -97,6 +105,7 @@ class AnalyticsScreen extends GetView<AnalyticsController> {
   // --------------------------------------------------------------------------------------------
 
   Widget _amount() => Obx(() => Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: [
           Text("${"analytics_total_period".tr} ", style: AppTextStyle.text12w400()),

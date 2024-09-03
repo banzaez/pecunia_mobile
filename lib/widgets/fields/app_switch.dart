@@ -20,8 +20,6 @@ class AppSwitch<T> extends StatelessWidget {
 
   final ValueChanged<T> onChange;
 
-  final double height = 48;
-
   @override
   Widget build(BuildContext context) => Container(
         decoration: BoxDecoration(
@@ -31,34 +29,35 @@ class AppSwitch<T> extends StatelessWidget {
         height: 48,
         width: width ?? double.infinity,
         child: Row(
-          children: List.generate(values.length, (i) => _button(values[i])),
+          children: List.generate(values.length, (i) => Expanded(child: _button(values[i]))),
         ),
-      );
-
-  Widget _button(AppSwitchValue item) => Expanded(
-        child: value == item.value
-            ? Container(
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: item.color ?? AppColors.primary,
-                  borderRadius: AppBorderStyle.borderRadius,
-                ),
-                margin: const EdgeInsets.all(4),
-                child: _labelText(item.label, active: true),
-              )
-            : GestureDetector(
-                onTap: () => onChange.call(item.value),
-                child: _labelText(item.label, active: false),
-              ),
       );
 
   // --------------------------------------------------------------------------------------------
 
-  Widget _labelText(String label, {required bool active}) => Text(
-        label,
-        style: AppTextStyle.text14w600(color: active ? null : AppColors.disable),
+  Widget _button(AppSwitchValue item) {
+    final isActive = item.value == value;
+    final widget = Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: isActive ? item.color ?? AppColors.primary : null,
+        borderRadius: AppBorderStyle.borderRadius,
+      ),
+      margin: const EdgeInsets.all(4),
+      child: Text(
+        item.label,
+        style: AppTextStyle.text14w600(color: isActive ? null : AppColors.disable),
         textAlign: TextAlign.center,
-      );
+      ),
+    );
+
+    return isActive
+        ? widget
+        : GestureDetector(
+            onTap: () => onChange.call(item.value),
+            child: widget,
+          );
+  }
 }
 
 class AppSwitchValue<T> {
