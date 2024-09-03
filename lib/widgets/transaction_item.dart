@@ -65,7 +65,7 @@ class TransactionItem extends StatelessWidget {
 
   Widget _description() {
     if(transaction.description.isEmpty) return const SizedBox.shrink();
-    var chars = transaction.description.substring(1, min(transaction.description.length, 25));
+    var chars = transaction.description.substring(0, min(transaction.description.length, 25));
     chars = chars + (chars.length < transaction.description.length ? "..." : "");
     return Text(chars, style: AppTextStyle.text12w400());
   }
