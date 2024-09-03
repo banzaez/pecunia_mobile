@@ -8,19 +8,12 @@ class AppSwitch<T> extends StatelessWidget {
   const AppSwitch({
     super.key,
     required this.onChange,
-    required this.textPrimary,
-    required this.textSecond,
-    required this.valuePrimary,
-    required this.valueSecond,
+    required this.values,
     required this.value,
     this.width,
   });
 
-  final String textPrimary;
-  final String textSecond;
-
-  final T valuePrimary;
-  final T valueSecond;
+  final List<AppSwitchValue<T>> values;
 
   final T value;
 
@@ -37,36 +30,45 @@ class AppSwitch<T> extends StatelessWidget {
         height: 48,
         width: width ?? double.infinity,
         child: Row(
-          children: [
-            _button(textPrimary, valuePrimary, value == valuePrimary),
-            _button(textSecond, valueSecond, value == valueSecond),
-          ],
+          children: List.generate(values.length, (i) => _button(values[i])),
         ),
       );
 
-  Widget _button(String text, T value, bool isActive) => Expanded(
-        child: isActive
+  Widget _button(AppSwitchValue item) => Expanded(
+        child: value == item.value
             ? Container(
-                decoration: const BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: AppBorderStyle.borderRadius
+                decoration: BoxDecoration(
+                  color: item.color ?? AppColors.primary,
+                  borderRadius: AppBorderStyle.borderRadius,
                 ),
                 height: 40,
                 child: Center(
                   child: Text(
-                    text,
+                    item.label,
                     style: AppTextStyle.text14w600(),
                     textAlign: TextAlign.center,
                   ),
                 ),
               ).paddingAll(4)
             : GestureDetector(
-                onTap: () => onChange.call(value),
+                onTap: () => onChange.call(item.value),
                 child: Text(
-                  text,
+                  item.label,
                   style: AppTextStyle.text14w600(color: AppColors.disable),
                   textAlign: TextAlign.center,
                 ),
               ),
       );
+}
+
+class AppSwitchValue<T> {
+  AppSwitchValue({
+    required this.label,
+    required this.value,
+    this.color,
+  });
+
+  final String label;
+  final T value;
+  final Color? color;
 }

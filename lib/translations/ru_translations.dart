@@ -46,9 +46,12 @@ final Map<String, String> ru = {
   "transaction_item_dialog_button_delete": "Удалить",
   "transaction_item_dialog_button_cancel": "Отменить",
 
-  "analytics_title": "Analytics",
+  "analytics_title": "Аналитика",
 
   "analytics_category_item_count" : "транзакций",
-  "analytics_category_period" : "аналитика за период %1\$",
-  "analytics_category_empty" : "аналитики за период %1\$ нет",
+  "analytics_category_period" : "за период %1\$ года",
+  "analytics_category_empty" : "аналитики за период %1\$ года нет",
+  "analytics_income": "доходы",
+  "analytics_expenses": "расходы",
+  "analytics_total": "суммарно",
 };

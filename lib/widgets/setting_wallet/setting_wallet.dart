@@ -60,10 +60,10 @@ class SettingWallet extends StatelessWidget {
               AppSpaces.v16,
               AppSwitch<bool>(
                 onChange: (value) => controller.showBalance.value = value,
-                textPrimary: "no".tr,
-                textSecond: "yes".tr,
-                valuePrimary: false,
-                valueSecond: true,
+                values: [
+                  AppSwitchValue(label: "no".tr, value: false),
+                  AppSwitchValue(label: "yes".tr, value: true),
+                ],
                 value: controller.showBalance.value,
                 width: 256,
               ),
@@ -71,10 +71,10 @@ class SettingWallet extends StatelessWidget {
               AppSpaces.v16,
               AppSwitch<bool>(
                 onChange: (value) => controller.isRoundUp.value = value,
-                textPrimary: "no".tr,
-                textSecond: "yes".tr,
-                valuePrimary: false,
-                valueSecond: true,
+                values: [
+                  AppSwitchValue(label: "no".tr, value: false),
+                  AppSwitchValue(label: "yes".tr, value: true),
+                ],
                 value: controller.isRoundUp.value,
                 width: 256,
               ),

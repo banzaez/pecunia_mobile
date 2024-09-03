@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:pecunia/controllers/transaction_controller.dart';
 import 'package:pecunia/models/analytics.dart';
 import 'package:pecunia/models/transaction.dart';
+import 'package:pecunia/provider/sql_analytics.dart';
 import 'package:pecunia/provider/sql_provider.dart';
 import 'package:pecunia/util/ext_datetime.dart';
 import 'package:pecunia/widgets/fields/pick_date/pick_date_field.dart';
@@ -23,25 +24,40 @@ class AnalyticsController extends GetxController {
 
   setDate(DateTime value, PickDateTypeField type) {
     if (type == PickDateTypeField.year) {
-      _type.value = AnalyticsType.year;
+      _period.value = AnalyticsPeriod.year;
     } else if (type == PickDateTypeField.month) {
-      _type.value = AnalyticsType.month;
+      _period.value = AnalyticsPeriod.month;
     } else if (type == PickDateTypeField.day) {
-      _type.value = AnalyticsType.day;
+      _period.value = AnalyticsPeriod.day;
     }
 
     _date.value = value.startOfDay;
   }
 
-  final Rx<AnalyticsType> _type = AnalyticsType.year.obs;
+  final Rx<AnalyticsFilter> _filter = AnalyticsFilter.total.obs;
+
+  AnalyticsFilter get filter => _filter.value;
+
+  set filter(AnalyticsFilter value) {
+    _filter.value = value;
+    _refreshAnalytics();
+  }
+
+  final Rx<AnalyticsPeriod> _period = AnalyticsPeriod.year.obs;
 
   List<Transaction> get transactionList => _transactionController.transactions;
 
-  bool get isYearSelected => _type.value == AnalyticsType.year;
+  String get periodStr => switch (_period.value) {
+        AnalyticsPeriod.year => date.toFormat("yyyy"),
+        AnalyticsPeriod.month => date.toFormat("MMMM yyyy"),
+        AnalyticsPeriod.day => date.toFormat("dd MMMM yyyy"),
+      };
 
-  bool get isMonthSelected => _type.value == AnalyticsType.month;
+  bool get isYearSelected => _period.value == AnalyticsPeriod.year;
 
-  bool get isDaySelected => _type.value == AnalyticsType.day;
+  bool get isMonthSelected => _period.value == AnalyticsPeriod.month;
+
+  bool get isDaySelected => _period.value == AnalyticsPeriod.day;
 
   List<int> get valuesYear => _years.map((e) => e.date.year).toList();
 
@@ -65,7 +81,8 @@ class AnalyticsController extends GetxController {
   //---------------------------------------------------------------------------------------------
 
   Future<void> _refreshAnalytics() async {
-    final results = await _sqlProvider.analytics.analytics(_transactionController.walletId);
+    final results = await _sqlProvider.analytics
+        .allAnalytics(walletId: _transactionController.walletId, filter: filter);
 
     _years.value = results[0];
     _yearsCategory.value = results[1];
@@ -77,25 +94,19 @@ class AnalyticsController extends GetxController {
 
   //---------------------------------------------------------------------------------------------
 
-  double? get amount => switch (_type.value) {
-        AnalyticsType.year => _years.firstWhereOrNull((e) => e.date.year == date.year)?.amount,
-        AnalyticsType.month => _months
+  double? get amount => switch (_period.value) {
+        AnalyticsPeriod.year => _years.firstWhereOrNull((e) => e.date.year == date.year)?.amount,
+        AnalyticsPeriod.month => _months
             .firstWhereOrNull((e) => e.date.year == date.year && e.date.month == date.month)
             ?.amount,
-        AnalyticsType.day => _days.firstWhereOrNull((e) => e.date == date)?.amount,
+        AnalyticsPeriod.day => _days.firstWhereOrNull((e) => e.date == date)?.amount,
       };
 
-  List<Analytics> get category => switch (_type.value) {
-        AnalyticsType.year => _yearsCategory.where((e) => e.date.year == date.year).toList(),
-        AnalyticsType.month => _monthsCategory
+  List<Analytics> get category => switch (_period.value) {
+        AnalyticsPeriod.year => _yearsCategory.where((e) => e.date.year == date.year).toList(),
+        AnalyticsPeriod.month => _monthsCategory
             .where((e) => e.date.year == date.year && e.date.month == date.month)
             .toList(),
-        AnalyticsType.day => _daysCategory.where((e) => e.date == date).toList(),
+        AnalyticsPeriod.day => _daysCategory.where((e) => e.date == date).toList(),
       };
-}
-
-enum AnalyticsType {
-  year,
-  month,
-  day,
 }

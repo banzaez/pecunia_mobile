@@ -40,10 +40,10 @@ class ProfileScreen extends GetView<ProfileController> {
         children: [
           Obx(() => AppSwitch<ThemeMode>(
                 onChange: (value) => controller.darkTheme.value = value,
-                textPrimary: "light".tr,
-                textSecond: "dark".tr,
-                valuePrimary: ThemeMode.light,
-                valueSecond: ThemeMode.dark,
+                values: [
+                  AppSwitchValue(label: "light".tr, value: ThemeMode.light),
+                  AppSwitchValue(label: "dark".tr, value: ThemeMode.dark),
+                ],
                 value: controller.darkTheme.value,
               )),
           Text("profile_theme".tr),
