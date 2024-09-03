@@ -54,4 +54,5 @@ final Map<String, String> en = {
   "analytics_income": "income",
   "analytics_expenses": "expenses",
   "analytics_total": "total",
+  "analytics_total_period": "total",
 };

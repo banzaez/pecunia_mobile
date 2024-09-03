@@ -91,9 +91,12 @@ class AnalyticsScreen extends GetView<AnalyticsController> {
 
   // --------------------------------------------------------------------------------------------
 
-  Widget _amount() => Obx(() => Text(
-        controller.amount?.formatSum ?? "0",
-        style: AppTextStyle.text22w400(),
+  Widget _amount() => Obx(() => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text("${"analytics_total_period".tr} ", style: AppTextStyle.text12w400()),
+          Text(controller.amount?.formatSum ?? "0", style: AppTextStyle.text18w400()),
+        ],
       ));
 
   Widget _category() => Obx(() => ListView.builder(

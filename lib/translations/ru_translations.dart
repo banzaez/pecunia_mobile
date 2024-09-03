@@ -54,4 +54,5 @@ final Map<String, String> ru = {
   "analytics_income": "доходы",
   "analytics_expenses": "расходы",
   "analytics_total": "суммарно",
+  "analytics_total_period": "итого",
 };
