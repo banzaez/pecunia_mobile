@@ -31,23 +31,23 @@ class TransactionController extends BaseController {
   // -----------SQL------------------------------------------------------------------------------
 
   Future<void> addSQL(Transaction transaction) async {
-    transaction.id = _walletId.value;
+    transaction.walletId = _walletId.value;
     await _sqlProvider.transactions.add(value: transaction);
     await refreshTransactions();
     notifyListenersSQL("add");
   }
 
   Future<void> updateSQL(Transaction transaction) async {
-    transaction.id = _walletId.value;
+    transaction.walletId = _walletId.value;
     await _sqlProvider.transactions.update(value: transaction);
     await refreshTransactions();
-    notifyListenersSQL("add");
+    notifyListenersSQL("update");
   }
 
   Future<void> deleteSQL(int id) async {
     await _sqlProvider.transactions.delete(id: id);
     await refreshTransactions();
-    notifyListenersSQL("add");
+    notifyListenersSQL("delete");
   }
 
   Future<void> refreshTransactions() async => transactions.value =

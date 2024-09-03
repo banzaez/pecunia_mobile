@@ -33,7 +33,7 @@ class CurrentWallet extends GetWidget<HomeController> {
   Widget _item(wallet) => GestureDetector(
         onTap: () {
           controller.currentWallet = wallet;
-          Get.close();
+          Get.backLegacy();
         },
         child: WalletItem(wallet: wallet, isEditing: false),
       );

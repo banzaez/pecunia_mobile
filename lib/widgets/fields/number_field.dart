@@ -4,6 +4,7 @@ import 'package:pecunia/widgets/fields/base_field.dart';
 class NumberField extends BaseField {
   NumberField({
     super.key,
+    super.autofocus,
     super.controller,
     super.hintText,
     super.labelText,

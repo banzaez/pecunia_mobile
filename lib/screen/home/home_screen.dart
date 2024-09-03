@@ -98,5 +98,5 @@ class HomeScreen extends GetView<HomeController> {
         ),
       );
 
-  Widget _bottom() => const AppAddTransaction();
+  Widget _bottom() => const AppAddTransaction().paddingSymmetric(horizontal: 16);
 }

@@ -10,7 +10,4 @@ abstract class AppBorderStyle{
   static const borderSideEnabled = BorderSide(color: AppColors.borderColor, width: 2);
   static const borderSideError = BorderSide(color: AppColors.error, width: 2);
   static final borderSideBox = Border.all(color: AppColors.borderColor, width: 2);
-
-  static final borderItemAnalytic = Border.all(color: AppColors.analyticsBorder, width: 1);
-
 }

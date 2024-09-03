@@ -39,6 +39,6 @@ class PickDateValue extends StatelessWidget {
 
   void _onTap() {
     onTap(date);
-    Get.close();
+    Get.backLegacy();
   }
 }

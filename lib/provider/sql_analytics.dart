@@ -69,7 +69,7 @@ class SQLAnalytics {
         "SUM(amount) as amount "
         "FROM preresult "
         "GROUP BY date_group, category "
-        "ORDER BY date_group DESC");
+        "ORDER BY SUM(amount)");
 
     return List.generate(maps.length, (index) => Analytics.fromJson(maps[index]));
   }

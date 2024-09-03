@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:pecunia/styles/app_border_style.dart';
 import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/styles/app_text_style.dart';
@@ -21,6 +20,8 @@ class AppSwitch<T> extends StatelessWidget {
 
   final ValueChanged<T> onChange;
 
+  final double height = 48;
+
   @override
   Widget build(BuildContext context) => Container(
         decoration: BoxDecoration(
@@ -37,27 +38,26 @@ class AppSwitch<T> extends StatelessWidget {
   Widget _button(AppSwitchValue item) => Expanded(
         child: value == item.value
             ? Container(
+                alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: item.color ?? AppColors.primary,
                   borderRadius: AppBorderStyle.borderRadius,
                 ),
-                height: 40,
-                child: Center(
-                  child: Text(
-                    item.label,
-                    style: AppTextStyle.text14w600(),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ).paddingAll(4)
+                margin: const EdgeInsets.all(4),
+                child: _labelText(item.label, active: true),
+              )
             : GestureDetector(
                 onTap: () => onChange.call(item.value),
-                child: Text(
-                  item.label,
-                  style: AppTextStyle.text14w600(color: AppColors.disable),
-                  textAlign: TextAlign.center,
-                ),
+                child: _labelText(item.label, active: false),
               ),
+      );
+
+  // --------------------------------------------------------------------------------------------
+
+  Widget _labelText(String label, {required bool active}) => Text(
+        label,
+        style: AppTextStyle.text14w600(color: active ? null : AppColors.disable),
+        textAlign: TextAlign.center,
       );
 }
 

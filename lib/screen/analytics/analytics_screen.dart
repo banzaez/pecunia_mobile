@@ -45,12 +45,16 @@ class AnalyticsScreen extends GetView<AnalyticsController> {
                     children: [
                       Text("analytics_category_period".tr.format([controller.periodStr])),
                       Flexible(
-                        child: AnalyticsGraph(data: controller.category),
+                        flex: 2,
+                        child: AnalyticsGraph(
+                          data: controller.category,
+                          isTotal: controller.filter == AnalyticsFilter.total,
+                        ),
                       ),
                       AppSpaces.v16,
                       _amount(),
                       AppSpaces.v16,
-                      _category(),
+                      Expanded(flex: 3, child: _category()),
                       AppSpaces.v16,
                     ],
                   ),
@@ -58,19 +62,20 @@ class AnalyticsScreen extends GetView<AnalyticsController> {
           Column(
             children: [
               AppSwitch(
-                  onChange: (value) => controller.filter = value,
-                  values: List.generate(
-                    AnalyticsFilter.values.length,
-                    (i) => AppSwitchValue(
-                        label: AnalyticsFilter.values[i].label,
-                        value: AnalyticsFilter.values[i],
-                        color: i == 0
-                            ? Colors.green
-                            : i == 1
-                                ? Colors.red
-                                : null),
-                  ),
-                  value: controller.filter),
+                      onChange: (value) => controller.filter = value,
+                      values: List.generate(
+                        AnalyticsFilter.values.length,
+                        (i) => AppSwitchValue(
+                            label: AnalyticsFilter.values[i].label,
+                            value: AnalyticsFilter.values[i],
+                            color: i == 0
+                                ? Colors.green
+                                : i == 1
+                                    ? Colors.red
+                                    : null),
+                      ),
+                      value: controller.filter)
+                  .paddingSymmetric(horizontal: 16),
               AppSpaces.v16,
               PickDate(
                 onChanged: (value, type) => controller.setDate(value!, type),

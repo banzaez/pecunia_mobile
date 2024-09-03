@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/models/analytics.dart';
 import 'package:pecunia/styles/app_border_style.dart';
-import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/styles/app_text_style.dart';
+import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/util/ext_double.dart';
 
 class AnalyticsCategoryItem extends StatelessWidget {
@@ -15,37 +15,49 @@ class AnalyticsCategoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         decoration: BoxDecoration(
-          border: AppBorderStyle.borderItemAnalytic,
           borderRadius: AppBorderStyle.borderRadius,
           gradient: LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: [
-              AppColors.analyticsItem,
-              analytics.amount > 0 ? Colors.green : Colors.red,
+              analytics.amount > 0 ? Colors.green.withOpacity(.25) : Colors.red.withOpacity(.25),
+              analytics.amount > 0
+                  ? Colors.greenAccent.withOpacity(.7)
+                  : Colors.redAccent.withOpacity(.7),
             ],
           ),
         ),
-        margin: const EdgeInsets.all(4),
-        child: ListTile(
-          leading: Icon(
-            Icons.fiber_manual_record,
-            color: Colors.primaries[index % Colors.primaries.length],
-          ),
-          title: Text(analytics.category ?? ""),
-          subtitle: Text.rich(TextSpan(
-            children: [
-              TextSpan(
-                text: "${"analytics_category_item_count".tr} ",
-                style: AppTextStyle.text10w400(),
-              ),
-              TextSpan(
-                text: analytics.count.toString(),
-                style: AppTextStyle.text12w400(),
-              ),
-            ],
-          )),
-          trailing: Text(analytics.amount.formatSum, style: AppTextStyle.text16w600()),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+        child: Row(
+          children: [
+            Icon(
+              Icons.fiber_manual_record,
+              color: Colors.primaries[index % Colors.primaries.length],
+            ),
+            AppSpaces.h24,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(analytics.category ?? ""),
+                Text.rich(TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "${"analytics_category_item_count".tr} ",
+                      style: AppTextStyle.text10w400(),
+                    ),
+                    TextSpan(
+                      text: analytics.count.toString(),
+                      style: AppTextStyle.text12w400(),
+                    ),
+                  ],
+                ))
+              ],
+            ),
+            const Spacer(),
+            Text(analytics.amount.formatSum, style: AppTextStyle.text16w600())
+          ],
         ),
       );
 }

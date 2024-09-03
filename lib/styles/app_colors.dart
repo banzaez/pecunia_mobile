@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppColors{
+class AppColors {
   AppColors._();
 
   static const Color background = Colors.black;
@@ -13,7 +13,4 @@ class AppColors{
   static const Color borderColor = Colors.grey;
 
   static const Color backgroundContent = Colors.white10;
-
-  static const Color analyticsItem = Colors.black12;
-  static const Color analyticsBorder = Colors.white24;
 }

@@ -99,6 +99,6 @@ class SettingWallet extends StatelessWidget {
       controller.updateSettings(update!);
       onChange?.call(update!);
     }
-    Get.close();
+    Get.backLegacy();
   }
 }

@@ -22,7 +22,7 @@ class AppAddTransaction extends StatelessWidget {
                 flex: 1,
                 child: NumberField(
                   controller: controller.controllerAmount,
-                  labelText: "home_button_summa".tr,
+                  labelText: "home_button_amount".tr,
                   errorText: controller.errorAmount.value,
                 ),
               ),

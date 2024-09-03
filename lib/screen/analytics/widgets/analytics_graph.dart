@@ -3,24 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:pecunia/models/analytics.dart';
 import 'package:pecunia/styles/app_border_style.dart';
 import 'package:pecunia/styles/app_text_style.dart';
+import 'package:pecunia/util/ext_double.dart';
 
 class AnalyticsGraph extends StatelessWidget {
-  const AnalyticsGraph({super.key, required this.data});
+  const AnalyticsGraph({super.key, required this.data, required this.isTotal});
 
+  final bool isTotal;
   final List<Analytics> data;
 
   @override
-  Widget build(BuildContext context) => AspectRatio(
-    aspectRatio: 1.8,
-    child: PieChart(
-      PieChartData(
-        borderData: FlBorderData(
-          show: false,
-        ),
-        sectionsSpace: 0,
-        centerSpaceRadius: 0,
-        sections: _graphItem(),
+  Widget build(BuildContext context) => PieChart(
+    PieChartData(
+      borderData: FlBorderData(
+        show: false,
       ),
+      sectionsSpace: 0,
+      centerSpaceRadius: 0,
+      sections: _graphItem(),
     ),
   );
 
@@ -38,15 +37,15 @@ class AnalyticsGraph extends StatelessWidget {
 
   List<PieChartSectionData> _graphItem() => List.generate(data.length, (index) {
         final background = Colors.primaries[index % Colors.primaries.length];
+        final item = data[index];
         return PieChartSectionData(
           color: background,
-          //borderSide: const BorderSide(color: Colors.white, width: 0.5),
-          badgeWidget: _badge(name: data[index].category ?? "", color: background),
+          badgeWidget: _badge(name: item.category ?? "", color: background),
           badgePositionPercentageOffset: .98,
-          showTitle: false,
-          radius: 100,
-          title: data[index].category,
-          value: data[index].amount.abs(),
+          radius: item.amount.isNegative ? 100 : 80,
+          title: item.amount.formatSum,
+          titleStyle: AppTextStyle.text12w400(),
+          value: item.amount.abs(),
         );
       });
 }

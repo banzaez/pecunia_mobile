@@ -2,14 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/controllers/transaction_controller.dart';
 import 'package:pecunia/models/transaction.dart';
+import 'package:pecunia/util/ext_double.dart';
+import 'package:pecunia/util/ext_string.dart';
 
-class AppAddTransactionController extends GetxController {
+class TransactionEditController extends GetxController {
+  TransactionEditController(this._transaction);
+
   final TransactionController _transactionController = Get.find();
+
+  final Transaction _transaction;
 
   final TextEditingController controllerAmount = TextEditingController();
   final TextEditingController controllerCategory = TextEditingController();
+  final TextEditingController controllerDescription = TextEditingController();
   final Rx<DateTime> datetime = Rx<DateTime>(DateTime.now());
-  final RxBool showDate = RxBool(false);
+
+  final RxInt i = RxInt(-1); // -1 or +1
 
   final errorAmount = RxnString();
   final errorCategory = RxnString();
@@ -20,21 +28,24 @@ class AppAddTransactionController extends GetxController {
   void onInit() {
     super.onInit();
 
-    showDate.addListener(() => datetime.value = DateTime.now());
+    fillField();
   }
 
   // ----------VALUES----------------------------------------------------------------------------
 
-  void cleanValues() {
-    controllerAmount.clear();
-    controllerCategory.clear();
-    showDate.value = false;
+  void fillField() {
+    controllerAmount.text = _transaction.amount.abs().formatSum.toSortable();
+    controllerCategory.text = _transaction.category;
+    controllerDescription.text = _transaction.description;
+    datetime.value = _transaction.createdAt;
+    i.value = _transaction.amount == 0 ? -1 : _transaction.amount.sign.toInt();
   }
 
-  void updateValues(Transaction transaction) {
-    transaction.amount = double.tryParse(controllerAmount.text) ?? 0;
-    transaction.category = controllerCategory.text;
-    transaction.createdAt = showDate.isTrue ? datetime.value : DateTime.now();
+  void updateValues() {
+    _transaction.amount = (double.tryParse(controllerAmount.text.toSortable()) ?? 0) * i.value;
+    _transaction.category = controllerCategory.text;
+    _transaction.description = controllerDescription.text;
+    _transaction.createdAt = datetime.value;
   }
 
   bool isOk() {
@@ -46,11 +57,9 @@ class AppAddTransactionController extends GetxController {
 
   // ----------SQL-------------------------------------------------------------------------------
 
-  void add(int i) {
-    final transaction = Transaction.empty();
-    updateValues(transaction);
-    transaction.amount = transaction.amount * i;
-    _transactionController.addSQL(transaction);
-    cleanValues();
+  bool edit() {
+    updateValues();
+    _transactionController.updateSQL(_transaction);
+    return true;
   }
 }
