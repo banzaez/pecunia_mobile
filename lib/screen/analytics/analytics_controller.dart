@@ -46,10 +46,12 @@ class AnalyticsController extends GetxController {
   List<int> get valuesYear => _years.map((e) => e.date.year).toList();
 
   List<int> get valuesMonth =>
-      _months.where((e) => e.date.year == _date.value.year).map((e) => e.date.month).toList();
+      _months.where((e) => e.date.year == date.year).map((e) => e.date.month).toList();
 
-  List<int> get valuesDay =>
-      _months.where((e) => e.date.year == _date.value.year).map((e) => e.date.month).toList();
+  List<int> get valuesDay => _days
+      .where((e) => e.date.year == date.year && e.date.month == date.month)
+      .map((e) => e.date.day)
+      .toList();
 
   //----------INIT-------------------------------------------------------------------------------
 

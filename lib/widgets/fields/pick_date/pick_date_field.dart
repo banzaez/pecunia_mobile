@@ -29,7 +29,13 @@ class PickDateField extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GestureDetector(
         onTap: () => appBottomSheet(
-          Wrap(children: _getValues(values: values)).paddingOnly(bottom: 64),
+          SizedBox(
+            width: double.infinity,
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              children: _getValues(values: values),
+            ).paddingOnly(bottom: 64),
+          ),
         ),
         onLongPress: () => onChanged(initDate!),
         child: Container(

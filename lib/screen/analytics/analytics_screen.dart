@@ -32,12 +32,22 @@ class AnalyticsScreen extends GetView<AnalyticsController> {
 
   Widget _body() => Obx(() => Column(
         children: [
-          AnalyticsGraph(data: controller.category),
-          AppSpaces.v16,
-          _amount(),
-          AppSpaces.v16,
-          _category(),
-          AppSpaces.v16,
+          controller.category.isEmpty
+              ? Expanded(child: Center(child: Text("analytics_category_empty".tr)))
+              : Expanded(
+                  child: Column(
+                    children: [
+                      Flexible(
+                        child: AnalyticsGraph(data: controller.category),
+                      ),
+                      AppSpaces.v16,
+                      _amount(),
+                      AppSpaces.v16,
+                      _category(),
+                      AppSpaces.v16,
+                    ],
+                  ),
+                ),
           PickDate(
             onChanged: (value, type) => controller.setDate(value!, type),
             initDate: controller.date,
@@ -47,7 +57,7 @@ class AnalyticsScreen extends GetView<AnalyticsController> {
             isDaySelected: controller.isDaySelected,
             valuesYear: controller.valuesYear,
             valuesMonth: controller.valuesMonth,
-            valuesDay: controller.valuesMonth,
+            valuesDay: controller.valuesDay,
           ),
           AppSpaces.v32,
         ],
@@ -60,13 +70,12 @@ class AnalyticsScreen extends GetView<AnalyticsController> {
         style: AppTextStyle.text22w400(),
       ));
 
-  Widget _category() => Expanded(
-        child: Obx(() => ListView.builder(
-              itemCount: controller.category.length,
-              itemBuilder: (_, index) => AnalyticsCategoryItem(
-                analytics: controller.category[index],
-                index: index,
-              ),
-            )),
-      );
+  Widget _category() => Obx(() => ListView.builder(
+        shrinkWrap: true,
+        itemCount: controller.category.length,
+        itemBuilder: (_, index) => AnalyticsCategoryItem(
+          analytics: controller.category[index],
+          index: index,
+        ),
+      ));
 }

@@ -10,19 +10,19 @@ class AnalyticsGraph extends StatelessWidget {
   final List<Analytics> data;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-        height: 200,
-        child: PieChart(
-          PieChartData(
-            borderData: FlBorderData(
-              show: false,
-            ),
-            sectionsSpace: 0,
-            centerSpaceRadius: 0,
-            sections: _graphItem(),
-          ),
+  Widget build(BuildContext context) => AspectRatio(
+    aspectRatio: 1.8,
+    child: PieChart(
+      PieChartData(
+        borderData: FlBorderData(
+          show: false,
         ),
-      );
+        sectionsSpace: 0,
+        centerSpaceRadius: 0,
+        sections: _graphItem(),
+      ),
+    ),
+  );
 
   // ----------ITEM------------------------------------------------------------------------------
 

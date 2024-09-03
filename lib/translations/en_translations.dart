@@ -49,4 +49,6 @@ final Map<String, String> en = {
   "analytics_title": "Analytics",
 
   "analytics_category_item_count" : "transactions",
+  "analytics_category_period" : "analytics for the period %1\$",
+  "analytics_category_empty" : "there are no analytics for the period %1\$",
 };

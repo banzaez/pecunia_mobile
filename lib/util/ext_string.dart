@@ -12,4 +12,13 @@ extension ExtString on String {
   String toWithoutSpace() => replaceAll(' ', '');
 
   String toSortable() => toLowerCase().replaceAll(' ', '');
+
+  String format(List<String> params) {
+    String result = this;
+    for (int i = 1; i <= params.length; i++) {
+      result = result.replaceAll('%$i\$', params[i - 1]);
+    }
+
+    return result;
+  }
 }

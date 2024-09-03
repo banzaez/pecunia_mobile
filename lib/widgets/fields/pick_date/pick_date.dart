@@ -24,14 +24,16 @@ class PickDate extends StatelessWidget {
     valuesYear == null
         ? this.valuesYear.fillOfRange(firstDate.year, start: lastDate.year)
         : this.valuesYear.addAll(valuesYear);
-    this.valuesYear.sort((a, b) => (b.compareTo(a)));
-
     valuesMonth == null
         ? this.valuesMonth.fillOfRange(12, start: 1)
         : this.valuesMonth.addAll(valuesMonth);
     valuesDay == null
         ? this.valuesDay.fillOfRange(initDate?.daysInMonth ?? 0, start: 1)
-        : this.valuesMonth.addAll(valuesDay);
+        : this.valuesDay.addAll(valuesDay);
+
+    this.valuesYear.sort((a, b) => (b.compareTo(a)));
+    this.valuesMonth.sort((a, b) => (a.compareTo(b)));
+    this.valuesDay.sort((a, b) => (a.compareTo(b)));
 
     valuesHour.fillOfRange(23, start: 0);
     valuesMinute.fillOfRange(59, start: 0, step: 5);

@@ -50,8 +50,6 @@ class SQLProvider {
         await db.execute("INSERT INTO ${SQLTableWallets.tableName} DEFAULT VALUES");
       },
       onConfigure: (db) {
-        db.execute(
-            "ALTER TABLE ${SQLTableTransactions.tableName} ADD COLUMN ${SQLTableTransactions.columnDescription} TEXT(512) DEFAULT '' NOT NULL");
       },
       onOpen: (db) {
         _database = db;

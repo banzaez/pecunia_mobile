@@ -49,4 +49,6 @@ final Map<String, String> ru = {
   "analytics_title": "Analytics",
 
   "analytics_category_item_count" : "транзакций",
+  "analytics_category_period" : "аналитика за период %1\$",
+  "analytics_category_empty" : "аналитики за период %1\$ нет",
 };

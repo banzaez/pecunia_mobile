@@ -6,14 +6,18 @@ class SQLAnalytics {
 
   final sql.Database _database;
 
+  String _preQuery(int walletId, String formatDate) => "with preresult as ("
+      "SELECT "
+      "_id as id, "
+      "strftime('$formatDate', created_at) as date_group, "
+      "date(created_at, 'start of day') as date, "
+      "category, "
+      "amount FROM transactions "
+      "WHERE wallet_id = $walletId)";
+
   Future<List<Analytics>> analyticsById(int walletId, String formatDate) async {
-    final maps = await _database.rawQuery("with preresult as ("
-        "SELECT "
-        "_id as id, "
-        "strftime('$formatDate', created_at) as date_group, "
-        "date(created_at, 'start of day') as date, "
-        "amount FROM transactions "
-        "WHERE wallet_id = $walletId)"
+    final maps = await _database.rawQuery(""
+        "${_preQuery(walletId, formatDate)}"
         ""
         "SELECT "
         "date_group as 'group', "
@@ -29,14 +33,8 @@ class SQLAnalytics {
   }
 
   Future<List<Analytics>> analyticsCategoryById(int walletId, String formatDate) async {
-    final maps = await _database.rawQuery("with preresult as ("
-        "SELECT "
-        "_id as id, "
-        "strftime('$formatDate', created_at) as date_group, "
-        "date(created_at, 'start of day') as date, "
-        "category, "
-        "amount FROM transactions "
-        "WHERE wallet_id = $walletId)"
+    final maps = await _database.rawQuery(""
+        "${_preQuery(walletId, formatDate)}"
         ""
         "SELECT date_group as 'group', "
         "category, "
@@ -55,10 +53,10 @@ class SQLAnalytics {
     final results = await Future.wait([
       analyticsById(walletId, "%Y"),
       analyticsCategoryById(walletId, "%Y"),
-      analyticsById(walletId, "%m"),
-      analyticsCategoryById(walletId, "%m"),
-      analyticsById(walletId, "%d"),
-      analyticsCategoryById(walletId, "%d"),
+      analyticsById(walletId, "%Y%m"),
+      analyticsCategoryById(walletId, "%Y%m"),
+      analyticsById(walletId, "%Y%m%d"),
+      analyticsCategoryById(walletId, "%Y%m%d"),
     ]);
 
     return results;
