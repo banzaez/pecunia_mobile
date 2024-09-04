@@ -35,7 +35,7 @@ class HomeScreen extends GetView<HomeController> {
           label: Text("analytics_title".tr, style: AppTextStyle.text16w400()),
         ),
       );
-
+  
   Widget _profile() => IconButton(
         onPressed: controller.goToProfile,
         icon: const Icon(Icons.account_box),
