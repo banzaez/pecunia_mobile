@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 0.1.1+2
+version: 0.1.2+3
 
 environment:
   sdk: ^3.5.1
@@ -25,7 +25,7 @@ dependencies:
   flutter_multi_formatter: ^2.13.0
   json_annotation: ^4.9.0
   package_info_plus: ^8.0.2
-  phone_numbers_parser: ^8.3.0
+  phone_numbers_parser: ^9.0.0
   sqflite: ^2.3.3+1
   url_launcher: ^6.3.0
 
