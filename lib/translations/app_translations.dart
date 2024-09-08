@@ -1,9 +1,12 @@
 import 'dart:ui';
-
-import 'package:countries_flag/countries_flag.dart';
 import 'package:get/get.dart';
-import 'package:pecunia/translations/en_translations.dart';
-import 'package:pecunia/translations/ru_translations.dart';
+import 'package:pecunia/translations/app_translation.dart';
+import 'package:pecunia/translations/en_translation.dart';
+import 'package:pecunia/translations/es_translation.dart';
+import 'package:pecunia/translations/fr_translation.dart';
+import 'package:pecunia/translations/pl_translation.dart';
+import 'package:pecunia/translations/ru_translation.dart';
+import 'package:pecunia/translations/ua_translation.dart';
 
 class LocaleItem {
   String name;
@@ -14,11 +17,14 @@ class LocaleItem {
 }
 
 class AppTranslations extends Translations {
-
   //----->>>>>-----add-here----->>>>>------------------------------------------------------------
-  List<LocaleItem> localeItems = [
-    LocaleItem(name: "English", locale: const Locale('en', 'US'), flag: Flags.england),
-    LocaleItem(name: "Русский", locale: const Locale('ru', 'RU'), flag: Flags.russia),
+  List<AppTranslation> localeItems = [
+    EnTranslation(),
+    EsTranslation(),
+    FrTranslation(),
+    PlTranslation(),
+    RuTranslation(),
+    UaTranslation(),
   ];
   //-----<<<<<-----add-here-----<<<<<------------------------------------------------------------
 
@@ -27,8 +33,6 @@ class AppTranslations extends Translations {
   void setLocale(Locale locale) => Get.updateLocale(locale);
 
   @override
-  Map<String, Map<String, String>> get keys => {
-        'en': en,
-        'ru': ru,
-      };
+  Map<String, Map<String, String>> get keys =>
+      {for (var v in localeItems) v.locale.languageCode: v.keys};
 }

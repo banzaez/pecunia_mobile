@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/styles/app_text_style.dart';
+import 'package:pecunia/translations/app_translation.dart';
 import 'package:pecunia/translations/app_translations.dart';
 import 'package:pecunia/util/app_spaces.dart';
 
@@ -26,7 +27,7 @@ class SwitchLanguage extends StatelessWidget {
 
   //---------------------------------------------------------------------------------------------
 
-  DropdownMenuItem _item({required LocaleItem item}) => DropdownMenuItem(
+  DropdownMenuItem _item({required AppTranslation item}) => DropdownMenuItem(
         value: item.locale,
         child: Row(
           children: [
