@@ -40,8 +40,9 @@ class MyApp extends StatelessWidget {
     final AppTranslations appTranslations = Get.find();
     return GetMaterialApp(
         debugShowCheckedModeBanner: !AppConstants.isProdServer,
-        supportedLocales: appTranslations.localeList,
+        supportedLocales: appTranslations.locales,
         translations: appTranslations,
+        fallbackLocale: appTranslations.locales.first,
         localizationsDelegates: const [
           GlobalCupertinoLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,

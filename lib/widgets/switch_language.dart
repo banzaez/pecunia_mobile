@@ -16,7 +16,7 @@ class SwitchLanguage extends StatelessWidget {
   Widget build(BuildContext context) => DropdownButton(
         onChanged: (value) => _appTranslations.setLocale(value!),
         value: Get.locale,
-        items: _appTranslations.localeItems.map((e) => _item(item: e)).toList(),
+        items: _appTranslations.translations.map((e) => _item(item: e)).toList(),
         autofocus: false,
         borderRadius: BorderRadius.circular(8),
         padding: EdgeInsets.zero,

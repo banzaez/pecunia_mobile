@@ -8,17 +8,10 @@ import 'package:pecunia/translations/pl_translation.dart';
 import 'package:pecunia/translations/ru_translation.dart';
 import 'package:pecunia/translations/ua_translation.dart';
 
-class LocaleItem {
-  String name;
-  Locale locale;
-  String flag;
-
-  LocaleItem({required this.name, required this.locale, required this.flag});
-}
 
 class AppTranslations extends Translations {
   //----->>>>>-----add-here----->>>>>------------------------------------------------------------
-  List<AppTranslation> localeItems = [
+  List<AppTranslation> translations = [
     EnTranslation(),
     EsTranslation(),
     FrTranslation(),
@@ -28,11 +21,11 @@ class AppTranslations extends Translations {
   ];
   //-----<<<<<-----add-here-----<<<<<------------------------------------------------------------
 
-  List<Locale> get localeList => localeItems.map((e) => e.locale).toList();
+  List<Locale> get locales => translations.map((e) => e.locale).toList();
 
   void setLocale(Locale locale) => Get.updateLocale(locale);
 
   @override
   Map<String, Map<String, String>> get keys =>
-      {for (var v in localeItems) v.locale.languageCode: v.keys};
+      {for (var v in translations) v.locale.languageCode: v.keys};
 }
