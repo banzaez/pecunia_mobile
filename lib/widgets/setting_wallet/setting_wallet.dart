@@ -36,9 +36,13 @@ class SettingWallet extends StatelessWidget {
           builder: (controller) => Column(
             children: [
               AppSpaces.v8,
-              update == null
-                  ? Text("setting_wallet_title_add".tr, style: AppTextStyle.text22w400())
-                  : Text("setting_wallet_title_update".tr, style: AppTextStyle.text22w400()),
+              Center(
+                child: Text(
+                  update == null ? "setting_wallet_title_add".tr : "setting_wallet_title_update".tr,
+                  style: AppTextStyle.text16w400(),
+                  textAlign: TextAlign.center,
+                ),
+              ),
               AppSpaces.v16,
               BaseField(
                 controller: controller.nameController,
