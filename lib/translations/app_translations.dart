@@ -8,9 +8,7 @@ import 'package:pecunia/translations/pl_translation.dart';
 import 'package:pecunia/translations/ru_translation.dart';
 import 'package:pecunia/translations/ua_translation.dart';
 
-
 class AppTranslations extends Translations {
-
   //----->>>>>-----add-here----->>>>>------------------------------------------------------------
   List<AppTranslation> translations = [
     EnTranslation(),
@@ -20,6 +18,7 @@ class AppTranslations extends Translations {
     RuTranslation(),
     UaTranslation(),
   ];
+
   //-----<<<<<-----add-here-----<<<<<------------------------------------------------------------
 
   List<Locale> get locales => translations.map((e) => e.locale).toList();
