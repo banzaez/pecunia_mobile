@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AppColors {
   AppColors._();
 
-  static const Color background = Colors.black;
+  static Color get background => Get.isDarkMode ? Colors.black : Colors.white;
+
   static const Color disable = Colors.grey;
   static const Color error = Colors.red;
   static const Color edit = Colors.red;

@@ -7,6 +7,10 @@ class AppThemes {
   AppThemes._();
 
   static ThemeData get theme => ThemeData(
+        bottomSheetTheme: const BottomSheetThemeData(
+          backgroundColor: Colors.white,
+        ),
+        dialogBackgroundColor: Colors.white,
         elevatedButtonTheme: _elevatedButtonTheme,
         primarySwatch: AppColors.primary,
         primaryColor: AppColors.primary,
@@ -25,6 +29,10 @@ class AppThemes {
       );
 
   static ThemeData get darkTheme => ThemeData(
+        bottomSheetTheme: const BottomSheetThemeData(
+          backgroundColor: Colors.white,
+        ),
+        dialogBackgroundColor: Colors.black,
         elevatedButtonTheme: _elevatedButtonTheme,
         primarySwatch: AppColors.primary,
         primaryColor: AppColors.primary,
