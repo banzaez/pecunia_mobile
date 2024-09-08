@@ -10,6 +10,7 @@ import 'package:pecunia/translations/ua_translation.dart';
 
 
 class AppTranslations extends Translations {
+
   //----->>>>>-----add-here----->>>>>------------------------------------------------------------
   List<AppTranslation> translations = [
     EnTranslation(),
