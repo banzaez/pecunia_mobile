@@ -51,7 +51,7 @@ class Transfer extends StatelessWidget {
                     Expanded(
                       child: NumberField(
                         controller: controller.amount,
-                        labelText: "amount".tr,
+                        labelText: "transfer_amount".tr,
                       ),
                     ),
                     AppSpaces.h16,
