@@ -68,6 +68,16 @@ class EsTranslation extends AppTranslation {
         "tran_dialog_edit_expenses": "gasto",
         "tran_dialog_edit_amount": "cantidad",
         "tran_dialog_edit_category": "categoría",
-        "tran_dialog_edit_description": "nota"
+        "tran_dialog_edit_description": "nota",
+        "wallet_field_empty": "elige una billetera",
+        "transfer_title": "transferencia entre billeteras",
+        "transfer_amount": "cantidad",
+        "transfer_exchange_rate": "tasa de cambio",
+        "transfer_total": "total",
+        "transfer_done": "listo",
+        "transfer_error_wallet": "Selecciona billeteras diferentes",
+        "transfer_description": "transferencia de %1\$ a %2\$, tasa de cambio %3\$",
+        "from": "de",
+        "to": "a",
       };
 }

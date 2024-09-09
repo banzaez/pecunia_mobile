@@ -70,6 +70,16 @@ class PlTranslation extends AppTranslation {
         "tran_dialog_edit_expenses": "wydatek",
         "tran_dialog_edit_amount": "kwota",
         "tran_dialog_edit_category": "kategoria",
-        "tran_dialog_edit_description": "uwaga"
+        "tran_dialog_edit_description": "uwaga",
+        "wallet_field_empty": "wybierz portfel",
+        "transfer_title": "przelew między portfelami",
+        "transfer_amount": "kwota",
+        "transfer_exchange_rate": "kurs wymiany",
+        "transfer_total": "suma",
+        "transfer_done": "gotowe",
+        "transfer_error_wallet": "Wybierz różne portfele",
+        "transfer_description": "przelew z %1\$ do %2\$, kurs wymiany %3\$",
+        "from": "z",
+        "to": "do"
       };
 }

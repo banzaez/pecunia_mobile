@@ -68,6 +68,16 @@ class FrTranslation extends AppTranslation {
         "tran_dialog_edit_expenses": "dépense",
         "tran_dialog_edit_amount": "montant",
         "tran_dialog_edit_category": "catégorie",
-        "tran_dialog_edit_description": "note"
+        "tran_dialog_edit_description": "note",
+        "wallet_field_empty": "choisissez un portefeuille",
+        "transfer_title": "transfert entre portefeuilles",
+        "transfer_amount": "montant",
+        "transfer_exchange_rate": "taux de change",
+        "transfer_total": "total",
+        "transfer_done": "terminé",
+        "transfer_error_wallet": "Sélectionnez des portefeuilles différents",
+        "transfer_description": "transfert de %1\$ à %2\$, taux de change %3\$",
+        "from": "de",
+        "to": "à"
       };
 }
