@@ -30,7 +30,7 @@ class AppThemes {
 
   static ThemeData get darkTheme => ThemeData(
         bottomSheetTheme: const BottomSheetThemeData(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.black,
         ),
         dialogBackgroundColor: Colors.black,
         elevatedButtonTheme: _elevatedButtonTheme,

@@ -57,6 +57,7 @@ class TransactionEdit extends StatelessWidget {
                 _sizeField(
                   child: BaseField(
                     controller: controller.controllerDescription,
+                    maxLines: 3,
                     labelText: "tran_dialog_edit_description".tr,
                   ),
                 ),

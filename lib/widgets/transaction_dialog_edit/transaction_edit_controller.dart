@@ -4,6 +4,7 @@ import 'package:pecunia/controllers/transaction_controller.dart';
 import 'package:pecunia/models/transaction.dart';
 import 'package:pecunia/util/ext_double.dart';
 import 'package:pecunia/util/ext_string.dart';
+import 'package:pecunia/widgets/fields/number_field.dart';
 
 class TransactionEditController extends GetxController {
   TransactionEditController(this._transaction);
@@ -12,7 +13,7 @@ class TransactionEditController extends GetxController {
 
   final Transaction _transaction;
 
-  final TextEditingController controllerAmount = TextEditingController();
+  final NumberEditingController controllerAmount = NumberEditingController();
   final TextEditingController controllerCategory = TextEditingController();
   final TextEditingController controllerDescription = TextEditingController();
   final Rx<DateTime> datetime = Rx<DateTime>(DateTime.now());

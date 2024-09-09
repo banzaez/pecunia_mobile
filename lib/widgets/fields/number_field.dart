@@ -1,24 +1,54 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pecunia/widgets/fields/base_field.dart';
 
-class NumberField extends BaseField {
-  NumberField({
+class NumberField extends StatelessWidget {
+  final NumberEditingController? controller;
+  final ValueChanged<num>? onChanged;
+  final bool autofocus;
+  final num? initialValue;
+  final String? hintText;
+  final String? labelText;
+  final String? errorText;
+  final bool enabled;
+  final bool showLabel;
+  final FormFieldValidator<String>? validator;
+
+  const NumberField({
     super.key,
-    super.autofocus,
-    super.controller,
-    super.hintText,
-    super.labelText,
-    super.validator,
-    super.showLabel,
-    super.errorText,
-    bool super.enabled = true,
-    super.initialValue,
-    ValueChanged? super.onChanged,
-    super.onEditingComplete,
-  }) : super(
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp(r'^\d+[,.]?\d{0,2}')),
-          ],
-        );
+    this.controller,
+    this.onChanged,
+    this.autofocus = false,
+    this.initialValue,
+    this.hintText,
+    this.labelText,
+    this.errorText,
+    this.enabled = true,
+    this.showLabel = true,
+    this.validator,
+  });
+
+  @override
+  Widget build(BuildContext context) => BaseField(
+        controller: controller,
+        initialValue: initialValue?.toString(),
+        autofocus: autofocus,
+        enabled: enabled,
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r'^\d+[,.]?\d{0,2}')),
+        ],
+        hintText: hintText,
+        showLabel: showLabel,
+        labelText: labelText,
+        errorText: errorText,
+        validator: validator,
+        onChanged: (value) => onChanged?.call(num.tryParse(value) ?? 0),
+      );
+}
+
+class NumberEditingController extends TextEditingController {
+  num get number => num.tryParse(super.text.replaceAll(",", ".")) ?? 0;
+
+  set number(num value) => super.text = value.toString();
 }

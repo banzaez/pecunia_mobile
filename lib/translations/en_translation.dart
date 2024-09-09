@@ -69,5 +69,20 @@ class EnTranslation extends AppTranslation {
         "tran_dialog_edit_amount": "amount",
         "tran_dialog_edit_category": "category",
         "tran_dialog_edit_description": "description",
+
+        "wallet_field_empty": "choose a wallet",
+
+        "transfer_title": "transfer between wallets",
+        "transfer_amount": "amount",
+        "transfer_exchange_rate": "exchange rate",
+        "transfer_total": "total",
+        "transfer_done": "done",
+
+        "transfer_error_wallet": "Enter different wallets",
+
+        "transfer_description": "transfer from %1\$ to %2\$, exchange rate %3\$",
+
+        "from": "from",
+        "to": "to",
       };
 }

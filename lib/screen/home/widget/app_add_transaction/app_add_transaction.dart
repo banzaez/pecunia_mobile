@@ -6,6 +6,7 @@ import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/widgets/fields/base_field.dart';
 import 'package:pecunia/widgets/fields/number_field.dart';
 import 'package:pecunia/widgets/fields/pick_date/pick_date.dart';
+import 'package:pecunia/widgets/transfer/transfer.dart';
 
 class AppAddTransaction extends StatelessWidget {
   const AppAddTransaction({super.key});
@@ -61,6 +62,8 @@ class AppAddTransaction extends StatelessWidget {
                   child: Text("home_button_expense".tr),
                 ),
               ),
+              AppSpaces.h8,
+              const Transfer(),
               AppSpaces.h8,
               Expanded(
                 child: ElevatedButton(

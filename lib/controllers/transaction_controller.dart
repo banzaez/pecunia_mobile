@@ -31,14 +31,14 @@ class TransactionController extends BaseController {
   // -----------SQL------------------------------------------------------------------------------
 
   Future<void> addSQL(Transaction transaction) async {
-    transaction.walletId = _walletId.value;
+    if(transaction.walletId == 0) transaction.walletId = _walletId.value;
     await _sqlProvider.transactions.add(value: transaction);
     await refreshTransactions();
     notifyListenersSQL("add");
   }
 
   Future<void> updateSQL(Transaction transaction) async {
-    transaction.walletId = _walletId.value;
+    if(transaction.walletId == 0) transaction.walletId =  _walletId.value;
     await _sqlProvider.transactions.update(value: transaction);
     await refreshTransactions();
     notifyListenersSQL("update");

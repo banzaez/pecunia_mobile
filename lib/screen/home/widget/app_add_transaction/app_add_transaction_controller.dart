@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/controllers/transaction_controller.dart';
 import 'package:pecunia/models/transaction.dart';
+import 'package:pecunia/widgets/fields/number_field.dart';
 
 class AppAddTransactionController extends GetxController {
   final TransactionController _transactionController = Get.find();
 
-  final TextEditingController controllerAmount = TextEditingController();
+  final NumberEditingController controllerAmount = NumberEditingController();
   final TextEditingController controllerCategory = TextEditingController();
   final Rx<DateTime> datetime = Rx<DateTime>(DateTime.now());
   final RxBool showDate = RxBool(false);
