@@ -24,59 +24,61 @@ class Transfer extends StatelessWidget {
   Future<void> _bottomSheet() async => await appBottomSheet(
         GetX<TransferController>(
           init: TransferController()..onInit(),
-          builder: (controller) => Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "transfer_title".tr,
-                style: AppTextStyle.text16w400(),
-                textAlign: TextAlign.center,
-              ),
-              AppSpaces.v16,
-              Text("from".tr),
-              WalletField(
-                onChanged: (value) => controller.from = value,
-                initValue: controller.from,
-              ),
-              Text("to".tr),
-              WalletField(
-                onChanged: (value) => controller.to = value,
-                initValue: controller.to,
-              ),
-              TextError(text: controller.errorWallet.value),
-              AppSpaces.v16,
-              Row(
-                children: [
-                  Expanded(
-                    child: NumberField(
-                      controller: controller.amount,
-                      labelText: "amount".tr,
+          builder: (controller) => SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "transfer_title".tr,
+                  style: AppTextStyle.text16w400(),
+                  textAlign: TextAlign.center,
+                ),
+                AppSpaces.v16,
+                Text("from".tr),
+                WalletField(
+                  onChanged: (value) => controller.from = value,
+                  initValue: controller.from,
+                ),
+                Text("to".tr),
+                WalletField(
+                  onChanged: (value) => controller.to = value,
+                  initValue: controller.to,
+                ),
+                TextError(text: controller.errorWallet.value),
+                AppSpaces.v16,
+                Row(
+                  children: [
+                    Expanded(
+                      child: NumberField(
+                        controller: controller.amount,
+                        labelText: "amount".tr,
+                      ),
                     ),
-                  ),
-                  AppSpaces.h16,
-                  _exchangeRate(controller),
-                ],
-              ),
-              AppSpaces.v16,
-              Row(
-                children: [
-                  Expanded(
-                    child: NumberField(
-                      controller: controller.total,
-                      labelText: "transfer_total".tr,
+                    AppSpaces.h16,
+                    _exchangeRate(controller),
+                  ],
+                ),
+                AppSpaces.v16,
+                Row(
+                  children: [
+                    Expanded(
+                      child: NumberField(
+                        controller: controller.total,
+                        labelText: "transfer_total".tr,
+                      ),
                     ),
-                  ),
-                  AppSpaces.h16,
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: controller.enableDone.isTrue ? () => onDone(controller) : null,
-                      child: Text("transfer_done".tr),
-                    ),
-                  )
-                ],
-              ),
-              AppSpaces.v32,
-            ],
+                    AppSpaces.h16,
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: controller.enableDone.isTrue ? () => onDone(controller) : null,
+                        child: Text("transfer_done".tr),
+                      ),
+                    )
+                  ],
+                ),
+                AppSpaces.v32,
+              ],
+            ),
           ),
         ),
       );
