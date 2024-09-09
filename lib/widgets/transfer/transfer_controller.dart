@@ -24,12 +24,16 @@ class TransferController extends GetxController {
   final RxnString errorExchangeRate = RxnString();
   final RxnString errorTotal = RxnString();
 
+  final RxBool divisionSign = false.obs;
+
   // ----------GETS------------------------------------------------------------------------------
 
   Wallet? get from => _fromWallet.value;
+
   set from(Wallet? wallet) => _fromWallet.value = wallet;
 
   Wallet? get to => _toWallet.value;
+
   set to(Wallet? wallet) => _toWallet.value = wallet;
 
   // ----------INIT------------------------------------------------------------------------------
@@ -42,6 +46,7 @@ class TransferController extends GetxController {
 
     amount.addListener(() => changeAmount());
     exchangeRate.addListener(() => changeAmount());
+    divisionSign.addListener(() => changeAmount());
   }
 
   // ----------CHANGES---------------------------------------------------------------------------
@@ -49,7 +54,12 @@ class TransferController extends GetxController {
   void checkEnableDone() => enableDone.value = isOk();
 
   void changeAmount() {
-    total.number = amount.number * exchangeRate.number;
+    final sum = (divisionSign.isTrue
+        ? exchangeRate.number == 0
+            ? 0
+            : amount.number / exchangeRate.number
+        : amount.number * exchangeRate.number).toStringAsFixed(2);
+    total.number = double.tryParse(sum) ?? 0;
     checkEnableDone();
   }
 

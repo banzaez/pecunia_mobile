@@ -12,6 +12,7 @@ class NumberField extends StatelessWidget {
   final String? errorText;
   final bool enabled;
   final bool showLabel;
+  final int decimal;
   final FormFieldValidator<String>? validator;
 
   const NumberField({
@@ -25,6 +26,7 @@ class NumberField extends StatelessWidget {
     this.errorText,
     this.enabled = true,
     this.showLabel = true,
+    this.decimal = 2,
     this.validator,
   });
 
@@ -36,7 +38,7 @@ class NumberField extends StatelessWidget {
         enabled: enabled,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'^\d+[,.]?\d{0,2}')),
+          FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,' '$decimal})')),
         ],
         hintText: hintText,
         showLabel: showLabel,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pecunia/styles/app_border_style.dart';
+import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/widgets/app_bottom_sheet.dart';
@@ -52,13 +54,7 @@ class Transfer extends StatelessWidget {
                     ),
                   ),
                   AppSpaces.h16,
-                  Expanded(
-                    child: NumberField(
-                      controller: controller.exchangeRate,
-                      enabled: controller.needExchangeRate.isTrue,
-                      labelText: "transfer_exchange_rate".tr,
-                    ),
-                  ),
+                  _exchangeRate(controller),
                 ],
               ),
               AppSpaces.v16,
@@ -87,7 +83,43 @@ class Transfer extends StatelessWidget {
 
   // --------------------------------------------------------------------------------------------
 
-  void onDone(controller) {
+  Widget _exchangeRate(TransferController controller) => Expanded(
+        child: Row(
+          children: [
+            GestureDetector(
+              onTap: controller.divisionSign.toggle,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.backgroundContent,
+                  border: AppBorderStyle.borderSideBox,
+                  borderRadius: AppBorderStyle.borderRadius,
+                ),
+                width: 48,
+                height: 48,
+                child: Center(
+                  child: Text(
+                    controller.divisionSign.isTrue ? "/" : "*",
+                    style: AppTextStyle.text18w400(),
+                  ),
+                ),
+              ),
+            ),
+            AppSpaces.h8,
+            Flexible(
+              child: NumberField(
+                controller: controller.exchangeRate,
+                decimal: 5,
+                enabled: controller.needExchangeRate.isTrue,
+                labelText: "transfer_exchange_rate".tr,
+              ),
+            ),
+          ],
+        ),
+      );
+
+  // --------------------------------------------------------------------------------------------
+
+  void onDone(TransferController controller) {
     if (!controller.isOk()) return;
     controller.transfer();
     Get.backLegacy(result: true);
