@@ -3,197 +3,134 @@ import 'package:pecunia/models/finance_category.dart';
 
 class FinanceCategories extends GetxController {
   // Статические категории доходов
-  static const FinanceCategory salary = FinanceCategory(
-    id: 1,
-    name: "finance_category_salary",
-    subcategories: [],
-  );
+  // --------------------------------------------------------------------------------------------
+  static const FinanceCategory salary = FinanceCategory(1, "rfc_salary", []);
 
-  static const FinanceCategory bonuses = FinanceCategory(
-    id: 2,
-    name: "finance_category_bonuses",
-    subcategories: [],
-  );
+  static const FinanceCategory bonuses = FinanceCategory(2, "rfc_bonuses", []);
 
-  static const FinanceCategory gifts = FinanceCategory(
-    id: 3,
-    name: "finance_category_gifts",
-    subcategories: [],
-  );
+  static const FinanceCategory gifts = FinanceCategory(3, "rfc_gifts", []);
 
-  static const FinanceCategory sales = FinanceCategory(
-    id: 4,
-    name: "finance_category_sales",
-    subcategories: [],
-  );
+  static const FinanceCategory sales = FinanceCategory(4, "rfc_sales", []);
 
-  static const FinanceCategory investments = FinanceCategory(
-    id: 5,
-    name: "finance_category_investments",
-    subcategories: [],
-  );
+  static const FinanceCategory investments = FinanceCategory(5, "rfc_investments", []);
 
-  static const FinanceCategory rent = FinanceCategory(
-    id: 6,
-    name: "finance_category_rent",
-    subcategories: [],
-  );
+  static const FinanceCategory rent = FinanceCategory(6, "rfc_rent", []);
 
-  static const FinanceCategory freelance = FinanceCategory(
-    id: 7,
-    name: "finance_category_freelance",
-    subcategories: [],
-  );
+  static const FinanceCategory freelance = FinanceCategory(7, "rfc_freelance", []);
 
-  static const FinanceCategory dividends = FinanceCategory(
-    id: 8,
-    name: "finance_category_dividends",
-    subcategories: [],
-  );
+  static const FinanceCategory dividends = FinanceCategory(8, "rfc_dividends", []);
 
-  static const FinanceCategory taxRefunds = FinanceCategory(
-    id: 9,
-    name: "finance_category_tax_refunds",
-    subcategories: [],
-  );
+  static const FinanceCategory taxRefunds = FinanceCategory(9, "rfc_tax_refunds", []);
 
-  static const FinanceCategory cashback = FinanceCategory(
-    id: 10,
-    name: "finance_category_cashback",
-    subcategories: [],
-  );
+  static const FinanceCategory cashback = FinanceCategory(10, "rfc_cashback", []);
 
-  static const FinanceCategory otherIncome = FinanceCategory(
-    id: 11,
-    name: "finance_category_other_income",
-    subcategories: [],
-  );
+  static const FinanceCategory otherIncome = FinanceCategory(11, "rfc_other_income", []);
 
   // Статические категории расходов
   static const FinanceCategory foodAndDrinks = FinanceCategory(
-    id: 12,
-    name: "finance_category_food_and_drinks",
-    subcategories: [
-      FinanceCategory(id: 121, name: "finance_category_groceries", subcategories: []),
-      FinanceCategory(id: 122, name: "finance_category_restaurants_and_cafes", subcategories: []),
+    12,
+    "rfc_food_and_drinks",
+    [
+      FinanceCategory(121, "rfc_groceries", []),
+      FinanceCategory(122, "rfc_restaurants_and_cafes", []),
     ],
   );
 
   static const FinanceCategory transport = FinanceCategory(
-    id: 13,
-    name: "finance_category_transport",
-    subcategories: [
-      FinanceCategory(id: 131, name: "finance_category_public_transport", subcategories: []),
-      FinanceCategory(id: 132, name: "finance_category_private_transport", subcategories: []),
-      FinanceCategory(id: 133, name: "finance_category_fuel", subcategories: []),
-      FinanceCategory(id: 134, name: "finance_category_parking", subcategories: []),
+    13,
+    "rfc_transport",
+    [
+      FinanceCategory(131, "rfc_public_transport", []),
+      FinanceCategory(132, "rfc_private_transport", []),
+      FinanceCategory(133, "rfc_fuel", []),
+      FinanceCategory(134, "rfc_parking", []),
     ],
   );
 
   static const FinanceCategory housing = FinanceCategory(
-    id: 14,
-    name: "finance_category_housing",
-    subcategories: [
-      FinanceCategory(id: 141, name: "finance_category_rent_expenses", subcategories: []),
-      FinanceCategory(id: 142, name: "finance_category_mortgage", subcategories: []),
-      FinanceCategory(id: 143, name: "finance_category_utilities", subcategories: []),
-      FinanceCategory(id: 144, name: "finance_category_repairs_and_maintenance", subcategories: []),
+    14,
+    "rfc_housing",
+    [
+      FinanceCategory(141, "rfc_rent_expenses", []),
+      FinanceCategory(142, "rfc_mortgage", []),
+      FinanceCategory(143, "rfc_utilities", []),
+      FinanceCategory(144, "rfc_repairs_and_maintenance", []),
     ],
   );
 
-  static const FinanceCategory clothingAndFootwear = FinanceCategory(
-    id: 15,
-    name: "finance_category_clothing_and_footwear",
-    subcategories: [],
-  );
+  static const FinanceCategory clothingAndFootwear =
+      FinanceCategory(15, "rfc_clothing_and_footwear", []);
 
   static const FinanceCategory health = FinanceCategory(
-    id: 16,
-    name: "finance_category_health",
-    subcategories: [
-      FinanceCategory(id: 161, name: "finance_category_medicine", subcategories: []),
-      FinanceCategory(id: 162, name: "finance_category_insurance", subcategories: []),
-      FinanceCategory(id: 163, name: "finance_category_doctor_visits", subcategories: []),
+    16,
+    "rfc_health",
+    [
+      FinanceCategory(161, "rfc_medicine", []),
+      FinanceCategory(162, "rfc_insurance", []),
+      FinanceCategory(163, "rfc_doctor_visits", []),
     ],
   );
 
   static const FinanceCategory entertainment = FinanceCategory(
-    id: 17,
-    name: "finance_category_entertainment",
-    subcategories: [
-      FinanceCategory(id: 171, name: "finance_category_movies_and_theater", subcategories: []),
-      FinanceCategory(id: 172, name: "finance_category_travel_and_vacations", subcategories: []),
-      FinanceCategory(id: 173, name: "finance_category_hobbies", subcategories: []),
+    17,
+    "rfc_entertainment",
+    [
+      FinanceCategory(171, "rfc_movies_and_theater", []),
+      FinanceCategory(172, "rfc_travel_and_vacations", []),
+      FinanceCategory(173, "rfc_hobbies", []),
     ],
   );
 
   static const FinanceCategory sportsAndFitness = FinanceCategory(
-    id: 18,
-    name: "finance_category_sports_and_fitness",
-    subcategories: [
-      FinanceCategory(id: 181, name: "finance_category_gym_memberships", subcategories: []),
-      FinanceCategory(id: 182, name: "finance_category_sports_events", subcategories: []),
+    18,
+    "rfc_sports_and_fitness",
+    [
+      FinanceCategory(181, "rfc_gym_memberships", []),
+      FinanceCategory(182, "rfc_sports_events", []),
     ],
   );
 
   static const FinanceCategory education = FinanceCategory(
-    id: 19,
-    name: "finance_category_education",
-    subcategories: [
-      FinanceCategory(id: 191, name: "finance_category_courses_and_training", subcategories: []),
-      FinanceCategory(id: 192, name: "finance_category_learning_materials", subcategories: []),
+    19,
+    "rfc_education",
+    [
+      FinanceCategory(191, "rfc_courses_and_training", []),
+      FinanceCategory(192, "rfc_learning_materials", []),
     ],
   );
 
   static const FinanceCategory loansAndDebts = FinanceCategory(
-    id: 20,
-    name: "finance_category_loans_and_debts",
-    subcategories: [
-      FinanceCategory(id: 201, name: "finance_category_loan_payments", subcategories: []),
-      FinanceCategory(id: 202, name: "finance_category_loan_interest", subcategories: []),
+    20,
+    "rfc_loans_and_debts",
+    [
+      FinanceCategory(201, "rfc_loan_payments", []),
+      FinanceCategory(202, "rfc_loan_interest", []),
     ],
   );
 
   static const FinanceCategory pets = FinanceCategory(
-    id: 21,
-    name: "finance_category_pets",
-    subcategories: [
-      FinanceCategory(id: 211, name: "finance_category_food_and_care", subcategories: []),
-      FinanceCategory(id: 212, name: "finance_category_veterinary", subcategories: []),
+    21,
+    "rfc_pets",
+    [
+      FinanceCategory(211, "rfc_food_and_care", []),
+      FinanceCategory(212, "rfc_veterinary", []),
     ],
   );
 
-  static const FinanceCategory giftsAndCharity = FinanceCategory(
-    id: 22,
-    name: "finance_category_gifts_and_charity",
-    subcategories: [],
-  );
+  static const FinanceCategory giftsAndCharity = FinanceCategory(22, "rfc_gifts_and_charity", []);
 
-  static const FinanceCategory internetAndCommunication = FinanceCategory(
-    id: 23,
-    name: "finance_category_internet_and_communication",
-    subcategories: [],
-  );
+  static const FinanceCategory internetAndCommunication =
+      FinanceCategory(23, "rfc_internet_and_communication", []);
 
-  static const FinanceCategory personalExpenses = FinanceCategory(
-    id: 24,
-    name: "finance_category_personal_expenses",
-    subcategories: [],
-  );
+  static const FinanceCategory personalExpenses = FinanceCategory(24, "rfc_personal_expenses", []);
 
-  static const FinanceCategory investmentsExpenses = FinanceCategory(
-    id: 25,
-    name: "finance_category_investments_expenses",
-    subcategories: [],
-  );
+  static const FinanceCategory investmentsExpenses =
+      FinanceCategory(25, "rfc_investments_expenses", []);
 
-  static const FinanceCategory otherExpenses = FinanceCategory(
-    id: 26,
-    name: "finance_category_other_expenses",
-    subcategories: [],
-  );
+  static const FinanceCategory otherExpenses = FinanceCategory(26, "rfc_other_expenses", []);
 
   // Получение всех категорий в одном списке
+  // --------------------------------------------------------------------------------------------
   static const List<FinanceCategory> allCategories = [
     // доходы
     salary,
@@ -226,6 +163,7 @@ class FinanceCategories extends GetxController {
   ];
 
   // категории доходов
+  // --------------------------------------------------------------------------------------------
   static const List<FinanceCategory> incomeCategories = [
     salary,
     bonuses,
@@ -241,6 +179,7 @@ class FinanceCategories extends GetxController {
   ];
 
   // категории доходов
+  // --------------------------------------------------------------------------------------------
   static const List<FinanceCategory> expenseCategories = [
     foodAndDrinks,
     transport,
