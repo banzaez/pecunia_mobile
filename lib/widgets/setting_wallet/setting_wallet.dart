@@ -39,7 +39,6 @@ class SettingWallet extends StatelessWidget {
               Center(
                 child: Text(
                   update == null ? "setting_wallet_title_add".tr : "setting_wallet_title_update".tr,
-                  style: AppTextStyle.text16w400(),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -83,7 +82,7 @@ class SettingWallet extends StatelessWidget {
                 width: 256,
               ),
               Text("setting_wallet_is_round_up".tr),
-              AppSpaces.v16,
+              AppSpaces.v32,
               ElevatedButton(
                 onPressed: () => _save(controller),
                 child: Text("setting_wallet_button_save".tr),
