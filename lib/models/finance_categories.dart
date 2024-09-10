@@ -155,6 +155,7 @@ class FinanceCategories extends GetxController {
     taxRefunds,
     cashback,
     otherIncome,
+    transfer,
   ];
 
   // категории доходов
@@ -175,6 +176,7 @@ class FinanceCategories extends GetxController {
     personalExpenses,
     investmentsExpenses,
     otherExpenses,
+    transfer,
   ];
 
   // Функция для поиска категории по id
