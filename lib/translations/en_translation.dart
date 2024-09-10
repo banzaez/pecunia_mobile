@@ -18,8 +18,7 @@ class EnTranslation extends AppTranslation {
         "no": "no",
         "light": "light",
         "dark": "dark",
-        "home_button_amount": "amount",
-        "home_button_category": "category",
+        "label_category": "category",
         "home_button_income": "income",
         "home_button_expense": "expense",
         "profile_title": "Profile settings",
@@ -61,27 +60,14 @@ class EnTranslation extends AppTranslation {
         "analytics_expenses": "expenses",
         "analytics_total": "total",
         "analytics_total_period": "total",
-        "tran_dialog_edit_title": "Edit",
-        "tran_dialog_edit_save": "Save",
-        "tran_dialog_edit_cancel": "Cancel",
-        "tran_dialog_edit_income": "income",
-        "tran_dialog_edit_expenses": "expenses",
-        "tran_dialog_edit_amount": "amount",
-        "tran_dialog_edit_category": "category",
-        "tran_dialog_edit_description": "description",
-
         "wallet_field_empty": "choose a wallet",
-
         "transfer_title": "transfer between wallets",
         "transfer_amount": "amount",
         "transfer_exchange_rate": "exchange rate",
         "transfer_total": "total",
         "transfer_done": "done",
-
         "transfer_error_wallet": "Enter different wallets",
-
         "transfer_description": "transfer from %1\$ to %2\$, exchange rate %3\$",
-
         "from": "from",
         "to": "to",
 
@@ -134,6 +120,15 @@ class EnTranslation extends AppTranslation {
         "rfc_internet_and_communication": "Internet & Communication",
         "rfc_personal_expenses": "Personal Expenses",
         "rfc_investments_expenses": "Investments",
-        "rfc_other_expenses": "Other Expenses"
+        "rfc_other_expenses": "Other Expenses",
+
+        "tran_dialog_edit_title": "Edit",
+        "tran_dialog_edit_save": "Save",
+        "tran_dialog_edit_cancel": "Cancel",
+        "tran_dialog_edit_income": "income",
+        "tran_dialog_edit_expenses": "expenses",
+        "tran_dialog_edit_amount": "amount",
+        "tran_dialog_edit_category": "category",
+        "tran_dialog_edit_description": "description",
       };
 }

@@ -4,6 +4,7 @@ import 'package:pecunia/screen/home/home_controller.dart';
 import 'package:pecunia/screen/home/widget/app_add_transaction/app_add_transaction.dart';
 import 'package:pecunia/screen/home/widget/current_wallet.dart';
 import 'package:pecunia/styles/app_text_style.dart';
+import 'package:pecunia/widgets/setting_transaction/setting_transaction.dart';
 import 'package:pecunia/widgets/setting_wallet/setting_wallet.dart';
 import 'package:pecunia/widgets/transaction_item.dart';
 
@@ -98,5 +99,5 @@ class HomeScreen extends GetView<HomeController> {
         ),
       );
 
-  Widget _bottom() => const AppAddTransaction().paddingSymmetric(horizontal: 16);
+  Widget _bottom() => const SettingTransaction().paddingSymmetric(horizontal: 16);
 }
