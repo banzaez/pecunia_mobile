@@ -138,7 +138,6 @@ class FinanceCategories extends GetxController {
   static const List<FinanceCategory> allCategories = [
     ...incomeCategories,
     ...expenseCategories,
-    transfer
   ];
 
   // категории доходов
@@ -154,8 +153,8 @@ class FinanceCategories extends GetxController {
     dividends,
     taxRefunds,
     cashback,
-    otherIncome,
     transfer,
+    otherIncome,
   ];
 
   // категории доходов
@@ -175,8 +174,8 @@ class FinanceCategories extends GetxController {
     internetAndCommunication,
     personalExpenses,
     investmentsExpenses,
-    otherExpenses,
     transfer,
+    otherExpenses,
   ];
 
   // Функция для поиска категории по id
