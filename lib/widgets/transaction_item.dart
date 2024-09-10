@@ -8,6 +8,8 @@ import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/util/ext_datetime.dart';
 import 'package:pecunia/util/ext_double.dart';
+import 'package:pecunia/widgets/fields/category_field.dart';
+import 'package:pecunia/widgets/setting_transaction/setting_transaction.dart';
 
 class TransactionItem extends StatelessWidget {
   const TransactionItem({super.key, required this.transaction});
@@ -15,47 +17,50 @@ class TransactionItem extends StatelessWidget {
   final Transaction transaction;
 
   @override
-  Widget build(BuildContext context) => Dismissible(
-      key: Key(transaction.id.toString()),
-      onDismissed: (direction) => Get.find<TransactionController>().deleteSQL(transaction.id),
-      confirmDismiss: _confirmDismiss,
-      background: Container(color: Colors.red),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.white10,
-            child: transaction.amount > 0
-                ? const Icon(Icons.attach_money, color: Colors.green)
-                : const Icon(Icons.money_off, color: Colors.red),
-          ),
-          AppSpaces.h24,
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+  Widget build(BuildContext context) => GestureDetector(
+        onTap: () => SettingTransaction.setting(TransactionType.income, transaction),
+        child: Dismissible(
+            key: Key(transaction.id.toString()),
+            onDismissed: (direction) => Get.find<TransactionController>().deleteSQL(transaction.id),
+            confirmDismiss: _confirmDismiss,
+            background: Container(color: Colors.red),
+            child: Row(
               children: [
-                Text.rich(TextSpan(
-                  children: [
-                    TextSpan(
-                      text: transaction.amount > 0
-                          ? "tran_item_income".tr
-                          : "tran_item_expense".tr,
-                      style: AppTextStyle.text12w400(),
-                    ),
-                    TextSpan(
-                      text: " ${transaction.category}",
-                      style: AppTextStyle.text14w600(),
-                    ),
-                  ],
-                )),
-                Text(transaction.amount.formatSum, style: AppTextStyle.text16w400()),
-                _description(),
+                CircleAvatar(
+                  backgroundColor: Colors.white10,
+                  child: transaction.amount > 0
+                      ? const Icon(Icons.attach_money, color: Colors.green)
+                      : const Icon(Icons.money_off, color: Colors.red),
+                ),
+                AppSpaces.h24,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text.rich(TextSpan(
+                        children: [
+                          TextSpan(
+                            text: transaction.amount > 0
+                                ? "tran_item_income".tr
+                                : "tran_item_expense".tr,
+                            style: AppTextStyle.text12w400(),
+                          ),
+                          TextSpan(
+                            text: " ${transaction.category}",
+                            style: AppTextStyle.text14w600(),
+                          ),
+                        ],
+                      )),
+                      Text(transaction.amount.formatSum, style: AppTextStyle.text16w400()),
+                      _description(),
+                    ],
+                  ),
+                ),
+                _date(),
               ],
-            ),
-          ),
-          _date(),
-        ],
-      ).paddingAll(16));
+            ).paddingAll(16)),
+      );
 
   // --------------------------------------------------------------------------------------------
 

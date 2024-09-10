@@ -22,7 +22,7 @@ class SettingTransaction extends StatelessWidget {
         children: [
           Expanded(
             child: ElevatedButton(
-              onPressed: () => _setting(TransactionType.expense),
+              onPressed: () => setting(TransactionType.expense),
               child: Text("home_button_expense".tr),
             ),
           ),
@@ -31,7 +31,7 @@ class SettingTransaction extends StatelessWidget {
           AppSpaces.h8,
           Expanded(
             child: ElevatedButton(
-              onPressed: () => _setting(TransactionType.income),
+              onPressed: () => setting(TransactionType.income),
               child: Text("home_button_income".tr),
             ),
           ),
@@ -40,7 +40,7 @@ class SettingTransaction extends StatelessWidget {
 
   // --------------------------------------------------------------------------------------------
 
-  Future<void> _setting(TransactionType type) async => appBottomSheet(SingleChildScrollView(
+  static Future<void> setting(TransactionType type, [Transaction? update]) async => appBottomSheet(SingleChildScrollView(
         child: GetX<SettingTransactionController>(
           init: SettingTransactionController(update)..type = type,
           builder: (controller) => Column(
@@ -110,5 +110,5 @@ class SettingTransaction extends StatelessWidget {
 
   // --------------------------------------------------------------------------------------------
 
-  Widget _sizeField({required Widget child}) => SizedBox(width: 250, child: child);
+  static Widget _sizeField({required Widget child}) => SizedBox(width: 250, child: child);
 }
