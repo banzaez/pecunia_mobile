@@ -11,6 +11,8 @@ class Transaction {
   int walletId;
   double amount;
   String category;
+  @JsonKey(name: "category_id")
+  int categoryId;
   @JsonKey(name: "created_at", fromJson: toDateTime, toJson: fromDateTime)
   DateTime createdAt;
   @JsonKey(defaultValue: "")
@@ -21,12 +23,19 @@ class Transaction {
     required this.walletId,
     required this.amount,
     required this.category,
+    required this.categoryId,
     required this.createdAt,
     required this.description,
   });
 
-  factory Transaction.empty() =>
-      Transaction(walletId: 0, amount: 0, category: "", createdAt: DateTime.now(), description: "");
+  factory Transaction.empty() => Transaction(
+        walletId: 0,
+        amount: 0,
+        category: "",
+        categoryId: 0,
+        createdAt: DateTime.now(),
+        description: "",
+      );
 
   factory Transaction.fromJson(Map<String, dynamic> json) => _$TransactionFromJson(json);
 

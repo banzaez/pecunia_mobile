@@ -37,14 +37,7 @@ class SQLTableWallets {
   Future<List<Wallet>> selectAll() async {
     List<Map<String, Object?>> maps = await _database.query(
       tableName,
-      columns: [
-        columnId,
-        columnName,
-        columnCurrency,
-        columnDescription,
-        columnShowBalance,
-        columnRound,
-      ],
+      columns: null,
     );
 
     return List.generate(maps.length, (index) => Wallet.fromJson(maps[index]));

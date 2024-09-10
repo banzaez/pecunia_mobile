@@ -35,6 +35,7 @@ class SQLProvider {
             "${SQLTableTransactions.columnWalletId} INTEGER NOT NULL,"
             "${SQLTableTransactions.columnAmount} DOUBLE NOT NULL,"
             "${SQLTableTransactions.columnCategory} TEXT(100) NOT NULL,"
+            "${SQLTableTransactions.columnCategoryId} INTEGER DEFAULT '-1' NOT NULL,"
             "${SQLTableTransactions.columnCreatedAt} TEXT DEFAULT CURRENT_TIMESTAMP,"
             "${SQLTableTransactions.columnDescription} TEXT(512) NOT NULL)");
 
@@ -49,9 +50,15 @@ class SQLProvider {
 
         await db.execute("INSERT INTO ${SQLTableWallets.tableName} DEFAULT VALUES");
       },
-      onConfigure: (db) {
-      },
-      onOpen: (db) {
+      onConfigure: (db) {},
+      onOpen: (db) async {
+        await addColumnIfNotExists(
+          db,
+          SQLTableTransactions.tableName,
+          SQLTableTransactions.columnCategoryId,
+          "INTEGER DEFAULT '-1' NOT NULL",
+        );
+
         _database = db;
 
         analytics = SQLAnalytics(_database);
@@ -64,5 +71,35 @@ class SQLProvider {
     );
 
     isLoading = false;
+  }
+
+  Future<void> addColumnIfNotExists(
+    sql.Database db,
+    String tableName,
+    String columnName,
+    String columnType,
+  ) async {
+    try {
+      final alterTableQuery = "ALTER TABLE $tableName ADD COLUMN $columnName $columnType";
+      db.execute(alterTableQuery);
+    } catch (e) {}
+  }
+
+  Future<void> addTableIfNotExists(
+    sql.Database db,
+    String tableName,
+  ) async {
+    final columnExistsQuery = "SELECT * FROM sqlite_master WHERE name=$tableName";
+    final columns = await db.execute(columnExistsQuery);
+
+    // final columnNames = columns.map((row) => row['name'] as String).toSet();
+    //
+    // if (!columnNames.contains(columnName)) {
+    //   final alterTableQuery = "ALTER TABLE $tableName ADD COLUMN $columnName $columnType";
+    //   db.execute(alterTableQuery);
+    //   print('Column "$columnName" added to table "$tableName".');
+    // } else {
+    //   print('Column "$columnName" already exists in table "$tableName".');
+    // }
   }
 }
