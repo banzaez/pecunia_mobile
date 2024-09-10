@@ -131,36 +131,7 @@ class FinanceCategories extends GetxController {
 
   // Получение всех категорий в одном списке
   // --------------------------------------------------------------------------------------------
-  static const List<FinanceCategory> allCategories = [
-    // доходы
-    salary,
-    bonuses,
-    gifts,
-    sales,
-    investments,
-    rent,
-    freelance,
-    dividends,
-    taxRefunds,
-    cashback,
-    otherIncome,
-    // расходы
-    foodAndDrinks,
-    transport,
-    housing,
-    clothingAndFootwear,
-    health,
-    entertainment,
-    sportsAndFitness,
-    education,
-    loansAndDebts,
-    pets,
-    giftsAndCharity,
-    internetAndCommunication,
-    personalExpenses,
-    investmentsExpenses,
-    otherExpenses,
-  ];
+  static const List<FinanceCategory> allCategories = [...incomeCategories, ...expenseCategories];
 
   // категории доходов
   // --------------------------------------------------------------------------------------------
