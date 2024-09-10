@@ -12,10 +12,10 @@ import 'package:pecunia/widgets/setting_transaction/setting_transaction_controll
 import 'package:pecunia/widgets/transfer/transfer.dart';
 
 class SettingTransaction extends StatelessWidget {
-  const SettingTransaction({super.key, this.update, this.onChange});
+  const SettingTransaction({super.key, this.transaction, this.onChange});
 
   final ValueChanged? onChange;
-  final Transaction? update;
+  final Transaction? transaction;
 
   @override
   Widget build(BuildContext context) => Row(
@@ -40,9 +40,9 @@ class SettingTransaction extends StatelessWidget {
 
   // --------------------------------------------------------------------------------------------
 
-  static Future<void> setting(TransactionType type, [Transaction? update]) async => appBottomSheet(SingleChildScrollView(
+  static Future<void> setting(TransactionType type, [Transaction? transaction]) async => appBottomSheet(SingleChildScrollView(
         child: GetX<SettingTransactionController>(
-          init: SettingTransactionController(update)..type = type,
+          init: SettingTransactionController(type: type, transaction: transaction),
           builder: (controller) => Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -68,7 +68,7 @@ class SettingTransaction extends StatelessWidget {
               AppSpaces.v16,
               _sizeField(
                 child: BaseField(
-                  controller: controller.controllerDescription,
+                  controller: controller.description,
                   maxLines: 3,
                   labelText: "setting_tran_description".tr,
                 ),

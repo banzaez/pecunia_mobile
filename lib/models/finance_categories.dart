@@ -129,9 +129,17 @@ class FinanceCategories extends GetxController {
 
   static const FinanceCategory otherExpenses = FinanceCategory(26, "rfc_other_expenses", []);
 
+  // Статические категория остальные
+  // --------------------------------------------------------------------------------------------
+  static const FinanceCategory transfer = FinanceCategory(27, "rfc_transfer", []);
+
   // Получение всех категорий в одном списке
   // --------------------------------------------------------------------------------------------
-  static const List<FinanceCategory> allCategories = [...incomeCategories, ...expenseCategories];
+  static const List<FinanceCategory> allCategories = [
+    ...incomeCategories,
+    ...expenseCategories,
+    transfer
+  ];
 
   // категории доходов
   // --------------------------------------------------------------------------------------------

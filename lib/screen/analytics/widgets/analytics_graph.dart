@@ -40,7 +40,7 @@ class AnalyticsGraph extends StatelessWidget {
         final item = data[index];
         return PieChartSectionData(
           color: background,
-          badgeWidget: _badge(name: item.category ?? "", color: background),
+          badgeWidget: _badge(name: item.category?.name ?? "", color: background),
           badgePositionPercentageOffset: .98,
           radius: item.amount.isNegative ? 100 : 80,
           title: item.amount.formatSum,

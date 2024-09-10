@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:pecunia/models/finance_category.dart';
 import 'package:pecunia/util/sql_fun.dart';
 
 part 'transaction.g.dart';
@@ -10,9 +11,10 @@ class Transaction {
   @JsonKey(name: "wallet_id")
   int walletId;
   double amount;
-  String category;
-  @JsonKey(name: "category_id")
-  int categoryId;
+  @JsonKey(name: "category", defaultValue: "")
+  String categoryString;
+  @JsonKey(name: "category_id", fromJson: toCategory, toJson: fromCategory)
+  FinanceCategory? category;
   @JsonKey(name: "created_at", fromJson: toDateTime, toJson: fromDateTime)
   DateTime createdAt;
   @JsonKey(defaultValue: "")
@@ -22,8 +24,8 @@ class Transaction {
     this.id = 0,
     required this.walletId,
     required this.amount,
+    required this.categoryString,
     required this.category,
-    required this.categoryId,
     required this.createdAt,
     required this.description,
   });
@@ -31,8 +33,8 @@ class Transaction {
   factory Transaction.empty() => Transaction(
         walletId: 0,
         amount: 0,
-        category: "",
-        categoryId: 0,
+        categoryString: "",
+        category: null,
         createdAt: DateTime.now(),
         description: "",
       );

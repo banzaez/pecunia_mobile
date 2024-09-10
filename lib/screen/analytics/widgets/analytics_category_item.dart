@@ -40,7 +40,7 @@ class AnalyticsCategoryItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(analytics.category ?? ""),
+                Text(analytics.category?.name ?? ""),
                 Text.rich(TextSpan(
                   children: [
                     TextSpan(

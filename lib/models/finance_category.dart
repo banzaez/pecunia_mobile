@@ -10,4 +10,7 @@ class FinanceCategory {
   final List<FinanceCategory> subcategories;
 
   String get name => _name.tr;
+
+  @override
+  String toString() => name;
 }

@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:pecunia/models/finance_category.dart';
 import 'package:pecunia/util/sql_fun.dart';
 
 part 'analytics.g.dart';
@@ -8,7 +9,8 @@ class Analytics {
 
   @JsonKey(fromJson: toInt)
   final int group;
-  final String? category;
+  @JsonKey(name: "category_id", fromJson: toCategory, toJson: fromCategory)
+  final FinanceCategory? category;
   final double amount;
   final DateTime date;
   @JsonKey(name: "id")

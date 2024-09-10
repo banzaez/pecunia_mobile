@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pecunia/controllers/transaction_controller.dart';
+import 'package:pecunia/models/finance_categories.dart';
 import 'package:pecunia/models/transaction.dart';
 import 'package:pecunia/models/wallet.dart';
 import 'package:pecunia/util/ext_double.dart';
@@ -109,7 +110,7 @@ class TransferController extends GetxController {
 
     final transaction = Transaction.empty();
     transaction.walletId = from!.id;
-    transaction.category = "transfer";
+    transaction.category = FinanceCategories.transfer;
     transaction.description = description;
     transaction.amount = -amount.number.toDouble();
     _transactionController.addSQL(transaction);

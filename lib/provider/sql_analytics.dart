@@ -27,7 +27,7 @@ class SQLAnalytics {
       "_id as id, "
       "strftime('$formatDate', created_at) as date_group, "
       "date(created_at, 'start of day') as date, "
-      "category, "
+      "category_id, "
       "amount "
       "FROM transactions "
       "WHERE wallet_id = $walletId ${_filterByAmount(filter, "AND")})";
@@ -63,12 +63,12 @@ class SQLAnalytics {
         "${_preQuery(walletId, formatDate, filter)}"
         ""
         "SELECT date_group as 'group', "
-        "category, "
+        "category_id, "
         "date, "
         "COUNT(id) as id, "
         "SUM(amount) as amount "
         "FROM preresult "
-        "GROUP BY date_group, category "
+        "GROUP BY date_group, category_id "
         "ORDER BY SUM(amount)");
 
     return List.generate(maps.length, (index) => Analytics.fromJson(maps[index]));

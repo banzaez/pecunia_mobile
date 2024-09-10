@@ -121,6 +121,7 @@ class EnTranslation extends AppTranslation {
         "rfc_personal_expenses": "Personal Expenses",
         "rfc_investments_expenses": "Investments",
         "rfc_other_expenses": "Other Expenses",
+        "rfc_transfer": "Transfer",
 
         "setting_tran_title": "Edit",
         "setting_tran_save": "Save",

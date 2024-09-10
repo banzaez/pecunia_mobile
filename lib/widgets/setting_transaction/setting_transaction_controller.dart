@@ -7,9 +7,10 @@ import 'package:pecunia/models/transaction.dart';
 import 'package:pecunia/widgets/fields/category_field.dart';
 import 'package:pecunia/widgets/fields/number_field.dart';
 
-
 class SettingTransactionController extends BaseController {
-  SettingTransactionController([this.transaction]);
+  SettingTransactionController({required TransactionType type, this.transaction}) {
+    _type.value = type;
+  }
 
   final TransactionController _transactionController = Get.find();
 
@@ -17,11 +18,13 @@ class SettingTransactionController extends BaseController {
 
   final NumberEditingController amount = NumberEditingController();
   final Rxn<FinanceCategory> category = Rxn();
-  final TextEditingController controllerDescription = TextEditingController();
+  final TextEditingController description = TextEditingController();
   final Rx<DateTime> datetime = Rx<DateTime>(DateTime.now());
 
   final Rx<TransactionType> _type = TransactionType.income.obs;
+
   TransactionType get type => _type.value;
+
   set type(TransactionType type) {
     category.value = null;
     _type.value = type;
@@ -38,23 +41,21 @@ class SettingTransactionController extends BaseController {
   void onInit() {
     super.onInit();
 
-    if(transaction == null) {
-      return;
-    }
+    if (transaction == null) return;
 
-    amount.number = transaction!.amount.abs();
-    //category.value = transaction!.category;
-    controllerDescription.text = transaction!.description;
-    datetime.value = transaction!.createdAt;
     type = transaction!.amount > 0 ? TransactionType.income : TransactionType.expense;
+    amount.number = transaction!.amount.abs();
+    category.value = transaction!.category;
+    description.text = transaction!.description;
+    datetime.value = transaction!.createdAt;
   }
 
   // ----------VALUES----------------------------------------------------------------------------
 
   void updateValues() {
     transaction!.amount = amount.number * (type == TransactionType.income ? 1 : -1);
-   // transaction!.category = controllerCategory.text;
-    transaction!.description = controllerDescription.text;
+    transaction!.category = category.value;
+    transaction!.description = description.text;
     transaction!.createdAt = datetime.value;
   }
 
@@ -79,7 +80,7 @@ class SettingTransactionController extends BaseController {
   }
 
   bool save() {
-    if(transaction == null) {
+    if (transaction == null) {
       _addTransaction();
     } else {
       _updateTransaction(transaction!);
