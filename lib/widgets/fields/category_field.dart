@@ -10,21 +10,25 @@ class CategoryField extends StatelessWidget {
     required this.onChanged,
     required this.type,
     required this.value,
+    required this.error,
   });
 
   final ValueChanged<FinanceCategory> onChanged;
-  final CategoryType type;
+  final TransactionType type;
   final FinanceCategory? value;
+  final String? error;
 
-  List<FinanceCategory> get items => type == CategoryType.income
+  List<FinanceCategory> get items => type == TransactionType.income
       ? FinanceCategories.incomeCategories
       : FinanceCategories.expenseCategories;
 
   @override
   Widget build(BuildContext context) => DropdownField(
+        onChanged: onChanged,
         items: _itemsWidget(),
         hint: "label_category".tr,
         value: value,
+        error: error,
       );
 
   // --------------------------------------------------------------------------------------------
@@ -50,4 +54,4 @@ class CategoryField extends StatelessWidget {
   }
 }
 
-enum CategoryType { income, expense }
+enum TransactionType { income, expense }

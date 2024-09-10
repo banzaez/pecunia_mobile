@@ -122,13 +122,12 @@ class EnTranslation extends AppTranslation {
         "rfc_investments_expenses": "Investments",
         "rfc_other_expenses": "Other Expenses",
 
-        "tran_dialog_edit_title": "Edit",
-        "tran_dialog_edit_save": "Save",
-        "tran_dialog_edit_cancel": "Cancel",
-        "tran_dialog_edit_income": "income",
-        "tran_dialog_edit_expenses": "expenses",
-        "tran_dialog_edit_amount": "amount",
-        "tran_dialog_edit_category": "category",
-        "tran_dialog_edit_description": "description",
+        "setting_tran_title": "Edit",
+        "setting_tran_save": "Save",
+        "setting_tran_income": "income",
+        "setting_tran_expenses": "expenses",
+        "setting_tran_amount": "amount",
+        "setting_tran_category": "category",
+        "setting_tran_description": "description",
       };
 }

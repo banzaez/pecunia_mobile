@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/screen/home/home_controller.dart';
-import 'package:pecunia/screen/home/widget/app_add_transaction/app_add_transaction.dart';
 import 'package:pecunia/screen/home/widget/current_wallet.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/widgets/setting_transaction/setting_transaction.dart';

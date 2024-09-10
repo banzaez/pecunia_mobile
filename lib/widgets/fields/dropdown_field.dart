@@ -4,15 +4,15 @@ import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
 
-class DropdownField extends StatelessWidget {
-  final dynamic value;
+class DropdownField<T> extends StatelessWidget {
+  final T? value;
 
   final String hint;
   final String? label;
   final String? error;
 
-  final List<DropdownMenuItem<dynamic>> items;
-  final ValueChanged<dynamic>? onChanged;
+  final List<DropdownMenuItem<T>> items;
+  final ValueChanged<T>? onChanged;
 
   const DropdownField({
     super.key,

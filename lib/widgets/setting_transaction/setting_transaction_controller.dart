@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/controllers/base_controller.dart';
 import 'package:pecunia/controllers/transaction_controller.dart';
+import 'package:pecunia/models/finance_category.dart';
 import 'package:pecunia/models/transaction.dart';
-import 'package:pecunia/util/ext_double.dart';
-import 'package:pecunia/util/ext_string.dart';
+import 'package:pecunia/widgets/fields/category_field.dart';
 import 'package:pecunia/widgets/fields/number_field.dart';
 
 
@@ -15,12 +15,17 @@ class SettingTransactionController extends BaseController {
 
   final Transaction? transaction;
 
-  final NumberEditingController controllerAmount = NumberEditingController();
-  final TextEditingController controllerCategory = TextEditingController();
+  final NumberEditingController amount = NumberEditingController();
+  final Rxn<FinanceCategory> category = Rxn();
   final TextEditingController controllerDescription = TextEditingController();
   final Rx<DateTime> datetime = Rx<DateTime>(DateTime.now());
 
-  final RxInt i = RxInt(-1); // -1 or +1
+  final Rx<TransactionType> _type = TransactionType.income.obs;
+  TransactionType get type => _type.value;
+  set type(TransactionType type) {
+    category.value = null;
+    _type.value = type;
+  }
 
   final errorAmount = RxnString();
   final errorCategory = RxnString();
@@ -37,25 +42,25 @@ class SettingTransactionController extends BaseController {
       return;
     }
 
-    controllerAmount.text = transaction!.amount.abs().formatSum.toSortable();
-    controllerCategory.text = transaction!.category;
+    amount.number = transaction!.amount.abs();
+    //category.value = transaction!.category;
     controllerDescription.text = transaction!.description;
     datetime.value = transaction!.createdAt;
-    i.value = transaction!.amount == 0 ? -1 : transaction!.amount.sign.toInt();
+    type = transaction!.amount > 0 ? TransactionType.income : TransactionType.expense;
   }
 
   // ----------VALUES----------------------------------------------------------------------------
 
   void updateValues() {
-    transaction!.amount = (double.tryParse(controllerAmount.text.toSortable()) ?? 0) * i.value;
-    transaction!.category = controllerCategory.text;
+    transaction!.amount = amount.number * (type == TransactionType.income ? 1 : -1);
+   // transaction!.category = controllerCategory.text;
     transaction!.description = controllerDescription.text;
     transaction!.createdAt = datetime.value;
   }
 
   bool isOk() {
-    errorAmount.value = controllerAmount.text.isEmpty ? "tran_item_error_amount".tr : null;
-    errorCategory.value = controllerCategory.text.isEmpty ? "tran_item_error_category".tr : null;
+    errorAmount.value = amount.text.isEmpty ? "tran_item_error_amount".tr : null;
+    errorCategory.value = category.value == null ? "tran_item_error_category".tr : null;
 
     return !hasError;
   }
