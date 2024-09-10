@@ -16,7 +16,7 @@ class TransferController extends GetxController {
   final NumberEditingController exchangeRate = NumberEditingController();
   final NumberEditingController total = NumberEditingController();
 
-  final RxBool needExchangeRate = false.obs;
+  final RxBool differentCurrencies = false.obs;
   final RxBool enableDone = false.obs;
 
   final RxnString errorWallet = RxnString();
@@ -47,26 +47,42 @@ class TransferController extends GetxController {
     amount.addListener(() => changeAmount());
     exchangeRate.addListener(() => changeAmount());
     divisionSign.addListener(() => changeAmount());
+    total.addListener(() => changeTotal());
   }
 
   // ----------CHANGES---------------------------------------------------------------------------
 
   void checkEnableDone() => enableDone.value = isOk();
 
+  void changeWallet() {
+    exchangeRate.number = 1;
+    differentCurrencies.value = (from != null && to != null && from?.currency != to?.currency);
+    errorWallet.value = from?.id == to?.id ? "transfer_error_wallet".tr : null;
+
+    if (differentCurrencies.isTrue) {
+      amount.clear();
+    } else {
+      total.clear();
+    }
+
+    checkEnableDone();
+  }
+
   void changeAmount() {
+    if (differentCurrencies.isFalse) return;
+
     final sum = (divisionSign.isTrue
-        ? exchangeRate.number == 0
-            ? 0
-            : amount.number / exchangeRate.number
-        : amount.number * exchangeRate.number).toStringAsFixed(2);
+            ? exchangeRate.number == 0
+                ? 0
+                : amount.number / exchangeRate.number
+            : amount.number * exchangeRate.number)
+        .toStringAsFixed(2);
     total.number = double.tryParse(sum) ?? 0;
     checkEnableDone();
   }
 
-  void changeWallet() {
-    exchangeRate.number = 1;
-    needExchangeRate.value = (from != null && to != null && from?.currency != to?.currency);
-    errorWallet.value = from?.id == to?.id ? "transfer_error_wallet".tr : null;
+  void changeTotal() {
+    if (differentCurrencies.isFalse) amount.number = total.number;
     checkEnableDone();
   }
 
@@ -75,7 +91,7 @@ class TransferController extends GetxController {
   bool isOk() {
     if (errorWallet.value != null) return false;
     if (amount.number == 0) return false;
-    if (needExchangeRate.value && exchangeRate.number == 0) return false;
+    if (differentCurrencies.value && exchangeRate.number == 0) return false;
     if (total.number == 0) return false;
     return true;
   }

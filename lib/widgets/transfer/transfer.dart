@@ -46,25 +46,25 @@ class Transfer extends StatelessWidget {
                 ),
                 TextError(text: controller.errorWallet.value),
                 AppSpaces.v16,
-                Row(
+                if(controller.differentCurrencies.isTrue) Row(
                   children: [
                     Expanded(
                       child: NumberField(
                         controller: controller.amount,
-                        labelText: "transfer_amount".tr,
+                        labelText: controller.from?.currency,
                       ),
                     ),
                     AppSpaces.h16,
                     _exchangeRate(controller),
                   ],
-                ),
+                ).paddingOnly(bottom: 16),
                 AppSpaces.v16,
                 Row(
                   children: [
                     Expanded(
                       child: NumberField(
                         controller: controller.total,
-                        labelText: "transfer_total".tr,
+                        labelText: controller.to?.currency,
                       ),
                     ),
                     AppSpaces.h16,
@@ -111,7 +111,7 @@ class Transfer extends StatelessWidget {
               child: NumberField(
                 controller: controller.exchangeRate,
                 decimal: 5,
-                enabled: controller.needExchangeRate.isTrue,
+                enabled: controller.differentCurrencies.isTrue,
                 labelText: "transfer_exchange_rate".tr,
               ),
             ),
