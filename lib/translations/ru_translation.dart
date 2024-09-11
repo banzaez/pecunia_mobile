@@ -128,7 +128,7 @@ class RuTranslation extends AppTranslation {
         "rfc_investments_expenses": "Инвестиции",
         "rfc_other_expenses": "Другие расходы",
         "rfc_transfer": "Перевод",
-        "total_sum": "Сумма",
+        "total_sum": "Баланс",
         "incomes_sum": "Доходы",
         "expenses_sum": "Расходы",
         "total_hint": "за %1\$",

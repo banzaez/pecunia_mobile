@@ -17,18 +17,19 @@ class TotalHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           _item(
-              title: "total_sum".tr,
-              value: total.total.formatSum,
-              titleStyle: AppTextStyle.text18w700(),
-            ),
+            value: total.total.formatSum,
+            valueStyle: AppTextStyle.text12w600(),
+            label: "total_sum".tr,
+            labelStyle: AppTextStyle.text18w700(),
+          ),
           _item(
-            title: "incomes_sum".tr,
             value: total.income.formatSum,
+            label: "incomes_sum".tr,
             hintText: "total_hint".tr.format([DateTime.now().formatMMMM]),
           ),
           _item(
-            title: "expenses_sum".tr,
             value: total.expense.formatSum,
+            label: "expenses_sum".tr,
             hintText: "total_hint".tr.format([DateTime.now().formatMMMM]),
           ),
         ],
@@ -36,20 +37,20 @@ class TotalHeader extends StatelessWidget {
 
   // --------------------------------------------------------------------------------------------
 
-
   Widget _item({
-    required String title,
     required String value,
-    TextStyle? titleStyle,
+    required String label,
+    TextStyle? labelStyle,
+    TextStyle? valueStyle,
     String? hintText,
   }) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(value, style: titleStyle ?? AppTextStyle.text18w400()),
-          Text(title, style: AppTextStyle.text12w400()),
-          if(hintText != null) Text(hintText, style: AppTextStyle.text10w400()),
+          Text(value, style: labelStyle ?? AppTextStyle.text18w400()),
+          Text(label, style: valueStyle ?? AppTextStyle.text12w400()),
+          if (hintText != null) Text(hintText, style: AppTextStyle.text10w400()),
         ],
       );
 }

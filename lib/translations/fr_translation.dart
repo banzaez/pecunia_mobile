@@ -128,7 +128,7 @@ class FrTranslation extends AppTranslation {
         "rfc_investments_expenses": "Investissements",
         "rfc_other_expenses": "Autres dépenses",
         "rfc_transfer": "Transfert",
-        "total_sum": "Total",
+        "total_sum": "Solde",
         "incomes_sum": "Revenus",
         "expenses_sum": "Dépenses",
         "total_hint": "pour %1\$",

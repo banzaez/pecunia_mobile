@@ -131,7 +131,7 @@ class EnTranslation extends AppTranslation {
         "setting_tran_category": "category",
         "setting_tran_description": "description",
 
-        "total_sum": "Total",
+        "total_sum": "Balance",
         "incomes_sum": "Incomes",
         "expenses_sum": "Expenses",
         "total_hint": "for %1\$",

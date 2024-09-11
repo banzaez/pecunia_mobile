@@ -130,7 +130,7 @@ class PlTranslation extends AppTranslation {
         "rfc_investments_expenses": "Inwestycje",
         "rfc_other_expenses": "Inne wydatki",
         "rfc_transfer": "Przelew",
-        "total_sum": "Suma",
+        "total_sum": "Saldo",
         "incomes_sum": "Przychody",
         "expenses_sum": "Wydatki",
         "total_hint": "dla %1\$",
