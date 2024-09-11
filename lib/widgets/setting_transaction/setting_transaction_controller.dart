@@ -8,13 +8,14 @@ import 'package:pecunia/widgets/fields/category_field.dart';
 import 'package:pecunia/widgets/fields/number_field.dart';
 
 class SettingTransactionController extends BaseController {
-  SettingTransactionController({required TransactionType type, this.transaction}) {
+  SettingTransactionController({required TransactionType type, Transaction? transaction}) {
     _type.value = type;
+    this.transaction = transaction ?? Transaction.empty();
   }
 
   final TransactionController _transactionController = Get.find();
 
-  final Transaction? transaction;
+  late final Transaction transaction;
 
   final NumberEditingController amount = NumberEditingController();
   final Rxn<FinanceCategory> category = Rxn();
@@ -41,22 +42,20 @@ class SettingTransactionController extends BaseController {
   void onInit() {
     super.onInit();
 
-    if (transaction == null) return;
-
-    type = transaction!.amount > 0 ? TransactionType.income : TransactionType.expense;
-    amount.number = transaction!.amount.abs();
-    category.value = transaction!.category;
-    description.text = transaction!.description;
-    datetime.value = transaction!.createdAt;
+    type = transaction.id == 0 ? type : transaction.type;
+    amount.number = transaction.id == 0 ? null : transaction.amount.abs();
+    category.value = transaction.category;
+    description.text = transaction.description;
+    datetime.value = transaction.createdAt;
   }
 
   // ----------VALUES----------------------------------------------------------------------------
 
   void updateValues() {
-    transaction!.amount = amount.number * (type == TransactionType.income ? 1 : -1);
-    transaction!.category = category.value;
-    transaction!.description = description.text;
-    transaction!.createdAt = datetime.value;
+    transaction.amount = (amount.number * type.i).toDouble();
+    transaction.category = category.value;
+    transaction.description = description.text;
+    transaction.createdAt = datetime.value;
   }
 
   bool isOk() {
@@ -68,23 +67,12 @@ class SettingTransactionController extends BaseController {
 
   // ----------SQL-------------------------------------------------------------------------------
 
-  void _addTransaction() {
-    final transaction = Transaction.empty();
-    updateValues();
-    _transactionController.addSQL(transaction);
-  }
-
-  void _updateTransaction(Transaction transaction) {
-    updateValues();
-    _transactionController.updateSQL(transaction);
-  }
-
   bool save() {
-    if (transaction == null) {
-      _addTransaction();
-    } else {
-      _updateTransaction(transaction!);
-    }
+    updateValues();
+
+    transaction.id == 0
+        ? _transactionController.addSQL(transaction)
+        : _transactionController.updateSQL(transaction);
 
     return true;
   }

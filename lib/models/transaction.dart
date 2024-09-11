@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:pecunia/models/finance_category.dart';
 import 'package:pecunia/util/sql_fun.dart';
+import 'package:pecunia/widgets/fields/category_field.dart';
 
 part 'transaction.g.dart';
 
@@ -29,6 +30,8 @@ class Transaction {
     required this.createdAt,
     required this.description,
   });
+
+  TransactionType get type => amount > 0 ? TransactionType.income : TransactionType.expense;
 
   factory Transaction.empty() => Transaction(
         walletId: 0,

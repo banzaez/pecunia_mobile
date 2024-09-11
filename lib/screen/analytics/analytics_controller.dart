@@ -1,13 +1,16 @@
 import 'package:get/get.dart';
+import 'package:pecunia/controllers/app_controller.dart';
 import 'package:pecunia/controllers/transaction_controller.dart';
 import 'package:pecunia/models/analytics.dart';
 import 'package:pecunia/models/transaction.dart';
 import 'package:pecunia/provider/sql_analytics.dart';
 import 'package:pecunia/provider/sql_provider.dart';
+import 'package:pecunia/screen/transactions/transactions_arguments.dart';
 import 'package:pecunia/util/ext_datetime.dart';
 import 'package:pecunia/widgets/fields/pick_date/pick_date_field.dart';
 
 class AnalyticsController extends GetxController {
+  final AppController _appController = Get.find();
   final SQLProvider _sqlProvider = Get.find();
   final TransactionController _transactionController = Get.find();
 
@@ -78,6 +81,18 @@ class AnalyticsController extends GetxController {
     _refreshAnalytics();
   }
 
+  //----------NAVIGATION-------------------------------------------------------------------------
+
+  goToDetails({required int categoryId}) {
+    final TransactionsArguments arguments = TransactionsArguments(
+      walletId: _transactionController.walletId,
+      categoryId: categoryId,
+      startDate: interval.first,
+      endDate: interval.last,
+    );
+    return _appController.goToScreen(AppScreens.transactions, arguments: arguments);
+  }
+
   //---------------------------------------------------------------------------------------------
 
   Future<void> _refreshAnalytics() async {
@@ -108,5 +123,11 @@ class AnalyticsController extends GetxController {
             .where((e) => e.date.year == date.year && e.date.month == date.month)
             .toList(),
         AnalyticsPeriod.day => _daysCategory.where((e) => e.date == date).toList(),
+      };
+
+  List<DateTime> get interval => switch (_period.value) {
+        AnalyticsPeriod.year => [date.startOfYear, date.endOfYear],
+        AnalyticsPeriod.month => [date.startOfMonth, date.endOfMonth],
+        AnalyticsPeriod.day => [date.startOfDay, date.endOfDay],
       };
 }

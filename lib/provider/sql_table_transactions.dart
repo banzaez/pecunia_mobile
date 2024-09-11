@@ -1,4 +1,5 @@
 import 'package:pecunia/models/transaction.dart';
+import 'package:pecunia/util/sql_fun.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
 class SQLTableTransactions {
@@ -34,12 +35,29 @@ class SQLTableTransactions {
         whereArgs: [id],
       );
 
-  Future<List<Transaction>> selectAllByWalletId(int walletId) async {
+  Future<List<Transaction>> selectByWalletId(int walletId) async {
     List<Map<String, Object?>> maps = await _database.query(
       tableName,
       columns: null,
       where: "$columnWalletId = ?",
       whereArgs: [walletId],
+      orderBy: "$columnCreatedAt DESC",
+    );
+
+    return List.generate(maps.length, (index) => Transaction.fromJson(maps[index]));
+  }
+
+  Future<List<Transaction>> selectByWalletIdAndCategoryAndByPeriod(
+    int walletId,
+    int categoryId,
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
+    List<Map<String, Object?>> maps = await _database.query(
+      tableName,
+      columns: null,
+      where: "$columnWalletId = ? AND $columnCategoryId = ? AND $columnCreatedAt BETWEEN ? AND ?",
+      whereArgs: [walletId, categoryId, fromDateTime(startDate), fromDateTime(endDate)],
       orderBy: "$columnCreatedAt DESC",
     );
 

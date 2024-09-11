@@ -8,6 +8,7 @@ import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/util/ext_double.dart';
 import 'package:pecunia/util/ext_string.dart';
+import 'package:pecunia/widgets/custom_app_bar.dart';
 import 'package:pecunia/widgets/fields/app_switch.dart';
 import 'package:pecunia/widgets/fields/pick_date/pick_date.dart';
 
@@ -16,19 +17,8 @@ class AnalyticsScreen extends GetView<AnalyticsController> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: _appBar(),
+        appBar: CustomAppBar(title: "analytics_title".tr),
         body: _body(),
-      );
-
-  // --------------------------------------------------------------------------------------------
-
-  AppBar _appBar() => AppBar(
-        leading: IconButton(
-          onPressed: Get.back,
-          icon: const Icon(Icons.arrow_back_ios_new),
-        ),
-        title: Text("analytics_title".tr),
-        centerTitle: true,
       );
 
   // --------------------------------------------------------------------------------------------
@@ -116,9 +106,13 @@ class AnalyticsScreen extends GetView<AnalyticsController> {
   Widget _category() => Obx(() => ListView.builder(
         shrinkWrap: true,
         itemCount: controller.category.length,
-        itemBuilder: (_, index) => AnalyticsCategoryItem(
-          analytics: controller.category[index],
-          index: index,
-        ),
+        itemBuilder: (_, index) {
+          final analytics = controller.category[index];
+          return AnalyticsCategoryItem(
+            onTap: () => controller.goToDetails(categoryId: analytics.category?.id ?? 0),
+            analytics: analytics,
+            index: index,
+          );
+        },
       ));
 }

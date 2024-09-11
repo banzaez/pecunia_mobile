@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pecunia/screen/profile/profile_controller.dart';
+import 'package:pecunia/widgets/custom_app_bar.dart';
 import 'package:pecunia/widgets/fields/app_switch.dart';
 import 'package:pecunia/widgets/fields/currency_field.dart';
 import 'package:pecunia/widgets/setting_wallet/setting_wallet.dart';
@@ -19,19 +20,8 @@ class ProfileScreen extends GetView<ProfileController> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: _appBar(),
+        appBar: CustomAppBar(title: "profile_title".tr),
         body: _body(),
-      );
-
-  // --------------------------------------------------------------------------------------------
-
-  AppBar _appBar() => AppBar(
-        leading: IconButton(
-          onPressed: Get.back,
-          icon: const Icon(Icons.arrow_back_ios_new),
-        ),
-        title: Text("profile_title".tr),
-        centerTitle: true,
       );
 
   // --------------------------------------------------------------------------------------------

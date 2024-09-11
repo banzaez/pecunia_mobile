@@ -18,11 +18,13 @@ class AppController extends GetxController {
 enum AppScreens {
   home,
   analytics,
-  profile;
+  profile,
+  transactions;
 
   String get route => switch (this) {
         home => "/",
         profile => "/profile",
         analytics => "/analytics",
+        transactions => "/transactions",
       };
 }

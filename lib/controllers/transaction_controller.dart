@@ -9,6 +9,7 @@ class TransactionController extends BaseController {
   final RxInt _walletId = RxInt(0);
 
   int get walletId => _walletId.value;
+
   set walletId(int id) {
     _walletId.value = id;
     refreshTransactions();
@@ -31,14 +32,14 @@ class TransactionController extends BaseController {
   // -----------SQL------------------------------------------------------------------------------
 
   Future<void> addSQL(Transaction transaction) async {
-    if(transaction.walletId == 0) transaction.walletId = _walletId.value;
+    if (transaction.walletId == 0) transaction.walletId = _walletId.value;
     await _sqlProvider.transactions.add(value: transaction);
     await refreshTransactions();
     notifyListenersSQL("add");
   }
 
   Future<void> updateSQL(Transaction transaction) async {
-    if(transaction.walletId == 0) transaction.walletId =  _walletId.value;
+    if (transaction.walletId == 0) transaction.walletId = _walletId.value;
     await _sqlProvider.transactions.update(value: transaction);
     await refreshTransactions();
     notifyListenersSQL("update");
@@ -50,6 +51,19 @@ class TransactionController extends BaseController {
     notifyListenersSQL("delete");
   }
 
-  Future<void> refreshTransactions() async => transactions.value =
-      await _sqlProvider.transactions.selectAllByWalletId(_walletId.value);
+  Future<void> refreshTransactions() async =>
+      transactions.value = await _sqlProvider.transactions.selectByWalletId(_walletId.value);
+
+  Future<List<Transaction>> selectByWalletIdAndCategoryAndByPeriod(
+    int walletId,
+    int categoryId,
+    DateTime startDate,
+    DateTime endDate,
+  ) async =>
+      await _sqlProvider.transactions.selectByWalletIdAndCategoryAndByPeriod(
+        walletId,
+        categoryId,
+        startDate,
+        endDate,
+      );
 }
