@@ -127,6 +127,10 @@ class UaTranslation extends AppTranslation {
         "rfc_personal_expenses": "Особисті витрати",
         "rfc_investments_expenses": "Інвестиції",
         "rfc_other_expenses": "Інші витрати",
-        "rfc_transfer": "Перевод"
+        "rfc_transfer": "Перевод",
+        "total_sum": "Всього",
+        "incomes_sum": "Доходи",
+        "expenses_sum": "Витрати",
+        "total_hint": "за %1\$",
       };
 }

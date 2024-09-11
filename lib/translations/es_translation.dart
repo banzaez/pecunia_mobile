@@ -128,5 +128,9 @@ class EsTranslation extends AppTranslation {
         "rfc_investments_expenses": "Inversiones",
         "rfc_other_expenses": "Otros gastos",
         "rfc_transfer": "Transferencia",
+        "total_sum": "Total",
+        "incomes_sum": "Ingresos",
+        "expenses_sum": "Gastos",
+        "total_hint": "para %1\$",
       };
 }

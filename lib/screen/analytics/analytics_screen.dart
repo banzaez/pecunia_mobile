@@ -37,7 +37,7 @@ class AnalyticsScreen extends GetView<AnalyticsController> {
                       Text("analytics_category_period".tr.format([controller.periodStr])),
                       AppSpaces.v16,
                       Flexible(
-                        flex: 2,
+                        flex: 3,
                         child: Stack(
                           alignment: Alignment.bottomRight,
                           children: [
@@ -53,7 +53,7 @@ class AnalyticsScreen extends GetView<AnalyticsController> {
                         ),
                       ),
                       AppSpaces.v16,
-                      Expanded(flex: 3, child: _category()),
+                      Expanded(flex: 4, child: _category()),
                       AppSpaces.v16,
                     ],
                   ),

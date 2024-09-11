@@ -17,6 +17,10 @@ class AppTextStyle {
 
   //---------------------------------------------------------------------------------------------
 
+  static TextStyle text8w400({Color? color}) => baseStyle(color: color, fontSize: 8, fontWeight: FontWeight.w400);
+
+  static TextStyle text8w600({Color? color}) => baseStyle(color: color, fontSize: 8, fontWeight: FontWeight.w600);
+
   static TextStyle text10w400({Color? color}) => baseStyle(color: color, fontSize: 10, fontWeight: FontWeight.w400);
 
   static TextStyle text10w600({Color? color}) => baseStyle(color: color, fontSize: 10, fontWeight: FontWeight.w600);

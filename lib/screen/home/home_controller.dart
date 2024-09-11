@@ -5,6 +5,7 @@ import 'package:pecunia/controllers/app_controller.dart';
 import 'package:pecunia/controllers/base_controller.dart';
 import 'package:pecunia/controllers/transaction_controller.dart';
 import 'package:pecunia/controllers/wallet_controller.dart';
+import 'package:pecunia/models/analytics_total.dart';
 import 'package:pecunia/models/transaction.dart';
 import 'package:pecunia/models/wallet.dart';
 
@@ -21,6 +22,7 @@ class HomeController extends BaseController {
   }
 
   List<Wallet> get wallets => _walletController.wallets.value;
+  AnalyticsTotal get total => _transactionController.analyticsTotal;
   List<Transaction> get transactions => _transactionController.transactions.value;
 
   bool get isInitializing => _currentWallet.value == null;

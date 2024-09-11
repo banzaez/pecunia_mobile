@@ -5,6 +5,7 @@ import 'package:pecunia/screen/home/widget/current_wallet.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/widgets/setting_transaction/setting_transaction.dart';
 import 'package:pecunia/widgets/setting_wallet/setting_wallet.dart';
+import 'package:pecunia/widgets/total_header.dart';
 import 'package:pecunia/widgets/transaction_item.dart';
 
 class HomeScreen extends GetView<HomeController> {
@@ -28,14 +29,20 @@ class HomeScreen extends GetView<HomeController> {
       ));
 
   PreferredSize _analytics() => PreferredSize(
-        preferredSize: const Size.fromHeight(48.0),
-        child: TextButton.icon(
-          onPressed: controller.goToAnalytics,
-          icon: const Icon(Icons.query_stats),
-          label: Text("analytics_title".tr, style: AppTextStyle.text16w400()),
+        preferredSize: const Size.fromHeight(108.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TotalHeader(total: controller.total),
+            TextButton.icon(
+              onPressed: controller.goToAnalytics,
+              icon: const Icon(Icons.query_stats),
+              label: Text("analytics_title".tr, style: AppTextStyle.text16w400()),
+            ),
+          ],
         ),
       );
-  
+
   Widget _profile() => IconButton(
         onPressed: controller.goToProfile,
         icon: const Icon(Icons.account_box),

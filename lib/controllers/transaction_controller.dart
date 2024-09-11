@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pecunia/controllers/base_controller.dart';
+import 'package:pecunia/models/analytics_total.dart';
 import 'package:pecunia/models/transaction.dart';
 import 'package:pecunia/provider/sql_provider.dart';
 
@@ -13,7 +14,12 @@ class TransactionController extends BaseController {
   set walletId(int id) {
     _walletId.value = id;
     refreshTransactions();
+    refreshTotal();
   }
+
+  final Rx<AnalyticsTotal> _analyticsTotal = AnalyticsTotal(0, 0, 0).obs;
+
+  AnalyticsTotal get analyticsTotal => _analyticsTotal.value;
 
   final RxList<Transaction> transactions = RxList();
 
@@ -31,10 +37,17 @@ class TransactionController extends BaseController {
 
   // -----------SQL------------------------------------------------------------------------------
 
+  Future<void> refreshTransactions() async =>
+      transactions.value = await _sqlProvider.transactions.selectByWalletId(_walletId.value);
+
+  Future<void> refreshTotal() async =>
+      _analyticsTotal.value = await _sqlProvider.transactions.selectTotalByWallet(_walletId.value);
+
   Future<void> addSQL(Transaction transaction) async {
     if (transaction.walletId == 0) transaction.walletId = _walletId.value;
     await _sqlProvider.transactions.add(value: transaction);
     await refreshTransactions();
+    await refreshTotal();
     notifyListenersSQL("add");
   }
 
@@ -42,17 +55,16 @@ class TransactionController extends BaseController {
     if (transaction.walletId == 0) transaction.walletId = _walletId.value;
     await _sqlProvider.transactions.update(value: transaction);
     await refreshTransactions();
+    await refreshTotal();
     notifyListenersSQL("update");
   }
 
   Future<void> deleteSQL(int id) async {
     await _sqlProvider.transactions.delete(id: id);
     await refreshTransactions();
+    await refreshTotal();
     notifyListenersSQL("delete");
   }
-
-  Future<void> refreshTransactions() async =>
-      transactions.value = await _sqlProvider.transactions.selectByWalletId(_walletId.value);
 
   Future<List<Transaction>> selectByWalletIdAndCategoryAndByPeriod(
     int walletId,
