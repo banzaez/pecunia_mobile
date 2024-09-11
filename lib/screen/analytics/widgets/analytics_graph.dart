@@ -42,10 +42,10 @@ class AnalyticsGraph extends StatelessWidget {
           color: background,
           badgeWidget: _badge(name: item.category?.name ?? "", color: background),
           badgePositionPercentageOffset: .98,
-          radius: item.amount.isNegative ? 100 : 80,
-          title: item.amount.formatSum,
+          radius: item.total.isNegative ? 100 : 80,
+          title: item.total.formatSum,
           titleStyle: AppTextStyle.text12w400(),
-          value: item.amount.abs(),
+          value: item.total.abs(),
         );
       });
 }

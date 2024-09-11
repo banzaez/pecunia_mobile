@@ -19,7 +19,7 @@ class PickDateField extends StatelessWidget {
   });
 
   final ValueChanged<DateTime> onChanged;
-  final PickDateTypeField type;
+  final DateType type;
   final DateTime? initDate;
   final String format;
   final List<int> values;
@@ -73,32 +73,32 @@ class PickDateField extends StatelessWidget {
     DateTime currentDate = initDate ?? DateTime.now();
 
     DateTime dateTime = DateTime(
-      type == PickDateTypeField.year ? value : currentDate.year,
-      type == PickDateTypeField.month ? value : currentDate.month,
+      type == DateType.year ? value : currentDate.year,
+      type == DateType.month ? value : currentDate.month,
     );
 
     final day = currentDate.day > dateTime.daysInMonth ? dateTime.daysInMonth : currentDate.day;
 
     dateTime = DateTime(
-      type == PickDateTypeField.year ? value : currentDate.year,
-      type == PickDateTypeField.month ? value : currentDate.month,
-      type == PickDateTypeField.day ? value : day,
-      type == PickDateTypeField.hour ? value : currentDate.hour,
-      type == PickDateTypeField.minute ? value : currentDate.minute,
+      type == DateType.year ? value : currentDate.year,
+      type == DateType.month ? value : currentDate.month,
+      type == DateType.day ? value : day,
+      type == DateType.hour ? value : currentDate.hour,
+      type == DateType.minute ? value : currentDate.minute,
     );
     return dateTime;
   }
 
   int getCurrentValue() => switch (type) {
-        PickDateTypeField.year => initDate?.year ?? 0,
-        PickDateTypeField.month => initDate?.month ?? 0,
-        PickDateTypeField.day => initDate?.day ?? 0,
-        PickDateTypeField.hour => initDate?.hour ?? 0,
-        PickDateTypeField.minute => initDate?.minute ?? 0
+        DateType.year => initDate?.year ?? 0,
+        DateType.month => initDate?.month ?? 0,
+        DateType.day => initDate?.day ?? 0,
+        DateType.hour => initDate?.hour ?? 0,
+        DateType.minute => initDate?.minute ?? 0
       };
 }
 
-enum PickDateTypeField {
+enum DateType {
   year,
   month,
   day,

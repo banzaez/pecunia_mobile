@@ -39,7 +39,7 @@ class PickDate extends StatelessWidget {
     valuesMinute.fillOfRange(59, start: 0, step: 5);
   }
 
-  final Function(DateTime? value, PickDateTypeField type) onChanged;
+  final Function(DateTime? value, DateType type) onChanged;
 
   final DateTime? initDate;
 
@@ -80,8 +80,8 @@ class PickDate extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           PickDateField(
-            onChanged: (value) => onChanged(value, PickDateTypeField.day),
-            type: PickDateTypeField.day,
+            onChanged: (value) => onChanged(value, DateType.day),
+            type: DateType.day,
             initDate: initDate,
             format: formatDay,
             values: valuesDay,
@@ -89,8 +89,8 @@ class PickDate extends StatelessWidget {
           ),
           AppSpaces.h8,
           PickDateField(
-            onChanged: (value) => onChanged(value, PickDateTypeField.month),
-            type: PickDateTypeField.month,
+            onChanged: (value) => onChanged(value, DateType.month),
+            type: DateType.month,
             initDate: initDate,
             format: formatMonth,
             values: valuesMonth,
@@ -98,8 +98,8 @@ class PickDate extends StatelessWidget {
           ),
           AppSpaces.h8,
           PickDateField(
-            onChanged: (value) => onChanged(value, PickDateTypeField.year),
-            type: PickDateTypeField.year,
+            onChanged: (value) => onChanged(value, DateType.year),
+            type: DateType.year,
             initDate: initDate,
             format: formatYear,
             values: valuesYear,
@@ -113,8 +113,8 @@ class PickDate extends StatelessWidget {
         children: [
           AppSpaces.h16,
           PickDateField(
-            onChanged: (value) => onChanged(value, PickDateTypeField.hour),
-            type: PickDateTypeField.hour,
+            onChanged: (value) => onChanged(value, DateType.hour),
+            type: DateType.hour,
             initDate: initDate,
             format: formatHour,
             values: valuesHour,
@@ -122,8 +122,8 @@ class PickDate extends StatelessWidget {
           ),
           AppSpaces.h8,
           PickDateField(
-            onChanged: (value) => onChanged(value, PickDateTypeField.minute),
-            type: PickDateTypeField.minute,
+            onChanged: (value) => onChanged(value, DateType.minute),
+            type: DateType.minute,
             initDate: initDate,
             format: formatMinute,
             values: valuesMinute,

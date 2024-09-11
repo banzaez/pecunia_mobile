@@ -11,6 +11,7 @@ import 'package:pecunia/util/ext_string.dart';
 import 'package:pecunia/widgets/custom_app_bar.dart';
 import 'package:pecunia/widgets/fields/app_switch.dart';
 import 'package:pecunia/widgets/fields/pick_date/pick_date.dart';
+import 'package:pecunia/widgets/fields/pick_date/pick_date_field.dart';
 
 class AnalyticsScreen extends GetView<AnalyticsController> {
   const AnalyticsScreen({super.key});
@@ -79,9 +80,9 @@ class AnalyticsScreen extends GetView<AnalyticsController> {
                 onChanged: (value, type) => controller.setDate(value!, type),
                 initDate: controller.date,
                 enableTime: false,
-                isYearSelected: controller.isYearSelected,
-                isMonthSelected: controller.isMonthSelected,
-                isDaySelected: controller.isDaySelected,
+                isYearSelected: controller.period == DateType.year,
+                isMonthSelected: controller.period == DateType.month,
+                isDaySelected: controller.period == DateType.day,
                 valuesYear: controller.valuesYear,
                 valuesMonth: controller.valuesMonth,
                 valuesDay: controller.valuesDay,
@@ -99,7 +100,7 @@ class AnalyticsScreen extends GetView<AnalyticsController> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text("${"analytics_total_period".tr} ", style: AppTextStyle.text12w400()),
-          Text(controller.amount?.formatSum ?? "0", style: AppTextStyle.text18w400()),
+          Text(controller.total?.formatSum ?? "0", style: AppTextStyle.text18w400()),
         ],
       ));
 

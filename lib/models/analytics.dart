@@ -1,31 +1,39 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:pecunia/models/finance_category.dart';
+import 'package:pecunia/util/ext_datetime.dart';
 import 'package:pecunia/util/sql_fun.dart';
 
 part 'analytics.g.dart';
 
 @JsonSerializable()
 class Analytics {
-
   @JsonKey(fromJson: toInt)
-  final int group;
-  @JsonKey(name: "category_id", fromJson: toCategory, toJson: fromCategory)
+  final int year;
+  @JsonKey(fromJson: toInt)
+  final int month;
+  @JsonKey(fromJson: toInt)
+  final int day;
+  @JsonKey(fromJson: toCategory, toJson: fromCategory)
   final FinanceCategory? category;
-  final double amount;
+  final double total;
   final DateTime date;
-  @JsonKey(name: "id")
   final int count;
 
-  const Analytics({
-    required this.group,
+  Analytics(
+    this.year,
+    this.month,
+    this.day,
     this.category,
-    required this.amount,
-    required this.date,
-    required this.count,
-  });
+    this.total,
+    this.date,
+    this.count,
+  );
 
-  factory Analytics.fromJson(Map<String, dynamic> json) =>
-      _$AnalyticsFromJson(json);
+  DateTime get startOfYear => date.startOfYear;
+  DateTime get startOfMonth => date.startOfMonth;
+  DateTime get startOfDay => date.startOfDay;
+
+  factory Analytics.fromJson(Map<String, dynamic> json) => _$AnalyticsFromJson(json);
 
   Map<String, dynamic> toJson() => _$AnalyticsToJson(this);
 }

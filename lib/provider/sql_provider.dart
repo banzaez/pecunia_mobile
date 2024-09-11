@@ -34,7 +34,6 @@ class SQLProvider {
             "${SQLTableTransactions.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,"
             "${SQLTableTransactions.columnWalletId} INTEGER NOT NULL,"
             "${SQLTableTransactions.columnAmount} DOUBLE NOT NULL,"
-            "${SQLTableTransactions.columnCategory} TEXT(100) NOT NULL,"
             "${SQLTableTransactions.columnCategoryId} INTEGER DEFAULT '-1' NOT NULL,"
             "${SQLTableTransactions.columnCreatedAt} TEXT DEFAULT CURRENT_TIMESTAMP,"
             "${SQLTableTransactions.columnDescription} TEXT(512) NOT NULL)");

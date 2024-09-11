@@ -28,8 +28,8 @@ class AnalyticsCategoryItem extends StatelessWidget {
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: [
-                analytics.amount > 0 ? Colors.green.withOpacity(.25) : Colors.red.withOpacity(.25),
-                analytics.amount > 0
+                analytics.total > 0 ? Colors.green.withOpacity(.25) : Colors.red.withOpacity(.25),
+                analytics.total > 0
                     ? Colors.greenAccent.withOpacity(.7)
                     : Colors.redAccent.withOpacity(.7),
               ],
@@ -64,7 +64,7 @@ class AnalyticsCategoryItem extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-              Text(analytics.amount.formatSum, style: AppTextStyle.text16w600())
+              Text(analytics.total.formatSum, style: AppTextStyle.text16w600())
             ],
           ),
         ),

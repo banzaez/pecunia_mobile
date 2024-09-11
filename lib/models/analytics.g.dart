@@ -7,17 +7,21 @@ part of 'analytics.dart';
 // **************************************************************************
 
 Analytics _$AnalyticsFromJson(Map<String, dynamic> json) => Analytics(
-      group: toInt(json['group'] as String),
-      category: toCategory((json['category_id'] as num?)?.toInt()),
-      amount: (json['amount'] as num).toDouble(),
-      date: DateTime.parse(json['date'] as String),
-      count: (json['id'] as num).toInt(),
+      toInt(json['year'] as String),
+      toInt(json['month'] as String),
+      toInt(json['day'] as String),
+      toCategory((json['category'] as num?)?.toInt()),
+      (json['total'] as num).toDouble(),
+      DateTime.parse(json['date'] as String),
+      (json['count'] as num).toInt(),
     );
 
 Map<String, dynamic> _$AnalyticsToJson(Analytics instance) => <String, dynamic>{
-      'group': instance.group,
-      'category_id': fromCategory(instance.category),
-      'amount': instance.amount,
+      'year': instance.year,
+      'month': instance.month,
+      'day': instance.day,
+      'category': fromCategory(instance.category),
+      'total': instance.total,
       'date': instance.date.toIso8601String(),
-      'id': instance.count,
+      'count': instance.count,
     };

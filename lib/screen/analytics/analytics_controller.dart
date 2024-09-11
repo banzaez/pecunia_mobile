@@ -14,27 +14,15 @@ class AnalyticsController extends GetxController {
   final SQLProvider _sqlProvider = Get.find();
   final TransactionController _transactionController = Get.find();
 
-  final RxList<Analytics> _years = RxList();
-  final RxList<Analytics> _yearsCategory = RxList();
-  final RxList<Analytics> _months = RxList();
-  final RxList<Analytics> _monthsCategory = RxList();
-  final RxList<Analytics> _days = RxList();
-  final RxList<Analytics> _daysCategory = RxList();
+  final RxList<Analytics> _analytics = RxList();
 
   final Rx<DateTime> _date = DateTime.now().startOfDay.obs;
 
   DateTime get date => _date.value;
 
-  setDate(DateTime value, PickDateTypeField type) {
-    if (type == PickDateTypeField.year) {
-      _period.value = AnalyticsPeriod.year;
-    } else if (type == PickDateTypeField.month) {
-      _period.value = AnalyticsPeriod.month;
-    } else if (type == PickDateTypeField.day) {
-      _period.value = AnalyticsPeriod.day;
-    }
-
+  setDate(DateTime value, DateType type) {
     _date.value = value.startOfDay;
+    _period.value = type;
   }
 
   final Rx<AnalyticsFilter> _filter = AnalyticsFilter.total.obs;
@@ -46,31 +34,25 @@ class AnalyticsController extends GetxController {
     _refreshAnalytics();
   }
 
-  final Rx<AnalyticsPeriod> _period = AnalyticsPeriod.year.obs;
+  final Rx<DateType> _period = DateType.year.obs;
+
+  DateType get period => _period.value;
 
   List<Transaction> get transactionList => _transactionController.transactions;
 
-  String get periodStr => switch (_period.value) {
-        AnalyticsPeriod.year => date.toFormat("yyyy"),
-        AnalyticsPeriod.month => date.toFormat("MMMM yyyy"),
-        AnalyticsPeriod.day => date.toFormat("dd MMMM yyyy"),
+  String get periodStr => switch (period) {
+        DateType.year => date.toFormat("yyyy"),
+        DateType.month => date.toFormat("MMMM yyyy"),
+        DateType.day => date.toFormat("dd MMMM yyyy"),
+        DateType.hour => date.toFormat("HH:mm"),
+        DateType.minute => date.toFormat("HH:mm"),
       };
 
-  bool get isYearSelected => _period.value == AnalyticsPeriod.year;
+  List<int> get valuesYear => category.map((e) => e.date.year).toSet().toList();
 
-  bool get isMonthSelected => _period.value == AnalyticsPeriod.month;
+  List<int> get valuesMonth => category.map((e) => e.date.month).toSet().toList();
 
-  bool get isDaySelected => _period.value == AnalyticsPeriod.day;
-
-  List<int> get valuesYear => _years.map((e) => e.date.year).toList();
-
-  List<int> get valuesMonth =>
-      _months.where((e) => e.date.year == date.year).map((e) => e.date.month).toList();
-
-  List<int> get valuesDay => _days
-      .where((e) => e.date.year == date.year && e.date.month == date.month)
-      .map((e) => e.date.day)
-      .toList();
+  List<int> get valuesDay => category.map((e) => e.date.day).toSet().toList();
 
   //----------INIT-------------------------------------------------------------------------------
 
@@ -95,39 +77,29 @@ class AnalyticsController extends GetxController {
 
   //---------------------------------------------------------------------------------------------
 
-  Future<void> _refreshAnalytics() async {
-    final results = await _sqlProvider.analytics
-        .allAnalytics(walletId: _transactionController.walletId, filter: filter);
-
-    _years.value = results[0];
-    _yearsCategory.value = results[1];
-    _months.value = results[2];
-    _monthsCategory.value = results[3];
-    _days.value = results[4];
-    _daysCategory.value = results[5];
-  }
+  Future<void> _refreshAnalytics() async => _analytics.value = await _sqlProvider.analytics
+      .allAnalytics(walletId: _transactionController.walletId, filter: filter);
 
   //---------------------------------------------------------------------------------------------
 
-  double? get amount => switch (_period.value) {
-        AnalyticsPeriod.year => _years.firstWhereOrNull((e) => e.date.year == date.year)?.amount,
-        AnalyticsPeriod.month => _months
-            .firstWhereOrNull((e) => e.date.year == date.year && e.date.month == date.month)
-            ?.amount,
-        AnalyticsPeriod.day => _days.firstWhereOrNull((e) => e.date == date)?.amount,
-      };
+  List<Analytics> get category {
+    final list = switch (_period.value) {
+      DateType.year => _analytics.where((e) => e.date.year == date.year),
+      DateType.month => _analytics.where((e) => e.startOfMonth == date.startOfMonth),
+      DateType.day => _analytics.where((e) => e.date == date),
+      DateType.hour => throw UnimplementedError(),
+      DateType.minute => throw UnimplementedError(),
+    };
+    return list.toList();
+  }
 
-  List<Analytics> get category => switch (_period.value) {
-        AnalyticsPeriod.year => _yearsCategory.where((e) => e.date.year == date.year).toList(),
-        AnalyticsPeriod.month => _monthsCategory
-            .where((e) => e.date.year == date.year && e.date.month == date.month)
-            .toList(),
-        AnalyticsPeriod.day => _daysCategory.where((e) => e.date == date).toList(),
-      };
+  double? get total => category.fold(0.0, (value, e) => (value ?? 0) + e.total);
 
   List<DateTime> get interval => switch (_period.value) {
-        AnalyticsPeriod.year => [date.startOfYear, date.endOfYear],
-        AnalyticsPeriod.month => [date.startOfMonth, date.endOfMonth],
-        AnalyticsPeriod.day => [date.startOfDay, date.endOfDay],
+        DateType.year => [date.startOfYear, date.endOfYear],
+        DateType.month => [date.startOfMonth, date.endOfMonth],
+        DateType.day => [date.startOfDay, date.endOfDay],
+        DateType.hour => throw UnimplementedError(),
+        DateType.minute => throw UnimplementedError(),
       };
 }

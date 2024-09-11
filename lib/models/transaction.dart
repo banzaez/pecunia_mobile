@@ -12,8 +12,6 @@ class Transaction {
   @JsonKey(name: "wallet_id")
   int walletId;
   double amount;
-  @JsonKey(name: "category", defaultValue: "")
-  String categoryString;
   @JsonKey(name: "category_id", fromJson: toCategory, toJson: fromCategory)
   FinanceCategory? category;
   @JsonKey(name: "created_at", fromJson: toDateTime, toJson: fromDateTime)
@@ -25,7 +23,6 @@ class Transaction {
     this.id = 0,
     required this.walletId,
     required this.amount,
-    required this.categoryString,
     required this.category,
     required this.createdAt,
     required this.description,
@@ -36,7 +33,6 @@ class Transaction {
   factory Transaction.empty() => Transaction(
         walletId: 0,
         amount: 0,
-        categoryString: "",
         category: null,
         createdAt: DateTime.now(),
         description: "",
