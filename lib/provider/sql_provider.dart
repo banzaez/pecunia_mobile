@@ -51,13 +51,6 @@ class SQLProvider {
       },
       onConfigure: (db) {},
       onOpen: (db) async {
-        await addColumnIfNotExists(
-          db,
-          SQLTableTransactions.tableName,
-          SQLTableTransactions.columnCategoryId,
-          "INTEGER DEFAULT '-1' NOT NULL",
-        );
-
         _database = db;
 
         analytics = SQLAnalytics(_database);
