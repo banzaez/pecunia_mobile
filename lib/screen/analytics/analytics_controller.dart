@@ -40,20 +40,6 @@ class AnalyticsController extends GetxController {
 
   List<Transaction> get transactionList => _transactionController.transactions;
 
-  String get periodStr => switch (period) {
-        DateType.year => date.toFormat("yyyy"),
-        DateType.month => date.toFormat("MMMM yyyy"),
-        DateType.day => date.toFormat("dd MMMM yyyy"),
-        DateType.hour => date.toFormat("HH:mm"),
-        DateType.minute => date.toFormat("HH:mm"),
-      };
-
-  List<int> get valuesYear => category.map((e) => e.date.year).toSet().toList();
-
-  List<int> get valuesMonth => category.map((e) => e.date.month).toSet().toList();
-
-  List<int> get valuesDay => category.map((e) => e.date.day).toSet().toList();
-
   //----------INIT-------------------------------------------------------------------------------
 
   @override
@@ -102,4 +88,18 @@ class AnalyticsController extends GetxController {
         DateType.hour => throw UnimplementedError(),
         DateType.minute => throw UnimplementedError(),
       };
+
+  String get periodStr => switch (period) {
+        DateType.year => date.toFormat("yyyy"),
+        DateType.month => date.toFormat("MMMM yyyy"),
+        DateType.day => date.toFormat("dd MMMM yyyy"),
+        DateType.hour => date.toFormat("HH:mm"),
+        DateType.minute => date.toFormat("HH:mm"),
+      };
+
+  List<int> get valuesYear => category.map((e) => e.date.year).toSet().toList();
+
+  List<int> get valuesMonth => category.map((e) => e.date.month).toSet().toList();
+
+  List<int> get valuesDay => category.map((e) => e.date.day).toSet().toList();
 }
