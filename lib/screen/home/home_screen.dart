@@ -17,31 +17,29 @@ class HomeScreen extends GetView<HomeController> {
           child: Center(child: CircularProgressIndicator()),
         )
       : Scaffold(
-          appBar: _appBar(),
-          body: _body(),
-        ));
+        appBar: _appBar(),
+        body: _body(),
+      ));
 
   // --------------------------------------------------------------------------------------------
 
-  Widget _leading() => Obx(() => SettingWallet(
-        onChange: (value) => controller.refreshWallet(),
-        update: controller.currentWallet,
-      ));
-
-  PreferredSize _analytics() => PreferredSize(
-        preferredSize: const Size.fromHeight(108.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TotalHeader(total: controller.total),
-            TextButton.icon(
-              onPressed: controller.goToAnalytics,
-              icon: const Icon(Icons.query_stats),
-              label: Text("analytics_title".tr, style: AppTextStyle.text16w400()),
-            ),
-          ],
-        ),
-      );
+  PreferredSize _analytics() {
+    final bool showBalance = controller.currentWallet.showBalance;
+    return PreferredSize(
+      preferredSize: Size.fromHeight(showBalance ? 108.0 : 48.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (showBalance) TotalHeader(total: controller.total),
+          TextButton.icon(
+            onPressed: controller.goToAnalytics,
+            icon: const Icon(Icons.query_stats),
+            label: Text("analytics_title".tr, style: AppTextStyle.text16w400()),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _profile() => IconButton(
         onPressed: controller.goToProfile,
@@ -49,7 +47,7 @@ class HomeScreen extends GetView<HomeController> {
       );
 
   AppBar _appBar() => AppBar(
-        leading: _leading(),
+        leading: SettingWallet(update: controller.currentWallet),
         title: const CurrentWallet(),
         centerTitle: true,
         actions: [
@@ -63,7 +61,7 @@ class HomeScreen extends GetView<HomeController> {
   Widget _body() => Column(
         children: [
           _list(),
-          _bottom(),
+          const SettingTransaction().paddingSymmetric(horizontal: 16),
         ],
       );
 
@@ -104,6 +102,4 @@ class HomeScreen extends GetView<HomeController> {
           ),
         ),
       );
-
-  Widget _bottom() => const SettingTransaction().paddingSymmetric(horizontal: 16);
 }

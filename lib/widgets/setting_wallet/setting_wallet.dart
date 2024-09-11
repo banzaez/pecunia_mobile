@@ -10,9 +10,8 @@ import 'package:pecunia/widgets/fields/currency_field.dart';
 import 'package:pecunia/widgets/setting_wallet/setting_wallet_controller.dart';
 
 class SettingWallet extends StatelessWidget {
-  const SettingWallet({super.key, this.update, this.onChange});
+  const SettingWallet({super.key, this.update});
 
-  final ValueChanged? onChange;
   final Wallet? update;
 
   @override
@@ -84,7 +83,10 @@ class SettingWallet extends StatelessWidget {
               Text("setting_wallet_is_round_up".tr),
               AppSpaces.v32,
               ElevatedButton(
-                onPressed: () => _save(controller),
+                onPressed: () {
+                  if (!controller.isOk()) return;
+                  Get.backLegacy(result: controller.save());
+                },
                 child: Text("setting_wallet_button_save".tr),
               ),
               AppSpaces.v16,
@@ -92,16 +94,4 @@ class SettingWallet extends StatelessWidget {
           ),
         ),
       ));
-
-  void _save(SettingWalletController controller) {
-    if (!controller.isOk()) return;
-
-    if (update == null) {
-      controller.addSettings();
-    } else {
-      controller.updateSettings(update!);
-      onChange?.call(update!);
-    }
-    Get.backLegacy();
-  }
 }

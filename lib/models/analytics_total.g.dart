@@ -8,9 +8,9 @@ part of 'analytics_total.dart';
 
 AnalyticsTotal _$AnalyticsTotalFromJson(Map<String, dynamic> json) =>
     AnalyticsTotal(
-      (json['total'] as num).toDouble(),
-      (json['income'] as num).toDouble(),
-      (json['expense'] as num).toDouble(),
+      (json['total'] as num?)?.toDouble() ?? 0,
+      (json['income'] as num?)?.toDouble() ?? 0,
+      (json['expense'] as num?)?.toDouble() ?? 0,
     );
 
 Map<String, dynamic> _$AnalyticsTotalToJson(AnalyticsTotal instance) =>

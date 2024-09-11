@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 
 class AppController extends GetxController {
+  static bool isRoundUp = false;
+
   @override
   void onInit() {
     super.onInit();

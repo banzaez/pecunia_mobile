@@ -4,8 +4,11 @@ part 'analytics_total.g.dart';
 
 @JsonSerializable()
 class AnalyticsTotal {
+  @JsonKey(defaultValue: 0)
   final double total;
+  @JsonKey(defaultValue: 0)
   final double income;
+  @JsonKey(defaultValue: 0)
   final double expense;
 
   AnalyticsTotal(

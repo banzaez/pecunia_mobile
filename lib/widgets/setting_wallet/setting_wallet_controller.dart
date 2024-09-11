@@ -7,12 +7,14 @@ import 'package:pecunia/controllers/wallet_controller.dart';
 import 'package:pecunia/models/wallet.dart';
 
 class SettingWalletController extends BaseController {
-  SettingWalletController({required this.wallet});
+  SettingWalletController({required Wallet? wallet}) {
+    this.wallet = wallet ?? Wallet.empty();
+  }
 
   final StorageController _storageController = Get.find();
-
-  final Wallet? wallet;
   final WalletController _walletController = Get.find();
+
+  late final Wallet wallet;
 
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -29,21 +31,18 @@ class SettingWalletController extends BaseController {
   void onInit() {
     super.onInit();
 
-    if(wallet == null) {
-      currency.value = _storageController.currency;
-      return;
-    }
-
-    nameController.text = wallet!.name;
-    descriptionController.text = wallet!.description;
-    currency.value = CurrencyService().findByCode(wallet!.currency);
-    showBalance.value = wallet!.showBalance;
-    isRoundUp.value = wallet!.isRoundUp;
+    nameController.text = wallet.name;
+    descriptionController.text = wallet.description;
+    currency.value = wallet.id == 0
+        ? _storageController.currency
+        : CurrencyService().findByCode(wallet.currency);
+    showBalance.value = wallet.showBalance;
+    isRoundUp.value = wallet.isRoundUp;
   }
 
   // ----------VALUES----------------------------------------------------------------------------
 
-  void updateValues(Wallet wallet) {
+  void updateValues() {
     wallet.name = nameController.text;
     wallet.description = descriptionController.text;
     wallet.currency = currency.value!.code;
@@ -60,14 +59,13 @@ class SettingWalletController extends BaseController {
 
   // ----------SQL-------------------------------------------------------------------------------
 
-  void addSettings() {
-    final wallet = Wallet.empty();
-    updateValues(wallet);
-    _walletController.addSQL(wallet);
-  }
+  bool save() {
+    updateValues();
 
-  void updateSettings(Wallet wallet) {
-    updateValues(wallet);
-    _walletController.updateSQL(wallet);
+    wallet.id == 0
+        ? _walletController.addSQL(wallet)
+        : _walletController.updateSQL(wallet);
+
+    return true;
   }
 }

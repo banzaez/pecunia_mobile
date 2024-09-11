@@ -17,12 +17,13 @@ class HomeController extends BaseController {
   final Rxn<Wallet> _currentWallet = Rxn<Wallet>();
   Wallet get currentWallet => _currentWallet.value!;
   set currentWallet(Wallet? wallet) {
+    AppController.isRoundUp = wallet?.isRoundUp ?? false;
     _currentWallet.value = wallet;
     _transactionController.walletId = wallet?.id ?? 0;
   }
 
   List<Wallet> get wallets => _walletController.wallets.value;
-  AnalyticsTotal get total => _transactionController.analyticsTotal;
+  AnalyticsTotal get total => _transactionController.analyticsTotal.value;
   List<Transaction> get transactions => _transactionController.transactions.value;
 
   bool get isInitializing => _currentWallet.value == null;
@@ -34,18 +35,21 @@ class HomeController extends BaseController {
   @override
   void onInit() {
     super.onInit();
-
     currentWallet = _walletController.wallets.firstOrNull;
 
     _walletController.addListenerSQL((String type) {
       switch (type) {
         case "init": currentWallet = _walletController.wallets.first;
         case "delete": currentWallet = _walletController.wallets.first;
+        case "update": refreshPage();
       }
     });
   }
 
-  void refreshWallet() => _currentWallet.refresh();
+  void refreshPage() {
+    _currentWallet.refresh();
+    currentWallet = currentWallet;
+  }
 
   // ----------SWIPE-LIFT-RIGHT------------------------------------------------------------------
 

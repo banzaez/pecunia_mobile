@@ -1,7 +1,10 @@
 import 'package:intl/intl.dart';
+import 'package:pecunia/controllers/app_controller.dart';
 
 extension DoubleExtension on double {
-  String get formatSum => NumberFormat("#,###", "en_US").format(this).replaceAll(',', ' ');
+  String get formatSum => NumberFormat(AppController.isRoundUp ? "#,###" : "#,##0.00", "en_US")
+        .format(this)
+        .replaceAll(',', ' ');
 
   String get formatDouble => NumberFormat("#,##0.00", "en_US").format(this).replaceAll(',', ' ');
 }

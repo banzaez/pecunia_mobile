@@ -15,7 +15,10 @@ class DialogChooseWallet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: () => _onTap().then((wallet) => onChanged(wallet!)),
+        onTap: () => _onTap().then((wallet) {
+          if(wallet == null) return;
+          onChanged(wallet);
+        }),
         child: child,
       );
 
