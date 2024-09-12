@@ -84,19 +84,19 @@ class TransactionItem extends StatelessWidget {
   // --------------------------------------------------------------------------------------------
 
   Future<bool?> _confirmDismiss(DismissDirection direction) async => await Get.defaultDialog(
-        title: "tran_dialog_delete_title".tr,
-        middleText: "tran_dialog_delete_content".tr,
+        title: "dialog_delete_title".tr,
+        middleText: "dialog_delete_content".tr,
         confirm: TextButton(
           onPressed: () => Get.backLegacy(result: true),
           child: Text(
-            "tran_dialog_delete_delete".tr,
+            "dialog_delete_delete".tr,
             style: AppTextStyle.text16w600(color: Colors.red),
           ),
         ),
         cancel: TextButton(
           onPressed: () => Get.backLegacy(result: false),
           child: Text(
-            "tran_dialog_delete_cancel".tr,
+            "dialog_delete_cancel".tr,
             style: AppTextStyle.text16w600(),
           ),
         ),

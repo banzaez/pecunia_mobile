@@ -39,9 +39,32 @@ class WalletItem extends StatelessWidget {
             : null,
         trailing: isEditing
             ? IconButton(
-                onPressed: () => Get.find<WalletController>().deleteSQL(wallet.id),
+                onPressed: () => _confirmDismiss().then((value) {
+                  if (value == true) Get.find<WalletController>().deleteSQL(wallet.id);
+                }),
                 icon: const Icon(Icons.close, color: AppColors.edit),
               )
             : null,
       ));
+
+  // --------------------------------------------------------------------------------------------
+
+  Future<bool?> _confirmDismiss() async => await Get.defaultDialog(
+        title: "dialog_delete_title".tr,
+        middleText: "dialog_delete_content".tr,
+        confirm: TextButton(
+          onPressed: () => Get.backLegacy(result: true),
+          child: Text(
+            "dialog_delete_delete".tr,
+            style: AppTextStyle.text16w600(color: Colors.red),
+          ),
+        ),
+        cancel: TextButton(
+          onPressed: () => Get.backLegacy(result: false),
+          child: Text(
+            "dialog_delete_cancel".tr,
+            style: AppTextStyle.text16w600(),
+          ),
+        ),
+      );
 }

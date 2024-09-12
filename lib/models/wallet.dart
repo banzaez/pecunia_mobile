@@ -30,8 +30,8 @@ class Wallet {
         name: "",
         currency: null,
         description: "",
-        showBalance: false,
-        isRoundUp: false,
+        showBalance: true,
+        isRoundUp: true,
       );
 
   factory Wallet.fromJson(Map<String, dynamic> json) => _$WalletFromJson(json);
