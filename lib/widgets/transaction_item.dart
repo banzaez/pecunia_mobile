@@ -52,7 +52,10 @@ class TransactionItem extends StatelessWidget {
                           ),
                         ],
                       )),
-                      Text(transaction.amount.formatSum, style: AppTextStyle.text16w400()),
+                      Text(
+                        transaction.amount.formatSum,
+                        style: AppTextStyle.text16w400(),
+                      ),
                       _description(),
                     ],
                   ),

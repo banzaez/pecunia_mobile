@@ -18,6 +18,7 @@ class HomeController extends BaseController {
   Wallet get currentWallet => _currentWallet.value!;
   set currentWallet(Wallet? wallet) {
     AppController.isRoundUp = wallet?.isRoundUp ?? false;
+
     _currentWallet.value = wallet;
     _transactionController.walletId = wallet?.id ?? 0;
   }
