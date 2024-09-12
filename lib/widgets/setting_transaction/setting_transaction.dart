@@ -49,40 +49,44 @@ class SettingTransaction extends StatelessWidget {
             children: [
               Text("setting_tran_title".tr),
               AppSpaces.v16,
-              NumberField(
-                autofocus: true,
-                controller: controller.amount,
-                labelText: "setting_tran_amount".tr,
-                errorText: controller.errorAmount.value,
-              ),
-              AppSpaces.v16,
-              CategoryField(
-                onChanged: (value) => controller.category.value = value,
-                type: controller.type,
-                value: controller.category.value,
-                error: controller.errorCategory.value,
-              ),
-              AppSpaces.v16,
-              BaseField(
-                controller: controller.description,
-                maxLines: 3,
-                labelText: "setting_tran_description".tr,
-              ),
-              AppSpaces.v16,
-              AppSwitch(
-                onChange: (value) => controller.type = value,
-                values: [
-                  AppSwitchValue(
-                    label: "setting_tran_expenses".tr,
-                    value: TransactionType.expense,
+              Column(
+                children: [
+                  NumberField(
+                    autofocus: true,
+                    controller: controller.amount,
+                    labelText: "setting_tran_amount".tr,
+                    errorText: controller.errorAmount.value,
                   ),
-                  AppSwitchValue(
-                    label: "setting_tran_income".tr,
-                    value: TransactionType.income,
+                  AppSpaces.v16,
+                  CategoryField(
+                    onChanged: (value) => controller.category.value = value,
+                    type: controller.type,
+                    value: controller.category.value,
+                    error: controller.errorCategory.value,
+                  ),
+                  AppSpaces.v16,
+                  BaseField(
+                    controller: controller.description,
+                    maxLines: 3,
+                    labelText: "setting_tran_description".tr,
+                  ),
+                  AppSpaces.v16,
+                  AppSwitch(
+                    onChange: (value) => controller.type = value,
+                    values: [
+                      AppSwitchValue(
+                        label: "setting_tran_expenses".tr,
+                        value: TransactionType.expense,
+                      ),
+                      AppSwitchValue(
+                        label: "setting_tran_income".tr,
+                        value: TransactionType.income,
+                      ),
+                    ],
+                    value: controller.type,
                   ),
                 ],
-                value: controller.type,
-              ),
+              ).paddingSymmetric(horizontal: 32),
               AppSpaces.v16,
               PickDate(
                 onChanged: (value, type) => controller.datetime.value = value!,

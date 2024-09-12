@@ -14,6 +14,7 @@ import 'package:pecunia/screen/profile/profile_binding.dart';
 import 'package:pecunia/screen/profile/profile_screen.dart';
 import 'package:pecunia/screen/transactions/transactions_binding.dart';
 import 'package:pecunia/screen/transactions/transactions_screen.dart';
+import 'package:pecunia/screen/wallets/wallets_screen.dart';
 import 'package:pecunia/styles/app_themes.dart';
 import 'package:pecunia/translations/app_translations.dart';
 import 'package:pecunia/util/app_constants.dart';
@@ -56,9 +57,10 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(name: '/', page: () => const HomeScreen(), binding: HomeBinding()),
         GetPage(name: AppScreens.analytics.route, page: () => const AnalyticsScreen(), binding: AnalyticsBinding()),
+        GetPage(name: AppScreens.backup.route, page: () => const BackupScreen(), binding: BackupBinding()),
         GetPage(name: AppScreens.profile.route, page: () => const ProfileScreen(), binding: ProfileBinding()),
         GetPage(name: AppScreens.transactions.route, page: () => const TransactionsScreen(), binding: TransactionsBinding()),
-        GetPage(name: AppScreens.backup.route, page: () => const BackupScreen(), binding: BackupBinding()),
+        GetPage(name: AppScreens.wallets.route, page: () => const WalletsScreen()),
       ],
     );
   }

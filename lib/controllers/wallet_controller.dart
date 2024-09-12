@@ -10,6 +10,8 @@ class WalletController extends BaseController {
 
   final List<Function(String type)> _listeners = [];
 
+  final RxBool isEditing = RxBool(false);
+
   // -----------INIT-----------------------------------------------------------------------------
 
   @override

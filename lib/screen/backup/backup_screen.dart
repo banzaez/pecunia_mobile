@@ -36,7 +36,7 @@ class BackupScreen extends GetView<BackupController> {
               onPressed: controller.recovery,
               child: Text("backup_recovery".tr),
             ),
-            AppSpaces.v32,
+            AppSpaces.v64,
           ],
         ),
       );

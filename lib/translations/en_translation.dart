@@ -137,13 +137,15 @@ class EnTranslation extends AppTranslation {
         "total_hint": "for %1\$",
 
         "backup_title": "Archiving & Recovery",
-
+        "backup_button": "archiving & recovery",
         "backup_filename": "filename",
         "backup_size": "size",
-
         "backup_archiving": "archiving",
         "backup_recovery": "recovery",
         "backup_restarting": "Restarting",
         "backup_restarting_body": "Please tap here to open the app again.",
+
+        "wallets_title": "My wallents",
+        "wallets_button": "my wallents",
       };
 }
