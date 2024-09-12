@@ -6,6 +6,8 @@ import 'package:pecunia/controllers/storage_controller.dart';
 import 'package:pecunia/provider/sql_provider.dart';
 import 'package:pecunia/screen/analytics/analitics_binding.dart';
 import 'package:pecunia/screen/analytics/analytics_screen.dart';
+import 'package:pecunia/screen/backup/backup_binding.dart';
+import 'package:pecunia/screen/backup/backup_screen.dart';
 import 'package:pecunia/screen/home/home_binding.dart';
 import 'package:pecunia/screen/home/home_screen.dart';
 import 'package:pecunia/screen/profile/profile_binding.dart';
@@ -20,10 +22,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final sql = Get.put(SQLProvider(), permanent: true);
-  await sql.initAsync();
+  await sql.init();
 
   final storage = Get.put(StorageController(), permanent: true);
-  await storage.initAsync();
+  await storage.init();
 
   Get.put(AppTranslations(), permanent: true);
   Get.put(AppController(), permanent: true);
@@ -56,6 +58,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: AppScreens.analytics.route, page: () => const AnalyticsScreen(), binding: AnalyticsBinding()),
         GetPage(name: AppScreens.profile.route, page: () => const ProfileScreen(), binding: ProfileBinding()),
         GetPage(name: AppScreens.transactions.route, page: () => const TransactionsScreen(), binding: TransactionsBinding()),
+        GetPage(name: AppScreens.backup.route, page: () => const BackupScreen(), binding: BackupBinding()),
       ],
     );
   }

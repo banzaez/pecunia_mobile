@@ -10,7 +10,7 @@ class StorageController extends GetxController {
   final _currencyKey = "currency";
   final _localeKey = "locale";
 
-  Future<void> initAsync() async => await GetStorage.init();
+  Future<void> init() async => await GetStorage.init();
 
   //----------LOCALE-----------------------------------------------------------------------------
 

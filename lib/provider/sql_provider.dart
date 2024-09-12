@@ -17,7 +17,9 @@ class SQLProvider {
 
   final filename = "pecunia.db";
 
-  Future<void> initAsync() async {
+  String get databasesPath => _database.path;
+
+  Future<void> init() async {
     isLoading = true;
 
     // Get a location using getDatabasesPath

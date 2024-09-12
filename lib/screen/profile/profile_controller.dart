@@ -1,11 +1,13 @@
 import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pecunia/controllers/app_controller.dart';
 import 'package:pecunia/controllers/storage_controller.dart';
 import 'package:pecunia/controllers/wallet_controller.dart';
 import 'package:pecunia/models/wallet.dart';
 
 class ProfileController extends GetxController {
+  final AppController _appController = Get.find();
   final StorageController _storageController = Get.find();
   final WalletController _walletController = Get.find();
 
@@ -33,4 +35,8 @@ class ProfileController extends GetxController {
 
     darkTheme.addListener(() => Get.changeThemeMode(darkTheme.value));
   }
+
+  // -----------NAVIGATION-----------------------------------------------------------------------
+
+  void goToBackup() => _appController.goToScreen(AppScreens.backup);
 }

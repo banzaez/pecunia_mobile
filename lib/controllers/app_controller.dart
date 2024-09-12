@@ -21,12 +21,14 @@ enum AppScreens {
   home,
   analytics,
   profile,
-  transactions;
+  transactions,
+  backup;
 
   String get route => switch (this) {
         home => "/",
         profile => "/profile",
         analytics => "/analytics",
         transactions => "/transactions",
+        backup => "/backup",
       };
 }

@@ -60,8 +60,9 @@ class ProfileScreen extends GetView<ProfileController> {
               ],
             ),
             _listWallets(),
-            AppSpaces.v16,
             Text("${"profile_my_wallets".tr} (${controller.wallets.length})"),
+            AppSpaces.v16,
+            _backup(),
             AppSpaces.v16,
             const Spacer(),
             SwitchLanguage(),
@@ -99,6 +100,11 @@ class ProfileScreen extends GetView<ProfileController> {
                   ))),
         ),
       );
+
+  Widget _backup() => ElevatedButton(
+        onPressed: controller.goToBackup,
+        child: Text("backup_title".tr),
+      ).paddingSymmetric(horizontal: 8);
 
   Future<void> _launchUrl() async {
     final Uri url = Uri.parse("mailto:${AppConstants.supportEmail}");
