@@ -242,10 +242,10 @@ packages:
     dependency: transitive
     description:
       name: dart_style
-      sha256: "99e066ce75c89d6b29903d788a7bb9369cf754f7b24bf70bf4b6d6d6b26853b9"
+      sha256: "7856d364b589d1f08986e140938578ed36ed948581fbc3bc9aef1805039ac5ab"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.6"
+    version: "2.3.7"
   equatable:
     dependency: transitive
     description:
@@ -366,10 +366,10 @@ packages:
     dependency: "direct main"
     description:
       name: get
-      sha256: "70385baedff4951cc8916732da99c0e5f6f645f14073f65522dd89ad4faa2bf3"
+      sha256: fa0e73cad89b9a6df0ac46d899989f5a1f61359192961e9c2e180543ff9a3c62
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.0-release-candidate-9.1"
+    version: "5.0.0-release-candidate-9.2"
   get_storage:
     dependency: "direct main"
     description:

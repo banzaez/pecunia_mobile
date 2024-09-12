@@ -28,7 +28,7 @@ class TotalHeader extends StatelessWidget {
             hintText: "total_hint".tr.format([DateTime.now().formatMMMM]),
           ),
           _item(
-            value: total.expense.formatSum,
+            value: total.expense.abs().formatSum,
             label: "expenses_sum".tr,
             hintText: "total_hint".tr.format([DateTime.now().formatMMMM]),
           ),
