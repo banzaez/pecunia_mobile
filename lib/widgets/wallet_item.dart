@@ -17,7 +17,10 @@ class WalletItem extends StatelessWidget {
       child: ListTile(
         leading: CircleAvatar(
           backgroundColor: Colors.white10,
-          child: Text(wallet.currency, style: AppTextStyle.text14w600(color: Colors.white60)),
+          child: Text(
+            wallet.currency?.code ?? "",
+            style: AppTextStyle.text14w600(color: Colors.white60),
+          ),
         ),
         title: Text.rich(TextSpan(
           children: [
@@ -25,12 +28,15 @@ class WalletItem extends StatelessWidget {
             TextSpan(text: wallet.name),
           ],
         )),
-        subtitle: wallet.description.isNotEmpty ? Text.rich(TextSpan(
-          children: [
-            TextSpan(text: "${"wallet_item_description".tr}: ", style: AppTextStyle.text12w400()),
-            TextSpan(text: wallet.description),
-          ],
-        )) : null,
+        subtitle: wallet.description.isNotEmpty
+            ? Text.rich(TextSpan(
+                children: [
+                  TextSpan(
+                      text: "${"wallet_item_description".tr}: ", style: AppTextStyle.text12w400()),
+                  TextSpan(text: wallet.description),
+                ],
+              ))
+            : null,
         trailing: isEditing
             ? IconButton(
                 onPressed: () => Get.find<WalletController>().deleteSQL(wallet.id),

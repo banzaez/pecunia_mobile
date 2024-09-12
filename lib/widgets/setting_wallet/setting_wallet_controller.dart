@@ -33,9 +33,7 @@ class SettingWalletController extends BaseController {
 
     nameController.text = wallet.name;
     descriptionController.text = wallet.description;
-    currency.value = wallet.id == 0
-        ? _storageController.currency
-        : CurrencyService().findByCode(wallet.currency);
+    currency.value = wallet.id == 0 ? _storageController.currency : wallet.currency;
     showBalance.value = wallet.showBalance;
     isRoundUp.value = wallet.isRoundUp;
   }
@@ -45,7 +43,7 @@ class SettingWalletController extends BaseController {
   void updateValues() {
     wallet.name = nameController.text;
     wallet.description = descriptionController.text;
-    wallet.currency = currency.value!.code;
+    wallet.currency = currency.value;
     wallet.showBalance = showBalance.value;
     wallet.isRoundUp = isRoundUp.value;
   }
@@ -62,9 +60,7 @@ class SettingWalletController extends BaseController {
   bool save() {
     updateValues();
 
-    wallet.id == 0
-        ? _walletController.addSQL(wallet)
-        : _walletController.updateSQL(wallet);
+    wallet.id == 0 ? _walletController.addSQL(wallet) : _walletController.updateSQL(wallet);
 
     return true;
   }

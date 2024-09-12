@@ -9,7 +9,7 @@ part of 'wallet.dart';
 Wallet _$WalletFromJson(Map<String, dynamic> json) => Wallet(
       id: (json['_id'] as num?)?.toInt() ?? 0,
       name: json['name'] as String,
-      currency: json['currency'] as String,
+      currency: toCurrency(json['currency'] as String),
       description: json['description'] as String,
       showBalance: toBoolean(json['showBalance']),
       isRoundUp: toBoolean(json['isRoundUp']),
@@ -18,7 +18,7 @@ Wallet _$WalletFromJson(Map<String, dynamic> json) => Wallet(
 Map<String, dynamic> _$WalletToJson(Wallet instance) => <String, dynamic>{
       '_id': instance.id,
       'name': instance.name,
-      'currency': instance.currency,
+      'currency': fromCurrency(instance.currency),
       'description': instance.description,
       'showBalance': fromBoolean(instance.showBalance),
       'isRoundUp': fromBoolean(instance.isRoundUp),

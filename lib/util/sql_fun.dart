@@ -1,3 +1,4 @@
+import 'package:currency_picker/currency_picker.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pecunia/models/finance_categories.dart';
@@ -15,5 +16,10 @@ int toInt(String value) => int.tryParse(value) ?? 0;
 
 int fromCategory(FinanceCategory? category) => category?.id ?? -1;
 
-FinanceCategory? toCategory(int? value) => value == null ? null : FinanceCategories.allCategories
-    .firstWhereOrNull((element) => element.id == value);
+FinanceCategory? toCategory(int? value) => value == null
+    ? null
+    : FinanceCategories.allCategories.firstWhereOrNull((element) => element.id == value);
+
+Currency? toCurrency(String value) => CurrencyService().findByCode(value);
+
+String fromCurrency(Currency? currency) => currency?.code ?? "";

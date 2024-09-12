@@ -1,3 +1,4 @@
+import 'package:currency_picker/currency_picker.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:pecunia/util/sql_fun.dart';
 
@@ -8,7 +9,8 @@ class Wallet {
   @JsonKey(name: "_id")
   int id;
   String name;
-  String currency;
+  @JsonKey(fromJson: toCurrency, toJson: fromCurrency)
+  Currency? currency;
   String description;
   @JsonKey(fromJson: toBoolean, toJson: fromBoolean)
   bool showBalance;
@@ -26,7 +28,7 @@ class Wallet {
 
   factory Wallet.empty() => Wallet(
         name: "",
-        currency: "",
+        currency: null,
         description: "",
         showBalance: false,
         isRoundUp: false,
