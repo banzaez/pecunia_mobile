@@ -4,7 +4,6 @@ import 'package:pecunia/controllers/wallet_controller.dart';
 import 'package:pecunia/provider/sql_analytics.dart';
 import 'package:pecunia/provider/sql_table_transactions.dart';
 import 'package:pecunia/provider/sql_table_wallets.dart';
-import 'package:pecunia/services/google_api.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
 class SQLProvider {
@@ -24,8 +23,6 @@ class SQLProvider {
     // Get a location using getDatabasesPath
     var databasesPath = await sql.getDatabasesPath();
     String path = '$databasesPath/$filename';
-
-    GoogleApi().authenticate(path);
 
     // // Delete the database
     // await sql.deleteDatabase(path);
