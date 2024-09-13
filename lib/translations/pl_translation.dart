@@ -134,5 +134,15 @@ class PlTranslation extends AppTranslation {
         "incomes_sum": "Przychody",
         "expenses_sum": "Wydatki",
         "total_hint": "dla %1\$",
+        "backup_title": "Archiwizacja i Odzyskiwanie",
+        "backup_button": "archiwizacja i odzyskiwanie",
+        "backup_filename": "nazwa pliku",
+        "backup_size": "rozmiar",
+        "backup_archiving": "archiwizacja",
+        "backup_recovery": "odzyskiwanie",
+        "backup_restarting": "Restartowanie",
+        "backup_restarting_body": "Kliknij tutaj, aby ponownie otworzyć aplikację.",
+        "wallets_title": "Moje portfele",
+        "wallets_button": "moje portfele",
       };
 }

@@ -132,5 +132,15 @@ class EsTranslation extends AppTranslation {
         "incomes_sum": "Ingresos",
         "expenses_sum": "Gastos",
         "total_hint": "para %1\$",
+        "backup_title": "Archivado y Recuperación",
+        "backup_button": "archivado y recuperación",
+        "backup_filename": "nombre del archivo",
+        "backup_size": "tamaño",
+        "backup_archiving": "archivado",
+        "backup_recovery": "recuperación",
+        "backup_restarting": "Reiniciando",
+        "backup_restarting_body": "Por favor, toca aquí para abrir la aplicación de nuevo.",
+        "wallets_title": "Mis billeteras",
+        "wallets_button": "mis billeteras",
       };
 }

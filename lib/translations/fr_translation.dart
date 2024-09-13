@@ -132,5 +132,15 @@ class FrTranslation extends AppTranslation {
         "incomes_sum": "Revenus",
         "expenses_sum": "Dépenses",
         "total_hint": "pour %1\$",
+        "backup_title": "Archivage et Récupération",
+        "backup_button": "archivage et récupération",
+        "backup_filename": "nom du fichier",
+        "backup_size": "taille",
+        "backup_archiving": "archivage",
+        "backup_recovery": "récupération",
+        "backup_restarting": "Redémarrage",
+        "backup_restarting_body": "Veuillez cliquer ici pour rouvrir l'application.",
+        "wallets_title": "Mes portefeuilles",
+        "wallets_button": "mes portefeuilles",
       };
 }

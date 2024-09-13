@@ -132,5 +132,15 @@ class RuTranslation extends AppTranslation {
         "incomes_sum": "Доходы",
         "expenses_sum": "Расходы",
         "total_hint": "за %1\$",
+        "backup_title": "Архивация и Восстановление",
+        "backup_button": "архивация и восстановление",
+        "backup_filename": "имя файла",
+        "backup_size": "размер",
+        "backup_archiving": "архивация",
+        "backup_recovery": "восстановление",
+        "backup_restarting": "Перезапуск",
+        "backup_restarting_body": "Нажмите здесь, чтобы открыть приложение снова.",
+        "wallets_title": "Мои кошельки",
+        "wallets_button": "мои кошельки",
       };
 }

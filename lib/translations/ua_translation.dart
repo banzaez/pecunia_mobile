@@ -132,5 +132,15 @@ class UaTranslation extends AppTranslation {
         "incomes_sum": "Доходи",
         "expenses_sum": "Витрати",
         "total_hint": "за %1\$",
+        "backup_title": "Архівація та Відновлення",
+        "backup_button": "архівація та відновлення",
+        "backup_filename": "ім'я файлу",
+        "backup_size": "розмір",
+        "backup_archiving": "архівація",
+        "backup_recovery": "відновлення",
+        "backup_restarting": "Перезапуск",
+        "backup_restarting_body": "Натисніть тут, щоб відкрити додаток знову.",
+        "wallets_title": "Мої гаманці",
+        "wallets_button": "мої гаманці",
       };
 }
