@@ -147,5 +147,8 @@ class EnTranslation extends AppTranslation {
 
         "wallets_title": "My wallents",
         "wallets_button": "my wallents",
+
+        "error": "Error",
+        "backup_error_msg": 'The selected file is not in "db" format',
       };
 }

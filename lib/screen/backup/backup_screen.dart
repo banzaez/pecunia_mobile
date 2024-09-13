@@ -19,25 +19,48 @@ class BackupScreen extends GetView<BackupController> {
   Widget _body() => Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            AppSpaces.v16,
-            Text(controller.filename, style: AppTextStyle.text16w400()),
-            Text("backup_filename".tr, style: AppTextStyle.text12w400()),
-            AppSpaces.v16,
-            Text("${controller.size}KB"),
-            Text("backup_size".tr, style: AppTextStyle.text12w400()),
-            const Spacer(),
-            ElevatedButton(
+            Column(
+              children: [
+                _text(controller.filename, "backup_filename".tr),
+                AppSpaces.v32,
+                _text("${controller.size}KB", "backup_size".tr),
+              ],
+            ),
+            _buttons(),
+          ],
+        ),
+      );
+
+  // --------------------------------------------------------------------------------------------
+
+  Widget _text(String value, String hint) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(value, style: AppTextStyle.text18w400()),
+          Text(hint, style: AppTextStyle.text14w400()),
+        ],
+      );
+
+  Widget _buttons() => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: 256,
+            child: ElevatedButton(
               onPressed: controller.archiving,
               child: Text("backup_archiving".tr),
             ),
-            AppSpaces.v16,
-            ElevatedButton(
+          ),
+          AppSpaces.v16,
+          SizedBox(
+            width: 256,
+            child: ElevatedButton(
               onPressed: controller.recovery,
               child: Text("backup_recovery".tr),
             ),
-            AppSpaces.v64,
-          ],
-        ),
+          ),
+        ],
       );
 }

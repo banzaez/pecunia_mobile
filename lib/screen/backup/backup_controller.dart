@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
+import 'package:pecunia/models/analytics.dart';
 import 'package:pecunia/provider/sql_provider.dart';
+import 'package:pecunia/util/ext_datetime.dart';
 import 'package:restart_app/restart_app.dart';
 
 class BackupController extends GetxController {
@@ -27,7 +29,7 @@ class BackupController extends GetxController {
 
   Future<void> archiving() async {
     FilePicker.platform.saveFile(
-      fileName: filename,
+      fileName: "penunia_backup_${DateTime.now().toFormat("yyyyMMdd")}.db",
       bytes: file.readAsBytesSync(),
     );
   }
@@ -37,7 +39,17 @@ class BackupController extends GetxController {
 
     if (result == null) return;
 
-    File backupFile = File(result.files.single.path!);
+    final path = result.files.single.path!;
+
+    final extension = path.split(".").last;
+
+    if (extension != "db") {
+      Get.snackbar("error".tr, "backup_error_msg".tr);
+      return;
+    }
+
+    File backupFile = File(path);
+
     backupFile.copySync(_sqlProvider.databasesPath);
 
     Restart.restartApp(
