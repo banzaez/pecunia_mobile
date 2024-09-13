@@ -25,31 +25,13 @@ class ProfileScreen extends GetView<ProfileController> {
 
   Widget _body() => GetX<ProfileController>(
         builder: (controller) => Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            AppSpaces.v16,
+            const SizedBox.shrink(),
             _settings(),
-            AppSpaces.v32,
             _buttons(),
-            AppSpaces.v16,
-            const Spacer(),
             SwitchLanguage(),
-            const Spacer(),
-            TextButton(
-              onPressed: _launchUrl,
-              child: const Text(AppConstants.supportEmail),
-            ),
-            Text("profile_support".tr, style: AppTextStyle.text12w400(color: AppColors.disable)),
-            AppSpaces.v16,
-            FutureBuilder(
-              future: PackageInfo.fromPlatform(),
-              builder: (_, snapshot) => snapshot.hasData
-                  ? Text(
-                      "${snapshot.data!.packageName} ${snapshot.data!.version}",
-                      style: AppTextStyle.text12w400(color: AppColors.disable),
-                    )
-                  : const SizedBox.shrink(),
-            ),
-            AppSpaces.v64,
+            _support(),
           ],
         ),
       );
@@ -93,6 +75,27 @@ class ProfileScreen extends GetView<ProfileController> {
               onPressed: controller.goToBackup,
               child: Text("backup_button".tr),
             ),
+          ),
+        ],
+      );
+
+  Widget _support() => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextButton(
+            onPressed: _launchUrl,
+            child: const Text(AppConstants.supportEmail),
+          ),
+          Text("profile_support".tr, style: AppTextStyle.text12w400(color: AppColors.disable)),
+          AppSpaces.v16,
+          FutureBuilder(
+            future: PackageInfo.fromPlatform(),
+            builder: (_, snapshot) => snapshot.hasData
+                ? Text(
+                    "${snapshot.data!.packageName} ${snapshot.data!.version}",
+                    style: AppTextStyle.text12w400(color: AppColors.disable),
+                  )
+                : const SizedBox.shrink(),
           ),
         ],
       );
