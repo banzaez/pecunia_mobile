@@ -44,7 +44,7 @@ class AnalyticsGraph extends StatelessWidget {
           badgePositionPercentageOffset: .98,
           radius: item.total.isNegative ? 100 : 80,
           title: item.total.formatSum,
-          titleStyle: AppTextStyle.text12w400(),
+          titleStyle: AppTextStyle.text10w600(),
           value: item.total.abs(),
         );
       });
