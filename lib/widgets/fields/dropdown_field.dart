@@ -1,80 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:pecunia/styles/app_colors.dart';
-import 'package:pecunia/styles/app_text_style.dart';
-import 'package:pecunia/util/app_spaces.dart';
+import 'package:pecunia/styles/app_border_style.dart';
 
 class DropdownField<T> extends StatelessWidget {
+  final ValueChanged<T>? onChanged;
+  final List<DropdownMenuItem<T>> items;
   final T? value;
 
   final String hint;
-  final String? label;
-  final String? error;
-
-  final List<DropdownMenuItem<T>> items;
-  final ValueChanged<T>? onChanged;
+  final String? errorText;
 
   const DropdownField({
     super.key,
     this.onChanged,
     required this.items,
     required this.hint,
-    this.label,
     this.value,
-    this.error,
+    this.errorText,
   });
 
   @override
-  Widget build(BuildContext context) {
-    var field = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        DecoratedBox(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: error == null ? AppColors.borderColor : AppColors.error,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(8),
+  Widget build(BuildContext context) => DropdownButtonFormField(
+        onChanged: (value) {
+          if (value == null) return;
+          onChanged?.call(value);
+        },
+        decoration: InputDecoration(
+          alignLabelWithHint: true,
+          contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          border: const OutlineInputBorder(
+            borderSide: AppBorderStyle.borderSide,
+            borderRadius: AppBorderStyle.borderRadius,
           ),
-          child: ButtonTheme(
-            alignedDropdown: true,
-            child: DropdownButton(
-              onChanged: (value) {
-                if (value == null) return;
-                onChanged?.call(value);
-              },
-              borderRadius: BorderRadius.circular(8),
-              isExpanded: true,
-              icon: const Padding(
-                padding: EdgeInsets.only(right: 8.0),
-                child: Icon(Icons.arrow_drop_down_outlined, color: Colors.white),
-              ),
-              underline: const SizedBox(),
-              value: value,
-              hint: Text(hint),
-              items: items,
-            ), //.marginSymmetric(horizontal: 8),
+          enabledBorder: const OutlineInputBorder(
+            borderSide: AppBorderStyle.borderSideEnabled,
+            borderRadius: AppBorderStyle.borderRadius,
           ),
+          errorBorder: const OutlineInputBorder(
+            borderSide: AppBorderStyle.borderSideError,
+            borderRadius: AppBorderStyle.borderRadius,
+          ),
+          errorText: errorText,
         ),
-        if (error != null)
-          Text(error!, style: AppTextStyle.text12w400(color: Colors.red))
-              .paddingOnly(left: 12, top: 8),
-      ],
-    );
-
-    if (label != null) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label!, style: AppTextStyle.text12w400()),
-          AppSpaces.v8,
-          field,
-        ],
+        hint: Text(hint),
+        items: items,
+        value: value,
       );
-    }
-
-    return field;
-  }
 }

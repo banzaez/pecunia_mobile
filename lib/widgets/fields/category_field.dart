@@ -28,30 +28,18 @@ class CategoryField extends StatelessWidget {
         items: _itemsWidget(),
         hint: "label_category".tr,
         value: value,
-        error: error,
+        errorText: error,
       );
 
   // --------------------------------------------------------------------------------------------
 
-  List<DropdownMenuItem<FinanceCategory>> _itemsWidget() {
-    final list = List.generate(items.length, (index) {
-      final item = items[index];
-      return DropdownMenuItem(
-        value: item,
-        child: Text(item.name),
-      );
-    });
-
-    list.insert(
-      0,
-      DropdownMenuItem(
-        value: null,
-        child: Text("tran_item_error_category".tr),
-      ),
-    );
-
-    return list;
-  }
+  List<DropdownMenuItem<FinanceCategory>> _itemsWidget() => List.generate(items.length, (index) {
+        final item = items[index];
+        return DropdownMenuItem(
+          value: item,
+          child: Text(item.name),
+        );
+      });
 }
 
 enum TransactionType {

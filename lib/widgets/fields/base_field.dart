@@ -50,7 +50,7 @@ class BaseField extends TextFormField {
             prefixIcon: prefixIcon,
             prefixText: prefixText,
             suffixIcon: suffixIcon,
-            labelText: showLabel ? labelText : null,
+            labelText: labelText,
             hintText: hintText,
             hintMaxLines: 10,
             floatingLabelBehavior: showLabel ? null : FloatingLabelBehavior.never,
