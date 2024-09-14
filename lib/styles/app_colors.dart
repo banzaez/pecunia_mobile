@@ -14,5 +14,5 @@ class AppColors {
 
   static const Color borderColor = Colors.grey;
 
-  static const Color backgroundContent = Colors.white10;
+  static get backgroundContent => Get.isDarkMode ? Colors.white10 : Colors.black12;
 }

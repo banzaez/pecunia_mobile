@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/styles/app_text_style.dart';
@@ -34,7 +33,7 @@ class AppThemes {
           backgroundColor: Colors.black,
         ),
         dialogBackgroundColor: Colors.black,
-        elevatedButtonTheme: _elevatedButtonTheme,
+        elevatedButtonTheme: _elevatedButtonDarkTheme,
         primarySwatch: AppColors.primary,
         primaryColor: AppColors.primary,
         colorScheme: const ColorScheme(
@@ -55,11 +54,21 @@ class AppThemes {
 
   static ElevatedButtonThemeData get _elevatedButtonTheme => ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white10,
+          backgroundColor: Colors.grey.shade300,
           textStyle: AppTextStyle.text16w400(),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
         ),
       );
+
+  static ElevatedButtonThemeData get _elevatedButtonDarkTheme => ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.white10,
+      textStyle: AppTextStyle.text16w400(),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+    ),
+  );
 }
