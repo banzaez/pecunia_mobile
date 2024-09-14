@@ -5,7 +5,7 @@ import 'package:pecunia/styles/app_colors.dart';
 Future<T?> appBottomSheet<T>(Widget child) async => await Get.bottomSheet(
       child.paddingAll(16),
       backgroundColor: AppColors.background,
-      barrierColor: Colors.white10,
+      barrierColor: Get.isDarkMode ? Colors.white24 : Colors.black54,
       shape: RoundedRectangleBorder(
         side: BorderSide(color: Colors.grey.withOpacity(0.3), width: 1),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),

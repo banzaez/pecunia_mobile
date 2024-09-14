@@ -8,8 +8,8 @@ import 'package:pecunia/util/ext_double.dart';
 class AnalyticsGraph extends StatelessWidget {
   const AnalyticsGraph({super.key, required this.data, required this.isTotal});
 
-  final bool isTotal;
   final List<Analytics> data;
+  final bool isTotal;
 
   @override
   Widget build(BuildContext context) => PieChart(
@@ -42,7 +42,7 @@ class AnalyticsGraph extends StatelessWidget {
           color: background,
           badgeWidget: _badge(name: item.category?.name ?? "", color: background),
           badgePositionPercentageOffset: .98,
-          radius: item.total.isNegative ? 100 : 80,
+          radius: isTotal ?  item.total.isNegative ? 100 : 80 : 100,
           title: item.total.formatSum,
           titleStyle: AppTextStyle.text10w600(),
           value: item.total.abs(),
