@@ -15,6 +15,7 @@ class SQLTableTransactions {
   static const String columnWalletId = 'wallet_id';
   static const String columnAmount = 'amount';
   static const String columnCategoryId = 'category_id';
+  static const String columnSubCategoryId = 'subcategory_id';
   static const String columnCreatedAt = 'created_at';
   static const String columnDescription = 'description';
 

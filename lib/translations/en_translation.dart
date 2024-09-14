@@ -150,5 +150,16 @@ class EnTranslation extends AppTranslation {
 
         "error": "Error",
         "backup_error_msg": 'The selected file is not in "db" format',
+
+        "rfc_auto": "Auto",
+        "rfc_auto_fuel": "Fuel",
+        "rfc_auto_maintenance": "Maintenance",
+        "rfc_auto_insurance": "Insurance",
+        "rfc_auto_repairs": "Repairs",
+        "rfc_auto_parking": "Parking",
+        "rfc_auto_car_tolls": "Tolls",
+        "rfc_auto_car_wash": "Car Wash",
+        "rfc_auto_tires": "Tires",
+        "rfc_auto_registration": "Registration",
       };
 }

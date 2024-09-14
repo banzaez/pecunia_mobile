@@ -10,6 +10,7 @@ class SQLTableWallets {
 
   static const String columnId = '_id';
   static const String columnName = 'name';
+  static const String columnCategoryId = 'category_id';
   static const String columnCurrency = 'currency';
   static const String columnDescription = 'description';
   static const String columnShowBalance = 'showBalance';

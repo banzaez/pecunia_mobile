@@ -14,6 +14,8 @@ class Transaction {
   double amount;
   @JsonKey(name: "category_id", fromJson: toCategory, toJson: fromCategory)
   FinanceCategory? category;
+  @JsonKey(name: "subcategory_id", fromJson: toCategory, toJson: fromCategory)
+  FinanceCategory? subcategory;
   @JsonKey(name: "created_at", fromJson: toDateTime, toJson: fromDateTime)
   DateTime createdAt;
   @JsonKey(defaultValue: "")

@@ -39,13 +39,15 @@ class SQLProvider {
             "${SQLTableTransactions.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,"
             "${SQLTableTransactions.columnWalletId} INTEGER NOT NULL,"
             "${SQLTableTransactions.columnAmount} DOUBLE NOT NULL,"
-            "${SQLTableTransactions.columnCategoryId} INTEGER DEFAULT '-1' NOT NULL,"
+            "${SQLTableTransactions.columnCategoryId} INTEGER NOT NULL,"
+            "${SQLTableTransactions.columnSubCategoryId} INTEGER,"
             "${SQLTableTransactions.columnCreatedAt} TEXT DEFAULT CURRENT_TIMESTAMP,"
             "${SQLTableTransactions.columnDescription} TEXT(250) NOT NULL)");
 
         await db.execute("CREATE TABLE ${SQLTableWallets.tableName} ("
             "${SQLTableWallets.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,"
             "${SQLTableWallets.columnName} TEXT(100) DEFAULT 'New' NOT NULL,"
+            "${SQLTableWallets.columnCategoryId} INTEGER,"
             "${SQLTableWallets.columnCurrency} TEXT(10) DEFAULT 'USD' NOT NULL,"
             "${SQLTableWallets.columnDescription} TEXT(250) DEFAULT '' NOT NULL,"
             "${SQLTableWallets.columnShowBalance} BOOLEAN DEFAULT '1' NOT NULL,"

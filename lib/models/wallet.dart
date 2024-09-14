@@ -1,5 +1,6 @@
 import 'package:currency_picker/currency_picker.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:pecunia/models/finance_category.dart';
 import 'package:pecunia/util/sql_fun.dart';
 
 part 'wallet.g.dart';
@@ -9,6 +10,8 @@ class Wallet {
   @JsonKey(name: "_id")
   int id;
   String name;
+  @JsonKey(name: "category_id", fromJson: toCategory, toJson: fromCategory)
+  FinanceCategory? category;
   @JsonKey(fromJson: toCurrency, toJson: fromCurrency)
   Currency? currency;
   String description;

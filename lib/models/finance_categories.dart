@@ -129,6 +129,19 @@ class FinanceCategories extends GetxController {
 
   static const FinanceCategory otherExpenses = FinanceCategory(26, "rfc_other_expenses", []);
 
+  // Основная категория "Авто" с id 28
+  static const FinanceCategory auto = FinanceCategory(28, 'rfc_auto', [
+    FinanceCategory(281, 'rfc_auto_fuel', []), // Топливо
+    FinanceCategory(282, 'rfc_auto_maintenance', []), // Техобслуживание
+    FinanceCategory(283, 'rfc_auto_insurance', []), // Страхование
+    FinanceCategory(284, 'rfc_auto_repairs', []), // Ремонт
+    FinanceCategory(285, 'rfc_auto_parking', []), // Парковка
+    FinanceCategory(286, 'rfc_auto_car_tolls', []), // Платные дороги
+    FinanceCategory(287, 'rfc_auto_car_wash', []), // Мойка машины
+    FinanceCategory(288, 'rfc_auto_tires', []), // Шины
+    FinanceCategory(289, 'rfc_auto_registration', []), // Регистрация
+  ]);
+
   // Статические категория остальные
   // --------------------------------------------------------------------------------------------
   static const FinanceCategory transfer = FinanceCategory(27, "rfc_transfer", []);
@@ -167,6 +180,7 @@ class FinanceCategories extends GetxController {
   // --------------------------------------------------------------------------------------------
   static List<FinanceCategory> get expenseCategories {
     final list = [
+      auto,
       foodAndDrinks,
       transport,
       housing,
