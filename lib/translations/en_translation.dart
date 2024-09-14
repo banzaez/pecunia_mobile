@@ -151,6 +151,8 @@ class EnTranslation extends AppTranslation {
         "error": "Error",
         "backup_error_msg": 'The selected file is not in "db" format',
 
+        "label_subcategory": "subcategory",
+
         "rfc_auto": "Auto",
         "rfc_auto_fuel": "Fuel",
         "rfc_auto_maintenance": "Maintenance",

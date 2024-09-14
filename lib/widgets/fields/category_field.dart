@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:pecunia/models/finance_categories.dart';
 import 'package:pecunia/models/finance_category.dart';
 import 'package:pecunia/widgets/fields/dropdown_field.dart';
@@ -10,31 +9,35 @@ class CategoryField extends StatelessWidget {
     required this.onChanged,
     required this.type,
     required this.value,
-    required this.error,
+    required this.hint,
+    this.items,
+    this.error,
   });
 
   final ValueChanged<FinanceCategory> onChanged;
   final TransactionType type;
+  final List<FinanceCategory>? items;
   final FinanceCategory? value;
+  final String hint;
   final String? error;
 
-  List<FinanceCategory> get items => type == TransactionType.income
+  List<FinanceCategory> get _items => items ?? (type == TransactionType.income
       ? FinanceCategories.incomeCategories
-      : FinanceCategories.expenseCategories;
+      : FinanceCategories.expenseCategories);
 
   @override
   Widget build(BuildContext context) => DropdownField(
         onChanged: onChanged,
         items: _itemsWidget(),
-        hint: "label_category".tr,
+        hint: hint,
         value: value,
         errorText: error,
       );
 
   // --------------------------------------------------------------------------------------------
 
-  List<DropdownMenuItem<FinanceCategory>> _itemsWidget() => List.generate(items.length, (index) {
-        final item = items[index];
+  List<DropdownMenuItem<FinanceCategory>> _itemsWidget() => List.generate(_items.length, (index) {
+        final item = _items[index];
         return DropdownMenuItem(
           value: item,
           child: Text(item.name),

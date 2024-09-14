@@ -18,16 +18,25 @@ class SettingTransactionController extends BaseController {
   late final Transaction transaction;
 
   final NumberEditingController amount = NumberEditingController();
-  final Rxn<FinanceCategory> category = Rxn();
   final TextEditingController description = TextEditingController();
   final Rx<DateTime> datetime = Rx<DateTime>(DateTime.now());
 
-  final Rx<TransactionType> _type = TransactionType.income.obs;
+  final Rxn<FinanceCategory> _category = Rxn();
+  FinanceCategory? get category => _category.value;
+  set category(FinanceCategory? value) {
+    _category.value = value;
+    subcategory = null;
+  }
 
+  final Rxn<FinanceCategory> _subcategory = Rxn();
+  FinanceCategory? get subcategory => _subcategory.value;
+  set subcategory(FinanceCategory? value) => _subcategory.value = value;
+
+  final Rx<TransactionType> _type = TransactionType.income.obs;
   TransactionType get type => _type.value;
 
   set type(TransactionType type) {
-    category.value = null;
+    category = null;
     _type.value = type;
   }
 
@@ -44,7 +53,8 @@ class SettingTransactionController extends BaseController {
 
     type = transaction.id == 0 ? type : transaction.type;
     amount.number = transaction.id == 0 ? null : transaction.amount.abs();
-    category.value = transaction.category;
+    category = transaction.category;
+    subcategory = transaction.subcategory;
     description.text = transaction.description;
     datetime.value = transaction.createdAt;
   }
@@ -53,14 +63,15 @@ class SettingTransactionController extends BaseController {
 
   void updateValues() {
     transaction.amount = (amount.number * type.i).toDouble();
-    transaction.category = category.value;
+    transaction.category = category;
+    transaction.subcategory = subcategory;
     transaction.description = description.text;
     transaction.createdAt = datetime.value;
   }
 
   bool isOk() {
     errorAmount.value = amount.text.isEmpty ? "tran_item_error_amount".tr : null;
-    errorCategory.value = category.value == null ? "tran_item_error_category".tr : null;
+    errorCategory.value = category == null ? "tran_item_error_category".tr : null;
 
     return !hasError;
   }

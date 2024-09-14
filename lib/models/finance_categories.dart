@@ -170,7 +170,7 @@ class FinanceCategories extends GetxController {
       transfer,
     ];
 
-    //list.sort((a, b) => a.name[0].compareTo(b.name));
+    list.sort((a, b) => a.name[0].compareTo(b.name));
     list.add(otherIncome);
 
     return list;
@@ -198,7 +198,7 @@ class FinanceCategories extends GetxController {
       transfer,
     ];
 
-    //list.sort((a, b) => a.name.compareTo(b.name));
+    list.sort((a, b) => a.name.compareTo(b.name));
     list.add(otherExpenses);
 
     return list;

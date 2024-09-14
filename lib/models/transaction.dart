@@ -8,7 +8,7 @@ part 'transaction.g.dart';
 @JsonSerializable()
 class Transaction {
   @JsonKey(name: "_id")
-  int id;
+  final int id;
   @JsonKey(name: "wallet_id")
   int walletId;
   double amount;
@@ -25,7 +25,8 @@ class Transaction {
     this.id = 0,
     required this.walletId,
     required this.amount,
-    required this.category,
+    this.category,
+    this.subcategory,
     required this.createdAt,
     required this.description,
   });
@@ -35,7 +36,6 @@ class Transaction {
   factory Transaction.empty() => Transaction(
         walletId: 0,
         amount: 0,
-        category: null,
         createdAt: DateTime.now(),
         description: "",
       );

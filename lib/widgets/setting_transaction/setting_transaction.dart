@@ -59,11 +59,20 @@ class SettingTransaction extends StatelessWidget {
                   ),
                   AppSpaces.v16,
                   CategoryField(
-                    onChanged: (value) => controller.category.value = value,
+                    onChanged: (value) => controller.category = value,
                     type: controller.type,
-                    value: controller.category.value,
+                    value: controller.category,
+                    hint: "label_category".tr,
                     error: controller.errorCategory.value,
                   ),
+                  if (controller.category?.subcategories.isNotEmpty ?? false)
+                    CategoryField(
+                      onChanged: (value) => controller.subcategory = value,
+                      type: controller.type,
+                      value: controller.subcategory,
+                      items: controller.category!.subcategories,
+                      hint: "label_subcategory".tr,
+                    ).paddingOnly(top: 16),
                   AppSpaces.v16,
                   BaseField(
                     controller: controller.description,
