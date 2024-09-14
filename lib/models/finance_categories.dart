@@ -135,48 +135,60 @@ class FinanceCategories extends GetxController {
 
   // Получение всех категорий в одном списке
   // --------------------------------------------------------------------------------------------
-  static const List<FinanceCategory> allCategories = [
+  static List<FinanceCategory> allCategories = [
     ...incomeCategories,
     ...expenseCategories,
   ];
 
   // категории доходов
   // --------------------------------------------------------------------------------------------
-  static const List<FinanceCategory> incomeCategories = [
-    salary,
-    bonuses,
-    gifts,
-    sales,
-    investments,
-    rent,
-    freelance,
-    dividends,
-    taxRefunds,
-    cashback,
-    transfer,
-    otherIncome,
-  ];
+  static List<FinanceCategory> get incomeCategories {
+    final list = [
+      salary,
+      bonuses,
+      gifts,
+      sales,
+      investments,
+      rent,
+      freelance,
+      dividends,
+      taxRefunds,
+      cashback,
+      transfer,
+    ];
+
+    //list.sort((a, b) => a.name[0].compareTo(b.name));
+    list.add(otherIncome);
+
+    return list;
+  }
 
   // категории доходов
   // --------------------------------------------------------------------------------------------
-  static const List<FinanceCategory> expenseCategories = [
-    foodAndDrinks,
-    transport,
-    housing,
-    clothingAndFootwear,
-    health,
-    entertainment,
-    sportsAndFitness,
-    education,
-    loansAndDebts,
-    pets,
-    giftsAndCharity,
-    internetAndCommunication,
-    personalExpenses,
-    investmentsExpenses,
-    transfer,
-    otherExpenses,
-  ];
+  static List<FinanceCategory> get expenseCategories {
+    final list = [
+      foodAndDrinks,
+      transport,
+      housing,
+      clothingAndFootwear,
+      health,
+      entertainment,
+      sportsAndFitness,
+      education,
+      loansAndDebts,
+      pets,
+      giftsAndCharity,
+      internetAndCommunication,
+      personalExpenses,
+      investmentsExpenses,
+      transfer,
+    ];
+
+    //list.sort((a, b) => a.name.compareTo(b.name));
+    list.add(otherExpenses);
+
+    return list;
+  }
 
   // Функция для поиска категории по id
   static FinanceCategory? getCategoryById(int id) {

@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:pecunia/styles/app_border_style.dart';
-import 'package:pecunia/styles/app_colors.dart';
-import 'package:pecunia/styles/app_text_style.dart';
 
 class BaseField extends TextFormField {
   BaseField({
     super.key,
     super.onChanged,
-    super.onEditingComplete,
+    super.autofocus,
     super.autofillHints,
+    super.focusNode,
     super.enabled,
-    String? labelText,
-    String? hintText,
-    String? helperText,
-    String? errorText,
-    String? prefixText,
     super.controller,
     super.initialValue,
     super.validator,
@@ -24,12 +18,14 @@ class BaseField extends TextFormField {
     super.maxLength,
     super.maxLines,
     super.obscureText,
+    String? labelText,
+    String? hintText,
+    String? helperText,
+    String? prefixText,
     Widget? prefixIcon,
-    Widget? prefix,
     Widget? suffixIcon,
+    String? errorText,
     bool showLabel = true,
-    super.autofocus,
-    super.focusNode,
   }) : super(
           decoration: InputDecoration(
             alignLabelWithHint: true,
@@ -46,19 +42,13 @@ class BaseField extends TextFormField {
               borderSide: AppBorderStyle.borderSideError,
               borderRadius: AppBorderStyle.borderRadius,
             ),
-            prefix: prefix,
             prefixIcon: prefixIcon,
             prefixText: prefixText,
             suffixIcon: suffixIcon,
             labelText: labelText,
             hintText: hintText,
-            hintMaxLines: 10,
-            floatingLabelBehavior: showLabel ? null : FloatingLabelBehavior.never,
             errorText: errorText,
-            errorStyle: AppTextStyle.text12w400(color: AppColors.error),
-            errorMaxLines: 2,
             helperText: helperText,
-          ),
-          style: AppTextStyle.text14w400(),
+          )
         );
 }
