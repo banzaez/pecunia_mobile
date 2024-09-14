@@ -13,11 +13,11 @@ class SQLProvider {
   late final SQLTableTransactions transactions;
   late final SQLTableWallets wallets;
 
-  bool isLoading = false;
-
   final filename = "pecunia.db";
 
   String get databasesPath => _database.path;
+
+  bool isLoading = false;
 
   Future<void> init() async {
     isLoading = true;
