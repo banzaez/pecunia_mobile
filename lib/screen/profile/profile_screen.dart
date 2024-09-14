@@ -25,9 +25,8 @@ class ProfileScreen extends GetView<ProfileController> {
 
   Widget _body() => GetX<ProfileController>(
         builder: (controller) => Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const SizedBox.shrink(),
             _settings(),
             _buttons(),
             SwitchLanguage(),

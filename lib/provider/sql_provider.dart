@@ -13,7 +13,8 @@ class SQLProvider {
   late final SQLTableTransactions transactions;
   late final SQLTableWallets wallets;
 
-  final filename = "pecunia.db";
+  final _filename = "pecunia.db";
+  get filename => _filename;
 
   String get databasesPath => _database.path;
 
