@@ -47,7 +47,8 @@ class TransactionItem extends StatelessWidget {
                             style: AppTextStyle.text12w400(),
                           ),
                           TextSpan(
-                            text: " ${transaction.category}",
+                            text:
+                                " ${transaction.category}${transaction.subcategory != null ? " (${transaction.subcategory})" : ""}",
                             style: AppTextStyle.text14w600(),
                           ),
                         ],

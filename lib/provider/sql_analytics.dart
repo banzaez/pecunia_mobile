@@ -21,12 +21,13 @@ class SQLAnalytics {
   Future<List<Analytics>> selectByWalletId(
     int walletId,
     String formatDate,
-    AnalyticsFilter filter,
-  ) async {
+    AnalyticsFilter filter, [
+    bool detail = false,
+  ]) async {
     List<Map<String, Object?>> maps = await _database.query(
       SQLTableTransactions.tableName,
       columns: [
-        "${SQLTableTransactions.columnCategoryId} AS category",
+        "${detail ? SQLTableTransactions.columnSubCategoryId : SQLTableTransactions.columnCategoryId} AS category",
         "strftime('$formatDate', ${SQLTableTransactions.columnCreatedAt}) AS year",
         "strftime('$formatDate', ${SQLTableTransactions.columnCreatedAt}) AS month",
         "strftime('$formatDate', ${SQLTableTransactions.columnCreatedAt}) AS day",
@@ -48,8 +49,9 @@ class SQLAnalytics {
   Future<List<Analytics>> allAnalytics({
     required int walletId,
     required AnalyticsFilter filter,
+    required bool detail,
   }) async =>
-      await selectByWalletId(walletId, "%Y", filter);
+      await selectByWalletId(walletId, "%Y", filter, detail);
 }
 
 enum AnalyticsFilter {

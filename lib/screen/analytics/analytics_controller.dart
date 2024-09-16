@@ -64,7 +64,7 @@ class AnalyticsController extends GetxController {
   //---------------------------------------------------------------------------------------------
 
   Future<void> _refreshAnalytics() async => _analytics.value = await _sqlProvider.analytics
-      .allAnalytics(walletId: _transactionController.walletId, filter: filter);
+      .allAnalytics(walletId: _transactionController.walletId, filter: filter, detail: false);
 
   //---------------------------------------------------------------------------------------------
 
