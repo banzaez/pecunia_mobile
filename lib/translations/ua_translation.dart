@@ -142,5 +142,20 @@ class UaTranslation extends AppTranslation {
         "backup_restarting_body": "Натисніть тут, щоб відкрити додаток знову.",
         "wallets_title": "Мої гаманці",
         "wallets_button": "мої гаманці",
+        "error": "Помилка",
+        "backup_error_msg": 'Обраний файл не у форматі "db"',
+
+        "label_subcategory": "підкатегорія",
+
+        "rfc_auto": "Авто",
+        "rfc_auto_fuel": "Паливо",
+        "rfc_auto_maintenance": "Обслуговування",
+        "rfc_auto_insurance": "Страхування",
+        "rfc_auto_repairs": "Ремонт",
+        "rfc_auto_parking": "Паркування",
+        "rfc_auto_car_tolls": "Дорожні збори",
+        "rfc_auto_car_wash": "Мийка авто",
+        "rfc_auto_tires": "Шини",
+        "rfc_auto_registration": "Реєстрація",
       };
 }

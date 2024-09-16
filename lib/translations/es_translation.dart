@@ -142,5 +142,20 @@ class EsTranslation extends AppTranslation {
         "backup_restarting_body": "Por favor, toca aquí para abrir la aplicación de nuevo.",
         "wallets_title": "Mis billeteras",
         "wallets_button": "mis billeteras",
+        "error": "Error",
+        "backup_error_msg": 'El archivo seleccionado no está en formato "db"',
+
+        "label_subcategory": "subcategoría",
+
+        "rfc_auto": "Auto",
+        "rfc_auto_fuel": "Combustible",
+        "rfc_auto_maintenance": "Mantenimiento",
+        "rfc_auto_insurance": "Seguro",
+        "rfc_auto_repairs": "Reparaciones",
+        "rfc_auto_parking": "Estacionamiento",
+        "rfc_auto_car_tolls": "Peajes",
+        "rfc_auto_car_wash": "Lavado de autos",
+        "rfc_auto_tires": "Neumáticos",
+        "rfc_auto_registration": "Registro",
       };
 }

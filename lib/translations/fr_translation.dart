@@ -142,5 +142,21 @@ class FrTranslation extends AppTranslation {
         "backup_restarting_body": "Veuillez cliquer ici pour rouvrir l'application.",
         "wallets_title": "Mes portefeuilles",
         "wallets_button": "mes portefeuilles",
+
+        "error": "Erreur",
+        "backup_error_msg": 'Le fichier sélectionné n\'est pas au format "db"',
+
+        "label_subcategory": "sous-catégorie",
+
+        "rfc_auto": "Auto",
+        "rfc_auto_fuel": "Carburant",
+        "rfc_auto_maintenance": "Entretien",
+        "rfc_auto_insurance": "Assurance",
+        "rfc_auto_repairs": "Réparations",
+        "rfc_auto_parking": "Stationnement",
+        "rfc_auto_car_tolls": "Péages",
+        "rfc_auto_car_wash": "Lavage auto",
+        "rfc_auto_tires": "Pneus",
+        "rfc_auto_registration": "Enregistrement",
       };
 }

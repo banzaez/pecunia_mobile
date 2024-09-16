@@ -144,5 +144,20 @@ class PlTranslation extends AppTranslation {
         "backup_restarting_body": "Kliknij tutaj, aby ponownie otworzyć aplikację.",
         "wallets_title": "Moje portfele",
         "wallets_button": "moje portfele",
+        "error": "Błąd",
+        "backup_error_msg": 'Wybrany plik nie jest w formacie "db"',
+
+        "label_subcategory": "podkategoria",
+
+        "rfc_auto": "Auto",
+        "rfc_auto_fuel": "Paliwo",
+        "rfc_auto_maintenance": "Konserwacja",
+        "rfc_auto_insurance": "Ubezpieczenie",
+        "rfc_auto_repairs": "Naprawy",
+        "rfc_auto_parking": "Parking",
+        "rfc_auto_car_tolls": "Opłaty drogowe",
+        "rfc_auto_car_wash": "Myjnia samochodowa",
+        "rfc_auto_tires": "Opony",
+        "rfc_auto_registration": "Rejestracja",
       };
 }

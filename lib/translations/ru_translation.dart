@@ -142,5 +142,20 @@ class RuTranslation extends AppTranslation {
         "backup_restarting_body": "Нажмите здесь, чтобы открыть приложение снова.",
         "wallets_title": "Мои кошельки",
         "wallets_button": "мои кошельки",
+        "error": "Ошибка",
+        "backup_error_msg": 'Выбранный файл не в формате "db"',
+
+        "label_subcategory": "подкатегория",
+
+        "rfc_auto": "Авто",
+        "rfc_auto_fuel": "Топливо",
+        "rfc_auto_maintenance": "Техническое обслуживание",
+        "rfc_auto_insurance": "Страховка",
+        "rfc_auto_repairs": "Ремонт",
+        "rfc_auto_parking": "Парковка",
+        "rfc_auto_car_tolls": "Дорожные сборы",
+        "rfc_auto_car_wash": "Мойка автомобиля",
+        "rfc_auto_tires": "Шины",
+        "rfc_auto_registration": "Регистрация",
       };
 }
