@@ -86,7 +86,7 @@ class AnalyticsScreen extends GetView<AnalyticsController> {
                 valuesYear: controller.valuesYear,
                 valuesMonth: controller.valuesMonth,
                 valuesDay: controller.valuesDay,
-              ),
+              ).paddingSymmetric(horizontal: 16),
             ],
           ),
           AppSpaces.v32,

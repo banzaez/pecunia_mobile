@@ -62,8 +62,8 @@ class SQLTableTransactions {
     List<Map<String, Object?>> result = await _database.query(
       tableName,
       columns: null,
-      where: "$columnWalletId = ? AND $columnCategoryId = ? AND $columnCreatedAt BETWEEN ? AND ?",
-      whereArgs: [walletId, categoryId, fromDateTime(startDate), fromDateTime(endDate)],
+      where: "$columnWalletId = ? AND ($columnCategoryId = ? OR $columnSubCategoryId = ?) AND $columnCreatedAt BETWEEN ? AND ?",
+      whereArgs: [walletId, categoryId, categoryId, fromDateTime(startDate), fromDateTime(endDate)],
       orderBy: "$columnCreatedAt DESC",
     );
 

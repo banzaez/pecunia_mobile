@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pecunia/controllers/app_controller.dart';
+import 'package:pecunia/controllers/base_controller.dart';
 import 'package:pecunia/controllers/transaction_controller.dart';
 import 'package:pecunia/models/analytics.dart';
 import 'package:pecunia/models/transaction.dart';
@@ -9,7 +10,7 @@ import 'package:pecunia/screen/transactions/transactions_arguments.dart';
 import 'package:pecunia/util/ext_datetime.dart';
 import 'package:pecunia/widgets/fields/pick_date/pick_date_field.dart';
 
-class AnalyticsController extends GetxController {
+class AnalyticsController extends BaseController {
   final AppController _appController = Get.find();
   final SQLProvider _sqlProvider = Get.find();
   final TransactionController _transactionController = Get.find();
@@ -23,6 +24,15 @@ class AnalyticsController extends GetxController {
   setDate(DateTime value, DateType type) {
     _date.value = value.startOfDay;
     _period.value = type;
+  }
+  
+  final RxBool _detail = false.obs;
+
+  bool get detail => _detail.value;
+
+  set detail(bool value) {
+    _detail.value = value;
+    _refreshAnalytics();
   }
 
   final Rx<AnalyticsFilter> _filter = AnalyticsFilter.total.obs;
@@ -64,7 +74,7 @@ class AnalyticsController extends GetxController {
   //---------------------------------------------------------------------------------------------
 
   Future<void> _refreshAnalytics() async => _analytics.value = await _sqlProvider.analytics
-      .allAnalytics(walletId: _transactionController.walletId, filter: filter, detail: false);
+      .allAnalytics(walletId: _transactionController.walletId, filter: filter, detail: detail);
 
   //---------------------------------------------------------------------------------------------
 
