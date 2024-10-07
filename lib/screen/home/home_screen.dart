@@ -27,12 +27,11 @@ class HomeScreen extends GetView<HomeController> {
   PreferredSize _analytics() {
     final bool showBalance = controller.currentWallet.showBalance;
     return PreferredSize(
-      preferredSize: Size.fromHeight(showBalance ? 128.0 : 48.0),
+      preferredSize: Size.fromHeight(showBalance ? 148.0 : 64.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (showBalance) TotalHeader(total: controller.total),
-          AppSpaces.v8,
+          if (showBalance) TotalHeader(total: controller.total).paddingOnly(bottom: 24),
           TextButton.icon(
             onPressed: controller.goToAnalytics,
             icon: const Icon(Icons.query_stats),
