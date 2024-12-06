@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:pecunia/screen/home/home_controller.dart';
 import 'package:pecunia/screen/home/widget/current_wallet.dart';
 import 'package:pecunia/styles/app_text_style.dart';
-import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/widgets/setting_transaction/setting_transaction.dart';
 import 'package:pecunia/widgets/setting_wallet/setting_wallet.dart';
 import 'package:pecunia/widgets/total_header.dart';
@@ -27,11 +26,11 @@ class HomeScreen extends GetView<HomeController> {
   PreferredSize _analytics() {
     final bool showBalance = controller.currentWallet.showBalance;
     return PreferredSize(
-      preferredSize: Size.fromHeight(showBalance ? 148.0 : 64.0),
+      preferredSize: Size.fromHeight(showBalance ? 158.0 : 64.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (showBalance) TotalHeader(total: controller.total).paddingOnly(bottom: 24),
+          if (showBalance) TotalHeader(total: controller.total).paddingOnly(bottom: 28),
           TextButton.icon(
             onPressed: controller.goToAnalytics,
             icon: const Icon(Icons.query_stats),
