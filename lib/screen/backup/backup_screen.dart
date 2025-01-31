@@ -60,7 +60,7 @@ class BackupScreen extends GetView<BackupController> {
               child: Text("backup_archiving".tr),
             ),
           ),
-          AppSpaces.v24,
+          AppSpaces.v12,
           SizedBox(
             width: 256,
             child: ElevatedButton(
