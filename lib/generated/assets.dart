@@ -8,5 +8,6 @@ class Assets {
   static const String appIconIcLauncherMonochrome = 'assets/app_icon/ic_launcher_monochrome.png';
   static const String appIconLogo = 'assets/app_icon/logo.png';
   static const String appIconPlayStore512 = 'assets/app_icon/play_store_512.png';
+  static const String pngIconGoogle = 'assets/png/icon-google.png';
 
 }

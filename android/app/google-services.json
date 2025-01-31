@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "60045007119",
+    "project_id": "pecunia-7cef5",
+    "storage_bucket": "pecunia-7cef5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:60045007119:android:2725fa8de58f18b6d4c67a",
+        "android_client_info": {
+          "package_name": "com.banzaez.pecunia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "60045007119-2e9jhafvb0s4q826c9sh0rvluiol1htl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.banzaez.pecunia",
+            "certificate_hash": "71d4c25b223d5ca719fc35c26abde5a64de67e04"
+          }
+        },
+        {
+          "client_id": "60045007119-2knqijm83e9aj5egnfsgo6gdus302tc3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAI7wu7yvGI7EWLy4ViWUgah4FRyC6P2fE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "60045007119-2knqijm83e9aj5egnfsgo6gdus302tc3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "60045007119-p634utpsgimaai604pmcdooq112glsjo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.banzaez.pecunia"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,8 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/controllers/app_controller.dart';
 import 'package:pecunia/controllers/storage_controller.dart';
+import 'package:pecunia/firebase_options.dart';
 import 'package:pecunia/provider/sql_provider.dart';
 import 'package:pecunia/screen/analytics/analitics_binding.dart';
 import 'package:pecunia/screen/analytics/analytics_screen.dart';
@@ -27,6 +29,10 @@ void main() async {
 
   final storage = Get.put(StorageController(), permanent: true);
   await storage.init();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   Get.put(AppTranslations(), permanent: true);
   Get.put(AppController(), permanent: true);
@@ -56,10 +62,22 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.dark,
       getPages: [
         GetPage(name: '/', page: () => const HomeScreen(), binding: HomeBinding()),
-        GetPage(name: AppScreens.analytics.route, page: () => const AnalyticsScreen(), binding: AnalyticsBinding()),
-        GetPage(name: AppScreens.backup.route, page: () => const BackupScreen(), binding: BackupBinding()),
-        GetPage(name: AppScreens.profile.route, page: () => const ProfileScreen(), binding: ProfileBinding()),
-        GetPage(name: AppScreens.transactions.route, page: () => const TransactionsScreen(), binding: TransactionsBinding()),
+        GetPage(
+            name: AppScreens.analytics.route,
+            page: () => const AnalyticsScreen(),
+            binding: AnalyticsBinding()),
+        GetPage(
+            name: AppScreens.backup.route,
+            page: () => const BackupScreen(),
+            binding: BackupBinding()),
+        GetPage(
+            name: AppScreens.profile.route,
+            page: () => const ProfileScreen(),
+            binding: ProfileBinding()),
+        GetPage(
+            name: AppScreens.transactions.route,
+            page: () => const TransactionsScreen(),
+            binding: TransactionsBinding()),
         GetPage(name: AppScreens.wallets.route, page: () => const WalletsScreen()),
       ],
     );

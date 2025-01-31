@@ -70,7 +70,6 @@ class EnTranslation extends AppTranslation {
         "transfer_description": "transfer from %1\$ to %2\$, exchange rate %3\$",
         "from": "from",
         "to": "to",
-
         "rfc_salary": "Salary",
         "rfc_bonuses": "Bonuses",
         "rfc_gifts": "Gifts",
@@ -122,7 +121,6 @@ class EnTranslation extends AppTranslation {
         "rfc_investments_expenses": "Investments",
         "rfc_other_expenses": "Other Expenses",
         "rfc_transfer": "Transfer",
-
         "setting_tran_title": "Edit",
         "setting_tran_save": "Save",
         "setting_tran_income": "income",
@@ -130,12 +128,10 @@ class EnTranslation extends AppTranslation {
         "setting_tran_amount": "amount",
         "setting_tran_category": "category",
         "setting_tran_description": "description",
-
         "total_sum": "Balance",
         "incomes_sum": "Incomes",
         "expenses_sum": "Expenses",
         "total_hint": "for %1\$",
-
         "backup_title": "Archiving & Recovery",
         "backup_button": "archiving & recovery",
         "backup_filename": "filename",
@@ -144,15 +140,11 @@ class EnTranslation extends AppTranslation {
         "backup_recovery": "recovery",
         "backup_restarting": "Restarting",
         "backup_restarting_body": "Please tap here to open the app again.",
-
         "wallets_title": "My wallents",
         "wallets_button": "my wallents",
-
         "error": "Error",
         "backup_error_msg": 'The selected file is not in "db" format',
-
         "label_subcategory": "subcategory",
-
         "rfc_auto": "Auto",
         "rfc_auto_fuel": "Fuel",
         "rfc_auto_maintenance": "Maintenance",
@@ -163,5 +155,16 @@ class EnTranslation extends AppTranslation {
         "rfc_auto_car_wash": "Car Wash",
         "rfc_auto_tires": "Tires",
         "rfc_auto_registration": "Registration",
+
+
+        "sign_out_with_google": "Sign out with Google",
+        "sign_in_with_google": "Sign in with Google",
+
+        "backup_cloud_dialog_delete": "Confirm deletion",
+        "backup_cloud_dialog_delete_content": "Are you sure you want to delete this file?",
+        "backup_cloud_dialog_recovery": "Confirm recovery",
+        "backup_cloud_dialog_recovery_content": "Are you sure you want to recovery this file?",
+        "backup_create_cloud_recovery": "Create cloud recovery",
+        "backup_cloud_empty": "The cloud is empty",
       };
 }

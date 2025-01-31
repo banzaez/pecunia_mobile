@@ -158,5 +158,16 @@ class FrTranslation extends AppTranslation {
         "rfc_auto_car_wash": "Lavage auto",
         "rfc_auto_tires": "Pneus",
         "rfc_auto_registration": "Enregistrement",
+
+
+        "sign_out_with_google": "Se déconnecter de Google",
+        "sign_in_with_google": "Se connecter avec Google",
+
+        "backup_cloud_dialog_delete": "Confirmer la suppression",
+        "backup_cloud_dialog_delete_content": "Êtes-vous sûr de vouloir supprimer ce fichier ?",
+        "backup_cloud_dialog_recovery": "Confirmer la récupération",
+        "backup_cloud_dialog_recovery_content": "Êtes-vous sûr de vouloir récupérer ce fichier ?",
+        "backup_create_cloud_recovery": "Créer une récupération dans le cloud",
+        "backup_cloud_empty": "Le cloud est vide"
       };
 }

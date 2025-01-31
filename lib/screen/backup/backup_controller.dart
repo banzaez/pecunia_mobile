@@ -2,12 +2,16 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
+import 'package:pecunia/controllers/google_controller.dart';
 import 'package:pecunia/provider/sql_provider.dart';
 import 'package:pecunia/util/ext_datetime.dart';
 import 'package:restart_app/restart_app.dart';
 
 class BackupController extends GetxController {
   final SQLProvider _sqlProvider = Get.find();
+  final GoogleController google = Get.find();
+
+  // -----------VARIABLES-------------------------------------------------------------------------
 
   late final File file;
   late final String filename;
@@ -51,6 +55,24 @@ class BackupController extends GetxController {
 
     backupFile.copySync(_sqlProvider.databasesPath);
 
+    Restart.restartApp(
+      notificationTitle: 'backup_restarting'.tr,
+      notificationBody: 'backup_restarting_body'.tr,
+    );
+  }
+
+  Future<void> recoveryCloud(String fileId) async {
+    // Запрос на скачивание файла
+    final mediaStream = await google.drive.getFileMedia(fileId);
+
+    // Сохранение файла локально
+    final localFile = File(_sqlProvider.databasesPath);
+
+    final fileSink = localFile.openWrite();
+    await mediaStream.stream.pipe(fileSink);
+    await fileSink.close();
+
+    // Перезапуск приложения
     Restart.restartApp(
       notificationTitle: 'backup_restarting'.tr,
       notificationBody: 'backup_restarting_body'.tr,

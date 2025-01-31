@@ -157,5 +157,16 @@ class RuTranslation extends AppTranslation {
         "rfc_auto_car_wash": "Мойка автомобиля",
         "rfc_auto_tires": "Шины",
         "rfc_auto_registration": "Регистрация",
+
+
+        "sign_out_with_google": "Выйти из Google",
+        "sign_in_with_google": "Войти через Google",
+
+        "backup_cloud_dialog_delete": "Подтвердите удаление",
+        "backup_cloud_dialog_delete_content": "Вы уверены, что хотите удалить этот файл?",
+        "backup_cloud_dialog_recovery": "Подтвердите восстановление",
+        "backup_cloud_dialog_recovery_content": "Вы уверены, что хотите восстановить этот файл?",
+        "backup_create_cloud_recovery": "Создать резервную копию в облаке",
+        "backup_cloud_empty": "Облако пусто"
       };
 }
