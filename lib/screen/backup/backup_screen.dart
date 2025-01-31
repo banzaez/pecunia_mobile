@@ -78,12 +78,12 @@ class BackupScreen extends GetView<BackupController> {
           children: [
             controller.google.isSignedIn
                 ? ButtonSocial(
-                    onPressed: controller.google.singOut,
+                    onPressed: controller.google.signOut,
                     label: "sign_out_with_google".tr,
                     icon: Assets.pngIconGoogle,
                   )
                 : ButtonSocial(
-                    onPressed: controller.google.singIn,
+                    onPressed: controller.google.signIn,
                     label: "sign_in_with_google".tr,
                     icon: Assets.pngIconGoogle,
                   ),

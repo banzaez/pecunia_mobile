@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sign_in_as_googleapis_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v3.dart' as drive_api;
@@ -10,7 +11,12 @@ import 'package:pecunia/provider/sql_provider.dart';
 import 'package:pecunia/util/ext_datetime.dart';
 
 class GoogleController extends BaseController {
-  late final GoogleSignIn _googleSignIn;
+  late final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: <String>[
+      drive_api.DriveApi.driveFileScope,
+    ],
+  );
+
   final Rxn<GoogleSignInAccount> _currentUser = Rxn();
   bool get isSignedIn => _currentUser.value != null;
 
@@ -25,34 +31,41 @@ class GoogleController extends BaseController {
   @override
   void onInit() {
     super.onInit();
-
-    _googleSignIn = GoogleSignIn(
-      scopes: <String>[
-        drive_api.DriveApi.driveFileScope,
-      ],
-    );
-
     _googleSignIn.onCurrentUserChanged.listen(onCurrentUserChanged);
-
-    // Проверка авторизации
     _googleSignIn.signInSilently();
   }
 
-  Future<void> singIn() async => await _googleSignIn.signIn();
+  Future<void> signIn() async {
+    try {
+      await _googleSignIn.signIn();
+    } catch (e) {
+      debugPrint("Ошибка при входе: $e");
+    }
+  }
 
-  Future<void> singOut() async {
-    _drive.value = null;
-    await _googleSignIn.signOut();
+  Future<void> signOut() async {
+    try {
+      _drive.value = null;
+      await _googleSignIn.signOut();
+    } catch (e) {
+      debugPrint("Ошибка при выходе: $e");
+    }
   }
 
   Future<void> onCurrentUserChanged(currentUser) async {
     _currentUser.value = currentUser;
 
-    if (_currentUser.value == null) return;
+    if (_currentUser.value == null) {
+      debugPrint("Пользователь вышел из системы.");
+      return;
+    }
 
     final client = await _googleSignIn.authenticatedClient();
 
-    if (client == null) return;
+    if (client == null) {
+      debugPrint("Не удалось получить клиент для авторизации.");
+      return;
+    }
 
     _drive.value = Get.put(GoogleDriveController(client: client));
   }
@@ -73,49 +86,69 @@ class GoogleDriveController extends BaseController {
 
   Future<void> readFiles() async {
     isLoading = true;
-    final drive_api.DriveApi drive = drive_api.DriveApi(client);
-    final driveFiles = await drive.files.list();
-
-    files.value = driveFiles.files ?? [];
-    isLoading = false;
+    try {
+      final drive_api.DriveApi drive = drive_api.DriveApi(client);
+      final driveFiles = await drive.files.list();
+      files.value = driveFiles.files ?? [];
+    } catch (e) {
+      debugPrint("Ошибка при чтении файлов: $e");
+    } finally {
+      isLoading = false;
+    }
   }
 
   Future<void> createFile() async {
     isLoading = true;
-    final drive_api.DriveApi drive = drive_api.DriveApi(client);
+    try {
+      final SQLProvider sqlProvider = Get.find();
+      final dbFile = File(sqlProvider.databasesPath);
 
-    // Получаем путь к файлу базы данных
-    final SQLProvider sqlProvider = Get.find();
-    final dbFile = File(sqlProvider.databasesPath);
+      if (!dbFile.existsSync()) {
+        debugPrint("Файл базы данных не найден.");
+        return;
+      }
 
-    // Загружаем файл
-    final driveFile = drive_api.File();
-    driveFile.name = "penunia_backup_${DateTime.now().toFormat("yyyyMMdd_HHmmss")}.db";
+      final drive_api.DriveApi drive = drive_api.DriveApi(client);
+      final driveFile = drive_api.File();
+      driveFile.name = "penunia_backup_${DateTime.now().toFormat("yyyyMMdd_HHmmss")}.db";
 
-    await drive.files.create(
-      driveFile,
-      uploadMedia: drive_api.Media(dbFile.openRead(), dbFile.lengthSync()),
-    );
+      await drive.files.create(
+        driveFile,
+        uploadMedia: drive_api.Media(dbFile.openRead(), dbFile.lengthSync()),
+      );
 
-    await readFiles();
-    isLoading = false;
+      await readFiles();
+    } catch (e) {
+      debugPrint("Ошибка при создании файла: $e");
+    } finally {
+      isLoading = false;
+    }
   }
 
   Future<drive_api.Media> getFileMedia(String fileId) async {
-    final drive_api.DriveApi drive = drive_api.DriveApi(client);
-    final mediaStream = await drive.files.get(
-      fileId,
-      downloadOptions: drive_api.DownloadOptions.fullMedia,
-    ) as drive_api.Media;
-    return mediaStream;
+    try {
+      final drive_api.DriveApi drive = drive_api.DriveApi(client);
+      final mediaStream = await drive.files.get(
+        fileId,
+        downloadOptions: drive_api.DownloadOptions.fullMedia,
+      ) as drive_api.Media;
+      return mediaStream;
+    } catch (e) {
+      debugPrint("Ошибка при получении файла: $e");
+      rethrow;
+    }
   }
 
   Future<void> deleteFile(String fileId) async {
     isLoading = true;
-    final drive_api.DriveApi drive = drive_api.DriveApi(client);
-    await drive.files.delete(fileId);
-
-    await readFiles();
-    isLoading = false;
+    try {
+      final drive_api.DriveApi drive = drive_api.DriveApi(client);
+      await drive.files.delete(fileId);
+      await readFiles();
+    } catch (e) {
+      debugPrint("Ошибка при удалении файла: $e");
+    } finally {
+      isLoading = false;
+    }
   }
 }
