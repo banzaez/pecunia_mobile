@@ -59,4 +59,5 @@ class DefaultFirebaseOptions {
     projectId: 'pecunia-7cef5',
     storageBucket: 'pecunia-7cef5.firebasestorage.app',
   );
+
 }

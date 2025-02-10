@@ -24,15 +24,15 @@ import 'package:pecunia/util/app_constants.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   final sql = Get.put(SQLProvider(), permanent: true);
   await sql.init();
 
   final storage = Get.put(StorageController(), permanent: true);
   await storage.init();
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
 
   Get.put(AppTranslations(), permanent: true);
   Get.put(AppController(), permanent: true);
