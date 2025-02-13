@@ -20,53 +20,51 @@ class AnalyticsCategoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: AppBorderStyle.borderRadius,
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [
-                analytics.total > 0 ? Colors.green.withValues(alpha: .25) : Colors.red.withValues(alpha: .25),
-                analytics.total > 0
-                    ? Colors.greenAccent.withValues(alpha: .7)
-                    : Colors.redAccent.withValues(alpha: .7),
-              ],
-            ),
-          ),
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-          child: Row(
+    onTap: onTap,
+    child: Container(
+      decoration: BoxDecoration(
+        borderRadius: AppBorderStyle.borderRadius,
+        gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [
+            analytics.total > 0
+                ? Colors.green.withValues(alpha: .25)
+                : Colors.red.withValues(alpha: .25),
+            analytics.total > 0
+                ? Colors.greenAccent.withValues(alpha: .7)
+                : Colors.redAccent.withValues(alpha: .7),
+          ],
+        ),
+      ),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      child: Row(
+        children: [
+          Icon(Icons.fiber_manual_record, color: Colors.primaries[index % Colors.primaries.length]),
+          AppSpaces.h24,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                Icons.fiber_manual_record,
-                color: Colors.primaries[index % Colors.primaries.length],
+              Text(analytics.category?.name ?? ""),
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "${"analytics_category_item_count".tr} ",
+                      style: AppTextStyle.text10w400(),
+                    ),
+                    TextSpan(text: analytics.count.toString(), style: AppTextStyle.text12w400()),
+                  ],
+                ),
               ),
-              AppSpaces.h24,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(analytics.category?.name ?? ""),
-                  Text.rich(TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "${"analytics_category_item_count".tr} ",
-                        style: AppTextStyle.text10w400(),
-                      ),
-                      TextSpan(
-                        text: analytics.count.toString(),
-                        style: AppTextStyle.text12w400(),
-                      ),
-                    ],
-                  ))
-                ],
-              ),
-              const Spacer(),
-              Text(analytics.total.formatSum, style: AppTextStyle.text16w600())
             ],
           ),
-        ),
-      );
+          const Spacer(),
+          Text(analytics.total.formatSum, style: AppTextStyle.text16w600()),
+        ],
+      ),
+    ),
+  );
 }
