@@ -28,10 +28,10 @@ class AnalyticsCategoryItem extends StatelessWidget {
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: [
-                analytics.total > 0 ? Colors.green.withOpacity(.25) : Colors.red.withOpacity(.25),
+                analytics.total > 0 ? Colors.green.withValues(alpha: .25) : Colors.red.withValues(alpha: .25),
                 analytics.total > 0
-                    ? Colors.greenAccent.withOpacity(.7)
-                    : Colors.redAccent.withOpacity(.7),
+                    ? Colors.greenAccent.withValues(alpha: .7)
+                    : Colors.redAccent.withValues(alpha: .7),
               ],
             ),
           ),

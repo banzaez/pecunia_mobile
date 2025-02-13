@@ -7,68 +7,60 @@ class AppThemes {
   AppThemes._();
 
   static ThemeData get theme => ThemeData(
-        bottomSheetTheme: const BottomSheetThemeData(
-          backgroundColor: Colors.white,
-        ),
-        dialogBackgroundColor: Colors.white,
-        elevatedButtonTheme: _elevatedButtonTheme,
-        primarySwatch: AppColors.primary,
-        primaryColor: AppColors.primary,
-        colorScheme: const ColorScheme(
-          brightness: Brightness.light,
-          primary: AppColors.primary,
-          onPrimary: Colors.white,
-          secondary: AppColors.primary,
-          onSecondary: Colors.black,
-          error: Colors.red,
-          onError: Colors.black,
-          surface: Colors.white,
-          onSurface: Colors.black,
-        ),
-        fontFamily: GoogleFonts.openSans().fontFamily,
-      );
+    bottomSheetTheme: const BottomSheetThemeData(backgroundColor: Colors.white),
+    elevatedButtonTheme: _elevatedButtonTheme,
+    primarySwatch: AppColors.primary,
+    primaryColor: AppColors.primary,
+    colorScheme: const ColorScheme(
+      brightness: Brightness.light,
+      primary: AppColors.primary,
+      onPrimary: Colors.white,
+      secondary: AppColors.primary,
+      onSecondary: Colors.black,
+      error: Colors.red,
+      onError: Colors.black,
+      surface: Colors.white,
+      onSurface: Colors.black,
+    ),
+    fontFamily: GoogleFonts.openSans().fontFamily,
+    dialogTheme: DialogThemeData(backgroundColor: Colors.white),
+  );
 
   static ThemeData get darkTheme => ThemeData(
-        bottomSheetTheme: const BottomSheetThemeData(
-          backgroundColor: Colors.black,
-        ),
-        dialogBackgroundColor: Colors.black,
-        elevatedButtonTheme: _elevatedButtonDarkTheme,
-        primarySwatch: AppColors.primary,
-        primaryColor: AppColors.primary,
-        colorScheme: const ColorScheme(
-          brightness: Brightness.dark,
-          primary: AppColors.primary,
-          onPrimary: Colors.black,
-          secondary: AppColors.primary,
-          onSecondary: Colors.white,
-          error: Colors.red,
-          onError: Colors.white,
-          surface: Colors.black,
-          onSurface: Colors.white,
-        ),
-        fontFamily: GoogleFonts.openSans().fontFamily,
-      );
+    bottomSheetTheme: const BottomSheetThemeData(backgroundColor: Colors.black),
+    elevatedButtonTheme: _elevatedButtonDarkTheme,
+    primarySwatch: AppColors.primary,
+    primaryColor: AppColors.primary,
+    colorScheme: const ColorScheme(
+      brightness: Brightness.dark,
+      primary: AppColors.primary,
+      onPrimary: Colors.black,
+      secondary: AppColors.primary,
+      onSecondary: Colors.white,
+      error: Colors.red,
+      onError: Colors.white,
+      surface: Colors.black,
+      onSurface: Colors.white,
+    ),
+    fontFamily: GoogleFonts.openSans().fontFamily,
+    dialogTheme: DialogThemeData(backgroundColor: Colors.black),
+  );
 
   // --------------------------------------------------------------------------------------------
 
   static ElevatedButtonThemeData get _elevatedButtonTheme => ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.grey.shade300,
-          textStyle: AppTextStyle.text16w400(),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-      );
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.grey.shade300,
+      textStyle: AppTextStyle.text16w400(),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    ),
+  );
 
   static ElevatedButtonThemeData get _elevatedButtonDarkTheme => ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: Colors.white10,
       textStyle: AppTextStyle.text16w400(),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     ),
   );
 }
