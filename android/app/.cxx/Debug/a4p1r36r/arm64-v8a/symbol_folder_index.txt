@@ -1,0 +1,1 @@
+/Users/mac/Documents/Projects/Flutter/pecunia_mobile/build/app/intermediates/cxx/Debug/a4p1r36r/obj/arm64-v8a
