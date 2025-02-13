@@ -18,9 +18,11 @@ class GoogleController extends BaseController {
   );
 
   final Rxn<GoogleSignInAccount> _currentUser = Rxn();
+
   bool get isSignedIn => _currentUser.value != null;
 
   final Rxn<GoogleDriveController> _drive = Rxn();
+
   GoogleDriveController get drive {
     assert(_drive.value != null);
     return _drive.value!;
@@ -58,6 +60,8 @@ class GoogleController extends BaseController {
     if (_currentUser.value == null) {
       debugPrint("Пользователь вышел из системы.");
       return;
+    } else {
+      debugPrint("Пользователь в системе: ${_currentUser.value!.displayName}");
     }
 
     final client = await _googleSignIn.authenticatedClient();
