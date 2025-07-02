@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pecunia/controllers/app_controller.dart';
 import 'package:pecunia/controllers/storage_controller.dart';
 import 'package:pecunia/firebase_options.dart';
