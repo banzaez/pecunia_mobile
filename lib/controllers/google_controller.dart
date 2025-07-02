@@ -14,7 +14,6 @@ class GoogleController extends BaseController {
   final GoogleSignIn googleSignIn = GoogleSignIn.instance;
   late Future<void> _signInInitialized;
   final Rxn<GoogleSignInAccount> _currentUser = Rxn();
-  GoogleSignInClientAuthorization? _authorization;
 
   bool get isSignedIn => _currentUser.value != null;
 
@@ -42,7 +41,6 @@ class GoogleController extends BaseController {
               _currentUser.value = event.user;
             case GoogleSignInAuthenticationEventSignOut():
               _currentUser.value = null;
-              _authorization = null;
           }
 
           if (_currentUser.value != null) {
