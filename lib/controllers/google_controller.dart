@@ -11,13 +11,10 @@ import 'package:pecunia/provider/sql_provider.dart';
 import 'package:pecunia/util/ext_datetime.dart';
 
 class GoogleController extends BaseController {
-  late final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: <String>[
-      drive_api.DriveApi.driveFileScope,
-    ],
-  );
-
+  final GoogleSignIn googleSignIn = GoogleSignIn.instance;
+  late Future<void> _signInInitialized;
   final Rxn<GoogleSignInAccount> _currentUser = Rxn();
+  GoogleSignInClientAuthorization? _authorization;
 
   bool get isSignedIn => _currentUser.value != null;
 
@@ -28,50 +25,66 @@ class GoogleController extends BaseController {
     return _drive.value!;
   }
 
+  final List<String> scopes = <String>[drive_api.DriveApi.driveFileScope];
+
   bool get hasDrive => _drive.value != null;
 
   @override
   void onInit() {
     super.onInit();
-    _googleSignIn.onCurrentUserChanged.listen(onCurrentUserChanged);
-    _googleSignIn.signInSilently();
+
+    _signInInitialized = googleSignIn.initialize();
+
+    googleSignIn.authenticationEvents
+        .listen((GoogleSignInAuthenticationEvent event) {
+          switch (event) {
+            case GoogleSignInAuthenticationEventSignIn():
+              _currentUser.value = event.user;
+            case GoogleSignInAuthenticationEventSignOut():
+              _currentUser.value = null;
+              _authorization = null;
+          }
+
+          if (_currentUser.value != null) {
+            _checkAuthorization();
+          }
+        })
+        .onError((Object error) {
+          debugPrint(error.toString());
+        });
+
+    _signInInitialized.then((void value) {
+      signIn();
+    });
   }
 
-  Future<void> signIn() async {
-    try {
-      await _googleSignIn.signIn();
-    } catch (e) {
-      debugPrint("Ошибка при входе: $e");
-    }
-  }
+  Future<void> signIn() async =>
+      googleSignIn.attemptLightweightAuthentication();
 
   Future<void> signOut() async {
     try {
       _drive.value = null;
-      await _googleSignIn.signOut();
+      await GoogleSignIn.instance.signOut();
     } catch (e) {
       debugPrint("Ошибка при выходе: $e");
     }
   }
 
-  Future<void> onCurrentUserChanged(currentUser) async {
-    _currentUser.value = currentUser;
+  // ------------------------------------------------------------
 
-    if (_currentUser.value == null) {
-      debugPrint("Пользователь вышел из системы.");
-      return;
-    } else {
-      debugPrint("Пользователь в системе: ${_currentUser.value!.displayName}");
+  void _updateAuthorization(GoogleSignInClientAuthorization? authorization) {
+    if (authorization != null) {
+      _drive.value = Get.put(
+        GoogleDriveController(client: authorization.authClient(scopes: scopes)),
+      );
     }
+  }
 
-    final client = await _googleSignIn.authenticatedClient();
+  Future<void> _checkAuthorization() async {
+    final authorization = await _currentUser.value!.authorizationClient
+        .authorizationForScopes(scopes);
 
-    if (client == null) {
-      debugPrint("Не удалось получить клиент для авторизации.");
-      return;
-    }
-
-    _drive.value = Get.put(GoogleDriveController(client: client));
+    _updateAuthorization(authorization);
   }
 }
 
@@ -114,7 +127,8 @@ class GoogleDriveController extends BaseController {
 
       final drive_api.DriveApi drive = drive_api.DriveApi(client);
       final driveFile = drive_api.File();
-      driveFile.name = "penunia_backup_${DateTime.now().toFormat("yyyyMMdd_HHmmss")}.db";
+      driveFile.name =
+          "penunia_backup_${DateTime.now().toFormat("yyyyMMdd_HHmmss")}.db";
 
       await drive.files.create(
         driveFile,
@@ -132,10 +146,12 @@ class GoogleDriveController extends BaseController {
   Future<drive_api.Media> getFileMedia(String fileId) async {
     try {
       final drive_api.DriveApi drive = drive_api.DriveApi(client);
-      final mediaStream = await drive.files.get(
-        fileId,
-        downloadOptions: drive_api.DownloadOptions.fullMedia,
-      ) as drive_api.Media;
+      final mediaStream =
+          await drive.files.get(
+                fileId,
+                downloadOptions: drive_api.DownloadOptions.fullMedia,
+              )
+              as drive_api.Media;
       return mediaStream;
     } catch (e) {
       debugPrint("Ошибка при получении файла: $e");

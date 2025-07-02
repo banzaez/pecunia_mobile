@@ -182,5 +182,5 @@ class BackupScreen extends GetView<BackupController> {
           onPressed: () => Get.closeAllDialogs(),
           child: Text("no".tr),
         ),
-      );
+      ) ?? false;
 }
