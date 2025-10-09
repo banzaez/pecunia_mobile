@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
 
   //----------SET-LOCALE-------------------------------------------------------------------------
 
-  Locale? _localeResolutionCallback(locale, supportedLocales) {
+  Locale? _localeResolutionCallback(Locale? locale, Iterable<Locale> supportedLocales) {
     final StorageController storageController = Get.find();
 
     Locale currentLocale = supportedLocales.first;

@@ -3,11 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:pecunia/models/finance_categories.dart';
 import 'package:pecunia/models/finance_category.dart';
 
-bool toBoolean(str) => str == 1 || str == '0' || str == 'true';
-
-String fromBoolean(value) => value ? "1" : "0";
-
-DateTime toDateTime(value) => DateTime.parse(value);
+DateTime toDateTime(String value) => DateTime.parse(value);
 
 String fromDateTime(DateTime value) => DateFormat("yyyy-MM-ddTHH:mm:ssZ").format(value);
 

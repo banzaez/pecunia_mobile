@@ -24,7 +24,7 @@ class DialogChooseWallet extends StatelessWidget {
 
   // --------------------------------------------------------------------------------------------
 
-  Widget _item(wallet) => GestureDetector(
+  Widget _item(Wallet wallet) => GestureDetector(
         onTap: () => Get.backLegacy(result: wallet),
         child: WalletItem(wallet: wallet, isEditing: false),
       );

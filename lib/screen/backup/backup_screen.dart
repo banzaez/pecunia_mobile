@@ -151,7 +151,7 @@ class BackupScreen extends GetView<BackupController> {
                     driveFiles[index].name!,
                     driveFiles[index].id!,
                   ),
-                  separatorBuilder: (_, __) => AppSpaces.v8,
+                  separatorBuilder: (_, _) => AppSpaces.v8,
                 ),
               ),
       ],

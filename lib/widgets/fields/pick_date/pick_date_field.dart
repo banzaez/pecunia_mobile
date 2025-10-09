@@ -69,7 +69,7 @@ class PickDateField extends StatelessWidget {
 
   // ----------CHANGE-DATE-----------------------------------------------------------------------
 
-  DateTime changeDate(value) {
+  DateTime changeDate(int value) {
     DateTime currentDate = initDate ?? DateTime.now();
 
     DateTime dateTime = DateTime(

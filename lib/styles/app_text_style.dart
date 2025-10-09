@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTextStyle {
   AppTextStyle._();
 
-  static baseStyle({
+  static TextStyle baseStyle({
     Color? color,
     required double fontSize,
     FontWeight? fontWeight,

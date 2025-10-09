@@ -15,9 +15,7 @@ class Wallet {
   @JsonKey(fromJson: toCurrency, toJson: fromCurrency)
   Currency? currency;
   String description;
-  @JsonKey(fromJson: toBoolean, toJson: fromBoolean)
   bool showBalance;
-  @JsonKey(fromJson: toBoolean, toJson: fromBoolean)
   bool isRoundUp;
 
   Wallet({

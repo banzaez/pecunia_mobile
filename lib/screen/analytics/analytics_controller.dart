@@ -21,7 +21,7 @@ class AnalyticsController extends BaseController {
 
   DateTime get date => _date.value;
 
-  setDate(DateTime value, DateType type) {
+  void setDate(DateTime value, DateType type) {
     _date.value = value.startOfDay;
     _period.value = type;
   }
@@ -61,14 +61,14 @@ class AnalyticsController extends BaseController {
 
   //----------NAVIGATION-------------------------------------------------------------------------
 
-  goToDetails({required int categoryId}) {
+  void goToDetails({required int categoryId}) {
     final TransactionsArguments arguments = TransactionsArguments(
       walletId: _transactionController.walletId,
       categoryId: categoryId,
       startDate: interval.first,
       endDate: interval.last,
     );
-    return _appController.goToScreen(AppScreens.transactions, arguments: arguments);
+    _appController.goToScreen(AppScreens.transactions, arguments: arguments);
   }
 
   //---------------------------------------------------------------------------------------------

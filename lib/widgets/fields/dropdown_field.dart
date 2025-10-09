@@ -43,6 +43,6 @@ class DropdownField<T> extends StatelessWidget {
         ),
         hint: Text(hint),
         items: items,
-        value: value,
+        initialValue: value,
       );
 }
