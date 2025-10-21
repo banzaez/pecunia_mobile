@@ -29,7 +29,7 @@ android {
 
     defaultConfig {
         applicationId = "com.banzaez.pecunia"
-        minSdk = 23 // flutter.minSdkVersion
+        minSdkVersion = flutter.minSdkVersion // flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
