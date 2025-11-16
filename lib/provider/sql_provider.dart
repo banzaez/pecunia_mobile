@@ -35,8 +35,6 @@ class SQLProvider {
       path,
       version: 1,
       onConfigure: (db) async {
-        await db.execute('PRAGMA foreign_keys = ON;');
-        await db.execute('PRAGMA journal_mode = WAL;');
       },
       onCreate: (sql.Database db, int version) async {
         await db.execute(
