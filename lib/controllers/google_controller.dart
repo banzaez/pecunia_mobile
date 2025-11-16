@@ -116,7 +116,7 @@ class GoogleDriveController extends BaseController {
     isLoading = true;
     try {
       final SQLProvider sqlProvider = Get.find();
-      final dbFile = File(sqlProvider.databasesPath);
+      final dbFile = File(sqlProvider.databasePath);
 
       if (!dbFile.existsSync()) {
         debugPrint("Файл базы данных не найден.");

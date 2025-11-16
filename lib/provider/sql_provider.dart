@@ -16,7 +16,7 @@ class SQLProvider {
   final String _filename = "pecunia.db";
   String get filename => _filename;
 
-  String get databasesPath => _database.path;
+  String get databasePath => _database.path;
 
   bool isLoading = false;
 
@@ -24,8 +24,8 @@ class SQLProvider {
     isLoading = true;
 
     // Get a location using getDatabasesPath
-    var databasesPath = await sql.getDatabasesPath();
-    String path = '$databasesPath/$filename';
+    final dir = await sql.getDatabasesPath();
+    final path = '$dir/$filename';
 
     // // Delete the database
     // await sql.deleteDatabase(path);
@@ -34,29 +34,38 @@ class SQLProvider {
     await sql.openDatabase(
       path,
       version: 1,
-      onCreate: (sql.Database db, int version) async {
-        await db.execute("CREATE TABLE ${SQLTableTransactions.tableName} ("
-            "${SQLTableTransactions.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,"
-            "${SQLTableTransactions.columnWalletId} INTEGER NOT NULL,"
-            "${SQLTableTransactions.columnAmount} DOUBLE NOT NULL,"
-            "${SQLTableTransactions.columnCategoryId} INTEGER NOT NULL,"
-            "${SQLTableTransactions.columnSubCategoryId} INTEGER,"
-            "${SQLTableTransactions.columnCreatedAt} TEXT DEFAULT CURRENT_TIMESTAMP,"
-            "${SQLTableTransactions.columnDescription} TEXT(250) NOT NULL)");
-
-        await db.execute("CREATE TABLE ${SQLTableWallets.tableName} ("
-            "${SQLTableWallets.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,"
-            "${SQLTableWallets.columnName} TEXT(100) DEFAULT 'New' NOT NULL,"
-            "${SQLTableWallets.columnCategoryId} INTEGER,"
-            "${SQLTableWallets.columnCurrency} TEXT(10) DEFAULT 'USD' NOT NULL,"
-            "${SQLTableWallets.columnDescription} TEXT(250) DEFAULT '' NOT NULL,"
-            "${SQLTableWallets.columnShowBalance} BOOLEAN DEFAULT '1' NOT NULL,"
-            "${SQLTableWallets.columnRound} BOOLEAN DEFAULT '1' NOT NULL,"
-            "${SQLTableWallets.columnSort} INTEGER DEFAULT '0' NOT NULL)");
-
-        await db.execute("INSERT INTO ${SQLTableWallets.tableName} DEFAULT VALUES");
+      onConfigure: (db) async {
+        await db.execute('PRAGMA foreign_keys = ON;');
+        await db.execute('PRAGMA journal_mode = WAL;');
       },
-      onConfigure: (db) {},
+      onCreate: (sql.Database db, int version) async {
+        await db.execute(
+          "CREATE TABLE ${SQLTableTransactions.tableName} ("
+          "${SQLTableTransactions.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "${SQLTableTransactions.columnWalletId} INTEGER NOT NULL,"
+          "${SQLTableTransactions.columnAmount} DOUBLE NOT NULL,"
+          "${SQLTableTransactions.columnCategoryId} INTEGER NOT NULL,"
+          "${SQLTableTransactions.columnSubCategoryId} INTEGER,"
+          "${SQLTableTransactions.columnCreatedAt} TEXT DEFAULT CURRENT_TIMESTAMP,"
+          "${SQLTableTransactions.columnDescription} TEXT(250) NOT NULL)",
+        );
+
+        await db.execute(
+          "CREATE TABLE ${SQLTableWallets.tableName} ("
+          "${SQLTableWallets.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "${SQLTableWallets.columnName} TEXT(100) DEFAULT 'New' NOT NULL,"
+          "${SQLTableWallets.columnCategoryId} INTEGER,"
+          "${SQLTableWallets.columnCurrency} TEXT(10) DEFAULT 'USD' NOT NULL,"
+          "${SQLTableWallets.columnDescription} TEXT(250) DEFAULT '' NOT NULL,"
+          "${SQLTableWallets.columnShowBalance} BOOLEAN DEFAULT '1' NOT NULL,"
+          "${SQLTableWallets.columnRound} BOOLEAN DEFAULT '1' NOT NULL,"
+          "${SQLTableWallets.columnSort} INTEGER DEFAULT '0' NOT NULL)",
+        );
+
+        await db.execute(
+          "INSERT INTO ${SQLTableWallets.tableName} DEFAULT VALUES",
+        );
+      },
       onOpen: (db) async {
         _database = db;
 

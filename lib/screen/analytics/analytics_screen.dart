@@ -89,7 +89,7 @@ class AnalyticsScreen extends GetView<AnalyticsController> {
               ).paddingSymmetric(horizontal: 16),
             ],
           ),
-          AppSpaces.v32,
+          AppSpaces.v64,
         ],
       ));
 

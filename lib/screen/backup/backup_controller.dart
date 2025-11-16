@@ -23,7 +23,7 @@ class BackupController extends GetxController {
   void onInit() {
     super.onInit();
 
-    file = File(_sqlProvider.databasesPath);
+    file = File(_sqlProvider.databasePath);
     filename = _sqlProvider.filename;
     size = file.lengthSync() ~/ (1024);
   }
@@ -53,7 +53,7 @@ class BackupController extends GetxController {
 
     File backupFile = File(path);
 
-    backupFile.copySync(_sqlProvider.databasesPath);
+    backupFile.copySync(_sqlProvider.databasePath);
 
     Restart.restartApp(
       notificationTitle: 'backup_restarting'.tr,
@@ -66,7 +66,7 @@ class BackupController extends GetxController {
     final mediaStream = await google.drive.getFileMedia(fileId);
 
     // Сохранение файла локально
-    final localFile = File(_sqlProvider.databasesPath);
+    final localFile = File(_sqlProvider.databasePath);
 
     final fileSink = localFile.openWrite();
     await mediaStream.stream.pipe(fileSink);
