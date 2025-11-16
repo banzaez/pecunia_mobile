@@ -109,7 +109,7 @@ class SettingTransaction extends StatelessWidget {
                 },
                 child: Text("setting_tran_save".tr),
               ),
-              AppSpaces.v16,
+              AppSpaces.v32,
             ],
           ),
         ),

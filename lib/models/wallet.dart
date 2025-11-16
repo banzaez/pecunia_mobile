@@ -7,6 +7,8 @@ part 'wallet.g.dart';
 
 @JsonSerializable()
 class Wallet {
+  static bool _valueToBool(int value) => value == 1 ? true : false;
+
   @JsonKey(name: "_id")
   int id;
   String name;
@@ -15,7 +17,9 @@ class Wallet {
   @JsonKey(fromJson: toCurrency, toJson: fromCurrency)
   Currency? currency;
   String description;
+  @JsonKey(defaultValue: true, fromJson: _valueToBool)
   bool showBalance;
+  @JsonKey(defaultValue: true, fromJson: _valueToBool)
   bool isRoundUp;
 
   Wallet({

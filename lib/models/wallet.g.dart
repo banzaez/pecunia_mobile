@@ -11,8 +11,12 @@ Wallet _$WalletFromJson(Map<String, dynamic> json) => Wallet(
   name: json['name'] as String,
   currency: toCurrency(json['currency'] as String),
   description: json['description'] as String,
-  showBalance: json['showBalance'] as bool,
-  isRoundUp: json['isRoundUp'] as bool,
+  showBalance: json['showBalance'] == null
+      ? true
+      : Wallet._valueToBool((json['showBalance'] as num).toInt()),
+  isRoundUp: json['isRoundUp'] == null
+      ? true
+      : Wallet._valueToBool((json['isRoundUp'] as num).toInt()),
 )..category = toCategory((json['category_id'] as num?)?.toInt());
 
 Map<String, dynamic> _$WalletToJson(Wallet instance) => <String, dynamic>{

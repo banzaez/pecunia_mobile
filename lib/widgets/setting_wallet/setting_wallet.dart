@@ -89,7 +89,7 @@ class SettingWallet extends StatelessWidget {
                 },
                 child: Text("setting_wallet_button_save".tr),
               ),
-              AppSpaces.v16,
+              AppSpaces.v32,
             ],
           ),
         ),
