@@ -6,7 +6,7 @@ import 'package:pecunia/provider/sql_provider.dart';
 class WalletController extends BaseController {
   final SQLProvider _sqlController = Get.find();
 
-  final RxList<Wallet> wallets = RxList();
+  final RxList<Wallet> wallets = <Wallet>[].obs;
 
   final RxBool isEditing = RxBool(false);
 
@@ -61,5 +61,5 @@ class WalletController extends BaseController {
   }
 
   Future<void> refreshWallets() async =>
-      wallets.value = await _sqlController.wallets.selectAll();
+      wallets.assignAll(await _sqlController.wallets.selectAll());
 }

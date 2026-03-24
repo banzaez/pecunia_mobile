@@ -41,6 +41,6 @@ class SQLTableWallets {
       columns: null,
     );
 
-    return List.generate(maps.length, (index) => Wallet.fromJson(maps[index]));
+    return maps.map((e) => Wallet.fromJson(e)).toList();
   }
 }

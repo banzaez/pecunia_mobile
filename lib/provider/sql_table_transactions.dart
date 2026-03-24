@@ -58,7 +58,7 @@ class SQLTableTransactions {
       orderBy: "$columnCreatedAt DESC",
     );
 
-    return List.generate(result.length, (index) => Transaction.fromJson(result[index]));
+    return result.map((e) => Transaction.fromJson(e)).toList();
   }
 
   Future<List<Transaction>> selectByWalletIdAndCategoryAndByPeriod(
@@ -75,7 +75,7 @@ class SQLTableTransactions {
       orderBy: "$columnCreatedAt DESC",
     );
 
-    return List.generate(result.length, (index) => Transaction.fromJson(result[index]));
+    return result.map((e) => Transaction.fromJson(e)).toList();
   }
 
   // ----------AVAILABLE DATES------------------------------------------------------------------

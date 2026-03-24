@@ -18,7 +18,7 @@ class TransactionController extends BaseController {
 
   final Rx<AnalyticsTotal> analyticsTotal = AnalyticsTotal(0, 0, 0).obs;
 
-  final RxList<Transaction> transactions = RxList();
+  final RxList<Transaction> transactions = <Transaction>[].obs;
 
   // -----------SQL------------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ class TransactionController extends BaseController {
   }
 
   Future<void> refreshTransactions() async =>
-      transactions.value = await _sqlProvider.transactions.selectByWalletId(_walletId.value);
+      transactions.assignAll(await _sqlProvider.transactions.selectByWalletId(_walletId.value));
 
   Future<void> refreshTotal() async =>
       analyticsTotal.value = await _sqlProvider.transactions.selectTotalByWallet(_walletId.value);

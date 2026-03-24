@@ -38,14 +38,14 @@ class NumberField extends StatelessWidget {
         enabled: enabled,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d{0,' '$decimal})')),
+          FilteringTextInputFormatter.allow(RegExp(r'(^\d*[\.,]?\d{0,' '$decimal})')),
         ],
         hintText: hintText,
         showLabel: showLabel,
         labelText: labelText,
         errorText: errorText,
         validator: validator,
-        onChanged: (value) => onChanged?.call(num.tryParse(value) ?? 0),
+        onChanged: (value) => onChanged?.call(num.tryParse(value.replaceAll(",", ".")) ?? 0),
       );
 }
 

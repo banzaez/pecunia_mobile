@@ -45,7 +45,7 @@ class BaseField extends TextFormField {
             prefixIcon: prefixIcon,
             prefixText: prefixText,
             suffixIcon: suffixIcon,
-            labelText: labelText,
+            labelText: showLabel ? (labelText ?? hintText) : null,
             hintText: hintText,
             errorText: errorText,
             helperText: helperText,

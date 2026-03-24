@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/models/wallet.dart';
+import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/widgets/dialogs/dialog_choose_wallet.dart';
 import 'package:pecunia/widgets/wallet_item.dart';
 
@@ -15,7 +16,7 @@ class WalletField extends StatelessWidget {
     onChanged: onChanged,
     child: initValue == null
         ? Card(
-          color: Colors.white10,
+          color: AppColors.backgroundContent,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
