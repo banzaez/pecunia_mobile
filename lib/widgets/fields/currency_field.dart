@@ -1,7 +1,7 @@
 import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pecunia/controllers/storage_controller.dart';
+import 'package:pecunia/provider/settings_provider.dart';
 import 'package:pecunia/styles/app_border_style.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 
@@ -21,7 +21,7 @@ class CurrencyField extends StatelessWidget {
           showCurrencyName: true,
           showCurrencyCode: true,
           favorite: [
-            Get.find<StorageController>().currency?.code ?? "",
+            Get.find<SettingsProvider>().currency?.code ?? "",
           ],
           onSelect: onChange,
         ),

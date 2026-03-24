@@ -144,6 +144,13 @@ class RuTranslation extends AppTranslation {
         "wallets_button": "мои кошельки",
         "transactions_title": "Транзакции",
         "error": "Ошибка",
+        "success": "Успешно",
+        "backup_saved_success": "Бэкап успешно сохранен",
+        "backup_restored_success": "Данные успешно восстановлены",
+        "backup_deleted_success": "Бэкап успешно удален",
+        "drive_error_read": "Ошибка чтения файлов в облаке",
+        "drive_error_delete": "Ошибка удаления файла в облаке",
+        "drive_error_download": "Ошибка загрузки из облака",
         "backup_error_msg": 'Выбранный файл не в формате "db"',
 
         "label_subcategory": "подкатегория",

@@ -1,9 +1,10 @@
 import 'package:get/get.dart';
+import 'package:pecunia/controllers/base_controller.dart';
 import 'package:pecunia/controllers/transaction_controller.dart';
 import 'package:pecunia/models/transaction.dart';
 import 'package:pecunia/screen/transactions/transactions_arguments.dart';
 
-class TransactionsController extends GetxController {
+class TransactionsController extends BaseController {
   final TransactionController _transactionController = Get.find();
 
   final RxList<Transaction> transactions = RxList();
@@ -26,13 +27,22 @@ class TransactionsController extends GetxController {
     startDate = arguments.startDate;
     endDate = arguments.endDate;
 
-    _transactionController
-        .selectByWalletIdAndCategoryAndByPeriod(
-          walletId,
-          categoryId,
-          startDate,
-          endDate,
-        )
-        .then((value) => transactions.value = value);
+    _loadTransactions();
+  }
+
+  Future<void> _loadTransactions() async {
+    isLoading = true;
+    try {
+      transactions.value = await _transactionController.selectByWalletIdAndCategoryAndByPeriod(
+        walletId,
+        categoryId,
+        startDate,
+        endDate,
+      );
+    } catch (e) {
+      error = e.toString();
+    } finally {
+      isLoading = false;
+    }
   }
 }

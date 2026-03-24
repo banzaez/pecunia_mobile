@@ -13,10 +13,14 @@ class TransactionsScreen extends GetView<TransactionsController> {
         body: _list(),
       );
 
-  // --------------------------------------------------------------------------------------------
-
-  Widget _list() => Obx(() => ListView.builder(
-        itemCount: controller.transactions.length,
-        itemBuilder: (_, index) => TransactionItem(transaction: controller.transactions[index]),
-      ));
+  Widget _list() => Obx(() {
+        if (controller.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return ListView.builder(
+          itemCount: controller.transactions.length,
+          itemBuilder: (_, index) =>
+              TransactionItem(transaction: controller.transactions[index]),
+        );
+      });
 }

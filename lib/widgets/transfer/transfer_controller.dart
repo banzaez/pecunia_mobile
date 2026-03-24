@@ -40,6 +40,14 @@ class TransferController extends GetxController {
   // ----------INIT------------------------------------------------------------------------------
 
   @override
+  void onClose() {
+    amount.dispose();
+    exchangeRate.dispose();
+    total.dispose();
+    super.onClose();
+  }
+
+  @override
   void onInit() {
     super.onInit();
     _fromWallet.addListener(() => changeWallet());

@@ -1,19 +1,22 @@
 import 'package:pecunia/provider/sql_analytics.dart';
 import 'package:pecunia/provider/sql_table_transactions.dart';
 import 'package:pecunia/provider/sql_table_wallets.dart';
+import 'dart:io' as io;
 import 'package:sqflite/sqflite.dart' as sql;
 
 class SQLProvider {
-  late final sql.Database _database;
+  late sql.Database _database;
+  sql.Database get database => _database;
 
-  late final SQLAnalytics analytics;
-  late final SQLTableTransactions transactions;
-  late final SQLTableWallets wallets;
+  late SQLAnalytics analytics;
+  late SQLTableTransactions transactions;
+  late SQLTableWallets wallets;
+
+  late String _databasePath;
+  String get databasePath => _databasePath;
 
   final String _filename = "pecunia.db";
   String get filename => _filename;
-
-  String get databasePath => _database.path;
 
   bool isLoading = false;
 
@@ -22,14 +25,14 @@ class SQLProvider {
 
     // Get a location using getDatabasesPath
     final dir = await sql.getDatabasesPath();
-    final path = '$dir/$filename';
+    _databasePath = '$dir/$filename';
 
     // // Delete the database
     // await sql.deleteDatabase(path);
 
     // open the database
-    await sql.openDatabase(
-      path,
+    final db = await sql.openDatabase(
+      _databasePath,
       version: 1,
       onConfigure: (db) async {
         await db.execute('PRAGMA foreign_keys = ON');
@@ -75,15 +78,24 @@ class SQLProvider {
       onUpgrade: (db, oldVersion, newVersion) async {
         // Example: if (oldVersion < 2) { await db.execute('ALTER TABLE ...'); }
       },
-      onOpen: (db) async {
-        _database = db;
-
-        analytics = SQLAnalytics(_database);
-        transactions = SQLTableTransactions(_database);
-        wallets = SQLTableWallets(_database);
-      },
     );
 
+    _database = db;
+    analytics = SQLAnalytics(_database);
+    transactions = SQLTableTransactions(_database);
+    wallets = SQLTableWallets(_database);
+
     isLoading = false;
+  }
+
+  Future<void> close() async {
+    await _database.close();
+  }
+
+  Future<String> createBackupSnapshot() async {
+    final tempDir = await io.Directory.systemTemp.createTemp('pecunia_backup');
+    final backupPath = '${tempDir.path}/backup_export.db';
+    await _database.execute("VACUUM INTO '$backupPath'");
+    return backupPath;
   }
 }

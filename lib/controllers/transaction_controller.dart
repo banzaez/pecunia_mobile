@@ -11,9 +11,9 @@ class TransactionController extends BaseController {
 
   int get walletId => _walletId.value;
 
-  set walletId(int id) {
+  Future<void> changeWallet(int id) async {
     _walletId.value = id;
-    _refresh();
+    await refreshAll();
   }
 
   final Rx<AnalyticsTotal> analyticsTotal = AnalyticsTotal(0, 0, 0).obs;
@@ -22,8 +22,17 @@ class TransactionController extends BaseController {
 
   // -----------SQL------------------------------------------------------------------------------
 
-  Future<void> _refresh() =>
-      Future.wait([refreshTransactions(), refreshTotal()]);
+  Future<void> refreshAll() async {
+    isLoading = true;
+    error = null;
+    try {
+      await Future.wait([refreshTransactions(), refreshTotal()]);
+    } catch (e) {
+      error = e.toString();
+    } finally {
+      isLoading = false;
+    }
+  }
 
   Future<void> refreshTransactions() async =>
       transactions.value = await _sqlProvider.transactions.selectByWalletId(_walletId.value);
@@ -32,25 +41,57 @@ class TransactionController extends BaseController {
       analyticsTotal.value = await _sqlProvider.transactions.selectTotalByWallet(_walletId.value);
 
   Future<void> addSQL(Transaction transaction) async {
-    if (transaction.walletId == 0) transaction.walletId = _walletId.value;
-    await _sqlProvider.transactions.add(value: transaction);
-    await _refresh();
+    isLoading = true;
+    error = null;
+    try {
+      if (transaction.walletId == 0) transaction.walletId = _walletId.value;
+      await _sqlProvider.transactions.add(value: transaction);
+      await refreshAll();
+    } catch (e) {
+      error = e.toString();
+    } finally {
+      isLoading = false;
+    }
   }
 
   Future<void> updateSQL(Transaction transaction) async {
-    if (transaction.walletId == 0) transaction.walletId = _walletId.value;
-    await _sqlProvider.transactions.update(value: transaction);
-    await _refresh();
+    isLoading = true;
+    error = null;
+    try {
+      if (transaction.walletId == 0) transaction.walletId = _walletId.value;
+      await _sqlProvider.transactions.update(value: transaction);
+      await refreshAll();
+    } catch (e) {
+      error = e.toString();
+    } finally {
+      isLoading = false;
+    }
   }
 
   Future<void> deleteSQL(int id) async {
-    await _sqlProvider.transactions.delete(id: id);
-    await _refresh();
+    isLoading = true;
+    error = null;
+    try {
+      await _sqlProvider.transactions.delete(id: id);
+      await refreshAll();
+    } catch (e) {
+      error = e.toString();
+    } finally {
+      isLoading = false;
+    }
   }
 
   Future<void> addTransferSQL(Transaction from, Transaction to) async {
-    await _sqlProvider.transactions.addBatch(values: [from, to]);
-    await _refresh();
+    isLoading = true;
+    error = null;
+    try {
+      await _sqlProvider.transactions.addBatch(values: [from, to]);
+      await refreshAll();
+    } catch (e) {
+      error = e.toString();
+    } finally {
+      isLoading = false;
+    }
   }
 
   Future<List<Transaction>> selectByWalletIdAndCategoryAndByPeriod(

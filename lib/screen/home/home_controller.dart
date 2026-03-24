@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:get/get.dart';
 import 'package:pecunia/controllers/app_controller.dart';
+import 'package:pecunia/provider/settings_provider.dart';
 import 'package:pecunia/controllers/base_controller.dart';
 import 'package:pecunia/controllers/transaction_controller.dart';
 import 'package:pecunia/controllers/wallet_controller.dart';
@@ -18,9 +19,9 @@ class HomeController extends BaseController {
   Wallet get currentWallet => _currentWallet.value!;
 
   set currentWallet(Wallet? wallet) {
-    AppController.isRoundUp.value = wallet?.isRoundUp ?? false;
+    Get.find<SettingsProvider>().isRoundUp.value = wallet?.isRoundUp ?? false;
     _currentWallet.value = wallet;
-    _transactionController.walletId = wallet?.id ?? 0;
+    _transactionController.changeWallet(wallet?.id ?? 0);
   }
 
   List<Wallet> get wallets => _walletController.wallets.value;
@@ -45,7 +46,10 @@ class HomeController extends BaseController {
   }
 
   void _onWalletsChanged(List<Wallet> wallets) {
-    if (wallets.isEmpty) return;
+    if (wallets.isEmpty) {
+      _currentWallet.value = null;
+      return;
+    }
 
     final currentId = _currentWallet.value?.id;
     final stillExists = currentId != null && wallets.any((w) => w.id == currentId);
@@ -53,9 +57,7 @@ class HomeController extends BaseController {
     if (!stillExists) {
       currentWallet = wallets.first;
     } else {
-      final updated = wallets.firstWhere((w) => w.id == currentId);
-      AppController.isRoundUp.value = updated.isRoundUp;
-      _currentWallet.value = updated;
+      currentWallet = wallets.firstWhere((w) => w.id == currentId);
     }
   }
 

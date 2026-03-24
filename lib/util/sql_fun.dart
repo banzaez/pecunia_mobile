@@ -7,8 +7,6 @@ DateTime toDateTime(String value) => DateTime.parse(value);
 
 String fromDateTime(DateTime value) => DateFormat("yyyy-MM-ddTHH:mm:ssZ").format(value);
 
-int toInt(String value) => int.tryParse(value) ?? 0;
-
 int? fromCategory(FinanceCategory? category) => category?.id;
 
 FinanceCategory? toCategory(int? value) =>

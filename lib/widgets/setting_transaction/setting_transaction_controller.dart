@@ -48,6 +48,13 @@ class SettingTransactionController extends BaseController {
   // ----------INIT------------------------------------------------------------------------------
 
   @override
+  void onClose() {
+    amount.dispose();
+    description.dispose();
+    super.onClose();
+  }
+
+  @override
   void onInit() {
     super.onInit();
 

@@ -15,27 +15,49 @@ class WalletController extends BaseController {
   @override
   void onInit() {
     super.onInit();
-    _loadWallets();
+    refreshWallets();
   }
-
-  Future<void> _loadWallets() => refreshWallets();
 
   // -----------SQL------------------------------------------------------------------------------
 
   Future<void> addSQL(Wallet wallet) async {
-    await _sqlController.wallets.add(value: wallet);
-    await refreshWallets();
+    isLoading = true;
+    error = null;
+    try {
+      await _sqlController.wallets.add(value: wallet);
+      await refreshWallets();
+    } catch (e) {
+      error = e.toString();
+    } finally {
+      isLoading = false;
+    }
   }
 
   Future<void> updateSQL(Wallet wallet) async {
-    await _sqlController.wallets.update(value: wallet);
-    await refreshWallets();
+    isLoading = true;
+    error = null;
+    try {
+      await _sqlController.wallets.update(value: wallet);
+      await refreshWallets();
+    } catch (e) {
+      error = e.toString();
+    } finally {
+      isLoading = false;
+    }
   }
 
   Future<void> deleteSQL(int id) async {
     if (wallets.length == 1) return;
-    await _sqlController.wallets.delete(id: id);
-    await refreshWallets();
+    isLoading = true;
+    error = null;
+    try {
+      await _sqlController.wallets.delete(id: id);
+      await refreshWallets();
+    } catch (e) {
+      error = e.toString();
+    } finally {
+      isLoading = false;
+    }
   }
 
   Future<void> refreshWallets() async =>

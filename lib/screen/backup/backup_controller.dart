@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/controllers/google_controller.dart';
+import 'package:pecunia/controllers/transaction_controller.dart';
+import 'package:pecunia/controllers/wallet_controller.dart';
 import 'package:pecunia/provider/sql_provider.dart';
 import 'package:pecunia/util/ext_datetime.dart';
-import 'package:restart_app/restart_app.dart';
 
 class BackupController extends GetxController {
   final SQLProvider _sqlProvider = Get.find();
@@ -35,10 +36,20 @@ class BackupController extends GetxController {
   // -----------BACKUP-----------------------------------------------------------------------------
 
   Future<void> archiving() async {
-    await FilePicker.platform.saveFile(
-      fileName: "pecunia_backup_${DateTime.now().toFormat("yyyyMMdd")}.db",
-      bytes: await file.readAsBytes(),
-    );
+    try {
+      final String backupPath = await _sqlProvider.createBackupSnapshot();
+      final backupFile = File(backupPath);
+
+      await FilePicker.platform.saveFile(
+        fileName: "pecunia_backup_${DateTime.now().toFormat("yyyyMMdd")}.db",
+        bytes: await backupFile.readAsBytes(),
+      );
+
+      if (await backupFile.exists()) await backupFile.delete();
+      Get.snackbar("success".tr, "backup_saved_success".tr);
+    } catch (e) {
+      Get.snackbar("error".tr, "backup_error_msg".tr);
+    }
   }
 
   Future<void> recovery() async {
@@ -47,26 +58,50 @@ class BackupController extends GetxController {
     if (result == null) return;
 
     final path = result.files.single.path!;
+    final backupFile = File(path);
 
-    final extension = path.split(".").last;
-
-    if (extension != "db") {
+    if (!await _isSqliteFile(backupFile)) {
+      await Future.delayed(const Duration(milliseconds: 300));
       Get.snackbar("error".tr, "backup_error_msg".tr);
       return;
     }
 
-    File backupFile = File(path);
+    try {
+      // Закрываем БД перед заменой файла
+      await _sqlProvider.close();
 
-    backupFile.copySync(_sqlProvider.databasePath);
+      await backupFile.copy(_sqlProvider.databasePath);
 
-    Restart.restartApp(
-      notificationTitle: 'backup_restarting'.tr,
-      notificationBody: 'backup_restarting_body'.tr,
-    );
+      await _sqlProvider.init();
+      await Get.find<WalletController>().refreshWallets();
+      await Get.find<TransactionController>().refreshTransactions();
+
+      Get.offAllNamed('/');
+      Get.snackbar("success".tr, "backup_restored_success".tr);
+      _loadSize();
+    } catch (e) {
+      Get.snackbar("error".tr, "backup_error_msg".tr);
+      // Пытаемся переинициализировать БД, если что-то пошло не так
+      await _sqlProvider.init();
+    }
+  }
+
+  Future<bool> _isSqliteFile(File file) async {
+    try {
+      if (await file.length() < 16) return false;
+      final bytes = await file.openRead(0, 16).first;
+      final header = String.fromCharCodes(bytes);
+      return header.startsWith("SQLite format 3");
+    } catch (e) {
+      return false;
+    }
   }
 
   Future<void> recoveryCloud(String fileId) async {
     final mediaStream = await google.drive.getFileMedia(fileId);
+
+    // Закрываем БД перед заменой файла
+    await _sqlProvider.close();
 
     final localFile = File(_sqlProvider.databasePath);
 
@@ -74,9 +109,12 @@ class BackupController extends GetxController {
     await mediaStream.stream.pipe(fileSink);
     await fileSink.close();
 
-    Restart.restartApp(
-      notificationTitle: 'backup_restarting'.tr,
-      notificationBody: 'backup_restarting_body'.tr,
-    );
+    await _sqlProvider.init();
+    await Get.find<WalletController>().refreshWallets();
+    await Get.find<TransactionController>().refreshTransactions();
+
+    Get.offAllNamed('/');
+    Get.snackbar("success".tr, "backup_restored_success".tr);
+    _loadSize();
   }
 }

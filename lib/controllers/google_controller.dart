@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sign_in_as_googleapis_auth.dart';
@@ -13,6 +14,8 @@ import 'package:pecunia/util/ext_datetime.dart';
 class GoogleController extends BaseController {
   final GoogleSignIn googleSignIn = GoogleSignIn.instance;
   late Future<void> _signInInitialized;
+  late StreamSubscription<GoogleSignInAuthenticationEvent> _authSubscription;
+
   final Rxn<GoogleSignInAccount> _currentUser = Rxn();
 
   bool get isSignedIn => _currentUser.value != null;
@@ -34,26 +37,29 @@ class GoogleController extends BaseController {
 
     _signInInitialized = googleSignIn.initialize();
 
-    googleSignIn.authenticationEvents
-        .listen((GoogleSignInAuthenticationEvent event) {
-          switch (event) {
-            case GoogleSignInAuthenticationEventSignIn():
-              _currentUser.value = event.user;
-            case GoogleSignInAuthenticationEventSignOut():
-              _currentUser.value = null;
-          }
+    _authSubscription = googleSignIn.authenticationEvents.listen(
+      (GoogleSignInAuthenticationEvent event) {
+        switch (event) {
+          case GoogleSignInAuthenticationEventSignIn():
+            _currentUser.value = event.user;
+          case GoogleSignInAuthenticationEventSignOut():
+            _currentUser.value = null;
+        }
 
-          if (_currentUser.value != null) {
-            _checkAuthorization();
-          }
-        })
-        .onError((Object error) {
-          debugPrint(error.toString());
-        });
+        if (_currentUser.value != null) {
+          _checkAuthorization();
+        }
+      },
+      onError: (Object error) => debugPrint(error.toString()),
+    );
 
-    _signInInitialized.then((void value) {
-      signIn();
-    });
+    _signInInitialized.then((void value) => signIn());
+  }
+
+  @override
+  void onClose() {
+    _authSubscription.cancel();
+    super.onClose();
   }
 
   Future<void> signIn() async =>
@@ -62,6 +68,7 @@ class GoogleController extends BaseController {
   Future<void> signOut() async {
     try {
       _drive.value = null;
+      _removeDriveController();
       await GoogleSignIn.instance.signOut();
     } catch (e) {
       debugPrint("Ошибка при выходе: $e");
@@ -70,8 +77,15 @@ class GoogleController extends BaseController {
 
   // ------------------------------------------------------------
 
+  void _removeDriveController() {
+    if (Get.isRegistered<GoogleDriveController>()) {
+      Get.delete<GoogleDriveController>(force: true);
+    }
+  }
+
   void _updateAuthorization(GoogleSignInClientAuthorization? authorization) {
     if (authorization != null) {
+      _removeDriveController();
       _drive.value = Get.put(
         GoogleDriveController(client: authorization.authClient(scopes: scopes)),
       );
@@ -87,9 +101,11 @@ class GoogleController extends BaseController {
 }
 
 class GoogleDriveController extends BaseController {
-  GoogleDriveController({required this.client});
+  GoogleDriveController({required this.client})
+      : driveApi = drive_api.DriveApi(client);
 
   final auth.AuthClient client;
+  final drive_api.DriveApi driveApi;
 
   final RxList<drive_api.File> files = <drive_api.File>[].obs;
 
@@ -101,12 +117,16 @@ class GoogleDriveController extends BaseController {
 
   Future<void> readFiles() async {
     isLoading = true;
+    error = null;
     try {
-      final drive_api.DriveApi drive = drive_api.DriveApi(client);
-      final driveFiles = await drive.files.list();
+      final driveFiles = await driveApi.files.list(
+        q: "name contains 'pecunia_backup' and trashed = false",
+        orderBy: "createdTime desc",
+      );
       files.value = driveFiles.files ?? [];
     } catch (e) {
-      debugPrint("Ошибка при чтении файлов: $e");
+      error = "Ошибка при чтении файлов: $e";
+      Get.snackbar("error".tr, "drive_error_read".tr);
     } finally {
       isLoading = false;
     }
@@ -114,57 +134,59 @@ class GoogleDriveController extends BaseController {
 
   Future<void> createFile() async {
     isLoading = true;
+    error = null;
     try {
       final SQLProvider sqlProvider = Get.find();
-      final dbFile = File(sqlProvider.databasePath);
+      final String backupPath = await sqlProvider.createBackupSnapshot();
+      final dbFile = File(backupPath);
+      final fileLength = await dbFile.length();
 
-      if (!dbFile.existsSync()) {
-        debugPrint("Файл базы данных не найден.");
-        return;
-      }
-
-      final drive_api.DriveApi drive = drive_api.DriveApi(client);
       final driveFile = drive_api.File();
       driveFile.name =
           "pecunia_backup_${DateTime.now().toFormat("yyyyMMdd_HHmmss")}.db";
 
-      await drive.files.create(
+      await driveApi.files.create(
         driveFile,
-        uploadMedia: drive_api.Media(dbFile.openRead(), dbFile.lengthSync()),
+        uploadMedia: drive_api.Media(dbFile.openRead(), fileLength),
       );
 
+      if (await dbFile.exists()) await dbFile.delete();
+
       await readFiles();
+      Get.snackbar("success".tr, "backup_saved_success".tr);
     } catch (e) {
-      debugPrint("Ошибка при создании файла: $e");
+      error = "Ошибка при создании файла: $e";
+      Get.snackbar("error".tr, "backup_error_msg".tr);
     } finally {
       isLoading = false;
     }
   }
 
   Future<drive_api.Media> getFileMedia(String fileId) async {
+    error = null;
     try {
-      final drive_api.DriveApi drive = drive_api.DriveApi(client);
-      final mediaStream =
-          await drive.files.get(
-                fileId,
-                downloadOptions: drive_api.DownloadOptions.fullMedia,
-              )
-              as drive_api.Media;
+      final mediaStream = await driveApi.files.get(
+        fileId,
+        downloadOptions: drive_api.DownloadOptions.fullMedia,
+      ) as drive_api.Media;
       return mediaStream;
     } catch (e) {
-      debugPrint("Ошибка при получении файла: $e");
+      error = "Ошибка при получении файла: $e";
+      Get.snackbar("error".tr, "drive_error_download".tr);
       rethrow;
     }
   }
 
   Future<void> deleteFile(String fileId) async {
     isLoading = true;
+    error = null;
     try {
-      final drive_api.DriveApi drive = drive_api.DriveApi(client);
-      await drive.files.delete(fileId);
+      await driveApi.files.delete(fileId);
       await readFiles();
+      Get.snackbar("success".tr, "backup_deleted_success".tr);
     } catch (e) {
-      debugPrint("Ошибка при удалении файла: $e");
+      error = "Ошибка при удалении файла: $e";
+      Get.snackbar("error".tr, "drive_error_delete".tr);
     } finally {
       isLoading = false;
     }

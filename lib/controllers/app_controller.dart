@@ -1,12 +1,6 @@
 import 'package:get/get.dart';
 
 class AppController extends GetxController {
-  static final RxBool isRoundUp = false.obs;
-
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   //----------NAVIGATION-------------------------------------------------------------------------
 
