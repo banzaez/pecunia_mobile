@@ -3,12 +3,12 @@ import 'package:pecunia/controllers/app_controller.dart';
 import 'package:pecunia/controllers/base_controller.dart';
 import 'package:pecunia/controllers/transaction_controller.dart';
 import 'package:pecunia/models/analytics.dart';
+import 'package:pecunia/models/analytics_filter.dart';
 import 'package:pecunia/models/transaction.dart';
-import 'package:pecunia/provider/sql_analytics.dart';
 import 'package:pecunia/provider/sql_provider.dart';
 import 'package:pecunia/screen/transactions/transactions_arguments.dart';
 import 'package:pecunia/util/ext_datetime.dart';
-import 'package:pecunia/widgets/fields/pick_date/pick_date_field.dart';
+import 'package:pecunia/widgets/fields/pick_date/pick_date_type.dart';
 
 class AnalyticsController extends BaseController {
   final AppController _appController = Get.find();
@@ -82,9 +82,10 @@ class AnalyticsController extends BaseController {
     final list = switch (_period.value) {
       DateType.year => _analytics.where((e) => e.date.year == date.year),
       DateType.month => _analytics.where((e) => e.startOfMonth == date.startOfMonth),
-      DateType.day => _analytics.where((e) => e.date == date),
-      DateType.hour => throw UnimplementedError(),
-      DateType.minute => throw UnimplementedError(),
+      DateType.day ||
+      DateType.hour ||
+      DateType.minute =>
+        _analytics.where((e) => e.startOfDay == date.startOfDay),
     };
     return list.toList();
   }
@@ -94,17 +95,19 @@ class AnalyticsController extends BaseController {
   List<DateTime> get interval => switch (_period.value) {
         DateType.year => [date.startOfYear, date.endOfYear],
         DateType.month => [date.startOfMonth, date.endOfMonth],
-        DateType.day => [date.startOfDay, date.endOfDay],
-        DateType.hour => throw UnimplementedError(),
-        DateType.minute => throw UnimplementedError(),
+        DateType.day ||
+        DateType.hour ||
+        DateType.minute =>
+          [date.startOfDay, date.endOfDay],
       };
 
   String get periodStr => switch (period) {
         DateType.year => date.toFormat("yyyy"),
         DateType.month => date.toFormat("MMMM yyyy"),
-        DateType.day => date.toFormat("dd MMMM yyyy"),
-        DateType.hour => date.toFormat("HH:mm"),
-        DateType.minute => date.toFormat("HH:mm"),
+        DateType.day ||
+        DateType.hour ||
+        DateType.minute =>
+          date.toFormat("dd MMMM yyyy"),
       };
 
   List<int> get valuesYear => category.map((e) => e.date.year).toSet().toList();

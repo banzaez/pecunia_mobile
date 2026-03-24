@@ -71,18 +71,22 @@ class SQLTableTransactions {
   }
 
   Future<AnalyticsTotal> selectTotalByWallet(int walletId) async {
-    final startDate = fromDateTime(DateTime.now().startOfMonth);
-    final endDate = fromDateTime(DateTime.now().endOfMonth);
+    final now = DateTime.now();
+    final startDate = fromDateTime(now.startOfMonth);
+    final endDate = fromDateTime(now.endOfMonth);
 
-    List<Map<String, Object?>> result = await _database.query(
-      tableName,
-      columns: [
-        "SUM($columnAmount) AS total",
-        "SUM(CASE WHEN $columnAmount > 0 AND $columnCreatedAt BETWEEN '$startDate' AND '$endDate' THEN $columnAmount ELSE 0 END) AS income",
-        "SUM(CASE WHEN $columnAmount < 0 AND $columnCreatedAt BETWEEN '$startDate' AND '$endDate' THEN $columnAmount ELSE 0 END) AS expense",
-      ],
-      where: "$columnWalletId = ?",
-      whereArgs: [walletId],
+    final List<Map<String, Object?>> result = await _database.rawQuery(
+      '''
+      SELECT
+        SUM($columnAmount) AS total,
+        SUM(CASE WHEN $columnAmount > 0 AND $columnCreatedAt BETWEEN ? AND ?
+            THEN $columnAmount ELSE 0 END) AS income,
+        SUM(CASE WHEN $columnAmount < 0 AND $columnCreatedAt BETWEEN ? AND ?
+            THEN $columnAmount ELSE 0 END) AS expense
+      FROM $tableName
+      WHERE $columnWalletId = ?
+      ''',
+      [startDate, endDate, startDate, endDate, walletId],
     );
 
     return result.isEmpty ? AnalyticsTotal(0, 0, 0) : AnalyticsTotal.fromJson(result.first);

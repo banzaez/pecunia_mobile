@@ -8,7 +8,6 @@ import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/util/ext_datetime.dart';
 import 'package:pecunia/util/ext_double.dart';
-import 'package:pecunia/widgets/fields/category_field.dart';
 import 'package:pecunia/widgets/setting_transaction/setting_transaction.dart';
 
 class TransactionItem extends StatelessWidget {
@@ -18,7 +17,7 @@ class TransactionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: () => SettingTransaction.setting(TransactionType.income, transaction),
+        onTap: () => SettingTransaction.setting(transaction.type, transaction),
         child: Dismissible(
             key: Key(transaction.id.toString()),
             onDismissed: (direction) => Get.find<TransactionController>().deleteSQL(transaction.id),

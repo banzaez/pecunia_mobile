@@ -1,6 +1,3 @@
-import 'package:get/get.dart';
-import 'package:pecunia/controllers/transaction_controller.dart';
-import 'package:pecunia/controllers/wallet_controller.dart';
 import 'package:pecunia/provider/sql_analytics.dart';
 import 'package:pecunia/provider/sql_table_transactions.dart';
 import 'package:pecunia/provider/sql_table_wallets.dart';
@@ -35,19 +32,9 @@ class SQLProvider {
       path,
       version: 1,
       onConfigure: (db) async {
+        await db.execute('PRAGMA foreign_keys = ON');
       },
       onCreate: (sql.Database db, int version) async {
-        await db.execute(
-          "CREATE TABLE ${SQLTableTransactions.tableName} ("
-          "${SQLTableTransactions.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,"
-          "${SQLTableTransactions.columnWalletId} INTEGER NOT NULL,"
-          "${SQLTableTransactions.columnAmount} DOUBLE NOT NULL,"
-          "${SQLTableTransactions.columnCategoryId} INTEGER NOT NULL,"
-          "${SQLTableTransactions.columnSubCategoryId} INTEGER,"
-          "${SQLTableTransactions.columnCreatedAt} TEXT DEFAULT CURRENT_TIMESTAMP,"
-          "${SQLTableTransactions.columnDescription} TEXT(250) NOT NULL)",
-        );
-
         await db.execute(
           "CREATE TABLE ${SQLTableWallets.tableName} ("
           "${SQLTableWallets.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -61,8 +48,32 @@ class SQLProvider {
         );
 
         await db.execute(
+          "CREATE TABLE ${SQLTableTransactions.tableName} ("
+          "${SQLTableTransactions.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "${SQLTableTransactions.columnWalletId} INTEGER NOT NULL REFERENCES ${SQLTableWallets.tableName}(${SQLTableWallets.columnId}) ON DELETE CASCADE,"
+          "${SQLTableTransactions.columnAmount} DOUBLE NOT NULL,"
+          "${SQLTableTransactions.columnCategoryId} INTEGER NOT NULL,"
+          "${SQLTableTransactions.columnSubCategoryId} INTEGER,"
+          "${SQLTableTransactions.columnCreatedAt} TEXT DEFAULT CURRENT_TIMESTAMP,"
+          "${SQLTableTransactions.columnDescription} TEXT(250) NOT NULL)",
+        );
+
+        await db.execute(
+          "CREATE INDEX idx_transactions_wallet_id "
+          "ON ${SQLTableTransactions.tableName} (${SQLTableTransactions.columnWalletId})",
+        );
+
+        await db.execute(
+          "CREATE INDEX idx_transactions_created_at "
+          "ON ${SQLTableTransactions.tableName} (${SQLTableTransactions.columnCreatedAt})",
+        );
+
+        await db.execute(
           "INSERT INTO ${SQLTableWallets.tableName} DEFAULT VALUES",
         );
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        // Example: if (oldVersion < 2) { await db.execute('ALTER TABLE ...'); }
       },
       onOpen: (db) async {
         _database = db;
@@ -70,9 +81,6 @@ class SQLProvider {
         analytics = SQLAnalytics(_database);
         transactions = SQLTableTransactions(_database);
         wallets = SQLTableWallets(_database);
-
-        Get.put(TransactionController());
-        Get.put(WalletController());
       },
     );
 

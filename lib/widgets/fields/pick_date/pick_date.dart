@@ -4,6 +4,8 @@ import 'package:pecunia/util/ext_datetime.dart';
 import 'package:pecunia/util/ext_list.dart';
 import 'package:pecunia/widgets/fields/pick_date/pick_date_field.dart';
 
+export 'package:pecunia/widgets/fields/pick_date/pick_date_type.dart';
+
 class PickDate extends StatelessWidget {
   PickDate({
     super.key,
@@ -22,7 +24,7 @@ class PickDate extends StatelessWidget {
     List<int>? valuesDay,
   }) {
     valuesYear == null
-        ? this.valuesYear.fillOfRange(firstDate.year, start: lastDate.year)
+        ? this.valuesYear.fillOfRange(maxDate.year, start: minDate.year)
         : this.valuesYear.addAll(valuesYear);
     valuesMonth == null
         ? this.valuesMonth.fillOfRange(12, start: 1)
@@ -31,12 +33,9 @@ class PickDate extends StatelessWidget {
         ? this.valuesDay.fillOfRange(initDate?.daysInMonth ?? 0, start: 1)
         : this.valuesDay.addAll(valuesDay);
 
-    this.valuesYear.sort((a, b) => (b.compareTo(a)));
-    this.valuesMonth.sort((a, b) => (a.compareTo(b)));
-    this.valuesDay.sort((a, b) => (a.compareTo(b)));
-
-    valuesHour.fillOfRange(23, start: 0);
-    valuesMinute.fillOfRange(59, start: 0, step: 5);
+    this.valuesYear.sort((a, b) => b.compareTo(a));
+    this.valuesMonth.sort((a, b) => a.compareTo(b));
+    this.valuesDay.sort((a, b) => a.compareTo(b));
   }
 
   final Function(DateTime? value, DateType type) onChanged;
@@ -46,11 +45,10 @@ class PickDate extends StatelessWidget {
   final String formatYear;
   final String formatMonth;
   final String formatDay;
-  final String formatHour = "HH";
-  final String formatMinute = "mm";
+  static const String _formatHour = "HH";
+  static const String _formatMinute = "mm";
 
   final bool enableTime;
-
   final TextStyle? textStyle;
 
   final bool isYearSelected;
@@ -60,13 +58,14 @@ class PickDate extends StatelessWidget {
   final List<int> valuesYear = [];
   final List<int> valuesMonth = [];
   final List<int> valuesDay = [];
-  final List<int> valuesHour = [];
-  final List<int> valuesMinute = [];
+
+  static final List<int> _valuesHour = List.generate(24, (i) => i);
+  static final List<int> _valuesMinute = List.generate(12, (i) => i * 5);
 
   // --------------------------------------------------------------------------------------------
 
-  final DateTime firstDate = DateTime.now();
-  final DateTime lastDate = DateTime(2020, 1, 1);
+  static final DateTime minDate = DateTime(2020, 1, 1);
+  static final DateTime maxDate = DateTime.now();
 
   // --------------------------------------------------------------------------------------------
 
@@ -116,8 +115,8 @@ class PickDate extends StatelessWidget {
             onChanged: (value) => onChanged(value, DateType.hour),
             type: DateType.hour,
             initDate: initDate,
-            format: formatHour,
-            values: valuesHour,
+            format: _formatHour,
+            values: _valuesHour,
             isSelected: false,
           ),
           AppSpaces.h8,
@@ -125,8 +124,8 @@ class PickDate extends StatelessWidget {
             onChanged: (value) => onChanged(value, DateType.minute),
             type: DateType.minute,
             initDate: initDate,
-            format: formatMinute,
-            values: valuesMinute,
+            format: _formatMinute,
+            values: _valuesMinute,
             isSelected: false,
           ),
         ],

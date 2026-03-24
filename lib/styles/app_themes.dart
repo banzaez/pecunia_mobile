@@ -6,6 +6,8 @@ import 'package:pecunia/styles/app_text_style.dart';
 class AppThemes {
   AppThemes._();
 
+  static final String? _fontFamily = GoogleFonts.openSans().fontFamily;
+
   static ThemeData get theme => ThemeData(
     bottomSheetTheme: const BottomSheetThemeData(backgroundColor: Colors.white),
     elevatedButtonTheme: _elevatedButtonTheme,
@@ -22,7 +24,7 @@ class AppThemes {
       surface: Colors.white,
       onSurface: Colors.black,
     ),
-    fontFamily: GoogleFonts.openSans().fontFamily,
+    fontFamily: _fontFamily,
     dialogTheme: DialogThemeData(backgroundColor: Colors.white),
   );
 
@@ -42,7 +44,7 @@ class AppThemes {
       surface: Colors.black,
       onSurface: Colors.white,
     ),
-    fontFamily: GoogleFonts.openSans().fontFamily,
+    fontFamily: _fontFamily,
     dialogTheme: DialogThemeData(backgroundColor: Colors.black),
   );
 

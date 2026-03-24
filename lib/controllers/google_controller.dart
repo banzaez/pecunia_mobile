@@ -126,7 +126,7 @@ class GoogleDriveController extends BaseController {
       final drive_api.DriveApi drive = drive_api.DriveApi(client);
       final driveFile = drive_api.File();
       driveFile.name =
-          "penunia_backup_${DateTime.now().toFormat("yyyyMMdd_HHmmss")}.db";
+          "pecunia_backup_${DateTime.now().toFormat("yyyyMMdd_HHmmss")}.db";
 
       await drive.files.create(
         driveFile,

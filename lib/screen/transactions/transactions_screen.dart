@@ -9,7 +9,7 @@ class TransactionsScreen extends GetView<TransactionsController> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: CustomAppBar(title: "".tr),
+        appBar: CustomAppBar(title: "transactions_title".tr),
         body: _list(),
       );
 

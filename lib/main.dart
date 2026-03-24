@@ -4,9 +4,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:pecunia/controllers/app_controller.dart';
 import 'package:pecunia/controllers/storage_controller.dart';
+import 'package:pecunia/controllers/transaction_controller.dart';
+import 'package:pecunia/controllers/wallet_controller.dart';
 import 'package:pecunia/firebase_options.dart';
 import 'package:pecunia/provider/sql_provider.dart';
-import 'package:pecunia/screen/analytics/analitics_binding.dart';
+import 'package:pecunia/screen/analytics/analytics_binding.dart';
 import 'package:pecunia/screen/analytics/analytics_screen.dart';
 import 'package:pecunia/screen/backup/backup_binding.dart';
 import 'package:pecunia/screen/backup/backup_screen.dart';
@@ -30,6 +32,9 @@ void main() async {
 
   final sql = Get.put(SQLProvider(), permanent: true);
   await sql.init();
+
+  Get.put(TransactionController(), permanent: true);
+  Get.put(WalletController(), permanent: true);
 
   final storage = Get.put(StorageController(), permanent: true);
   await storage.init();

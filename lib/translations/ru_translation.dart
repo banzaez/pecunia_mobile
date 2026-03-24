@@ -142,6 +142,7 @@ class RuTranslation extends AppTranslation {
         "backup_restarting_body": "Нажмите здесь, чтобы открыть приложение снова.",
         "wallets_title": "Мои кошельки",
         "wallets_button": "мои кошельки",
+        "transactions_title": "Транзакции",
         "error": "Ошибка",
         "backup_error_msg": 'Выбранный файл не в формате "db"',
 

@@ -142,6 +142,7 @@ class EsTranslation extends AppTranslation {
         "backup_restarting_body": "Por favor, toca aquí para abrir la aplicación de nuevo.",
         "wallets_title": "Mis billeteras",
         "wallets_button": "mis billeteras",
+        "transactions_title": "Transacciones",
         "error": "Error",
         "backup_error_msg": 'El archivo seleccionado no está en formato "db"',
 

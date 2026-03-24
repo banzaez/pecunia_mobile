@@ -142,6 +142,7 @@ class FrTranslation extends AppTranslation {
         "backup_restarting_body": "Veuillez cliquer ici pour rouvrir l'application.",
         "wallets_title": "Mes portefeuilles",
         "wallets_button": "mes portefeuilles",
+        "transactions_title": "Transactions",
 
         "error": "Erreur",
         "backup_error_msg": 'Le fichier sélectionné n\'est pas au format "db"',

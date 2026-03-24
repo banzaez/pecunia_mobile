@@ -1,5 +1,5 @@
-import 'package:get/get.dart';
 import 'package:pecunia/models/analytics.dart';
+import 'package:pecunia/models/analytics_filter.dart';
 import 'package:pecunia/provider/sql_table_transactions.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
@@ -20,24 +20,27 @@ class SQLAnalytics {
 
   Future<List<Analytics>> selectByWalletId(
     int walletId,
-    String formatDate,
     AnalyticsFilter filter, [
     bool detail = false,
   ]) async {
-    List<Map<String, Object?>> maps = await _database.query(
+    final categoryColumn = detail
+        ? SQLTableTransactions.columnSubCategoryId
+        : SQLTableTransactions.columnCategoryId;
+
+    final List<Map<String, Object?>> maps = await _database.query(
       SQLTableTransactions.tableName,
       columns: [
-        "${detail ? SQLTableTransactions.columnSubCategoryId : SQLTableTransactions.columnCategoryId} AS category",
-        "strftime('$formatDate', ${SQLTableTransactions.columnCreatedAt}) AS year",
-        "strftime('$formatDate', ${SQLTableTransactions.columnCreatedAt}) AS month",
-        "strftime('$formatDate', ${SQLTableTransactions.columnCreatedAt}) AS day",
+        "$categoryColumn AS category",
+        "strftime('%Y', ${SQLTableTransactions.columnCreatedAt}) AS year",
+        "strftime('%m', ${SQLTableTransactions.columnCreatedAt}) AS month",
+        "strftime('%d', ${SQLTableTransactions.columnCreatedAt}) AS day",
         "COUNT(${SQLTableTransactions.columnId}) AS count",
         "MIN(date(${SQLTableTransactions.columnCreatedAt}, 'start of day')) AS date",
         "SUM(${SQLTableTransactions.columnAmount}) AS total",
       ],
       where: "${SQLTableTransactions.columnWalletId} = ? ${_filterByAmount(filter, "AND")}",
       whereArgs: [walletId],
-      groupBy: "category_id",
+      groupBy: categoryColumn,
       orderBy: "category DESC",
     );
 
@@ -51,17 +54,5 @@ class SQLAnalytics {
     required AnalyticsFilter filter,
     required bool detail,
   }) async =>
-      await selectByWalletId(walletId, "%Y", filter, detail);
-}
-
-enum AnalyticsFilter {
-  income,
-  expenses,
-  total;
-
-  String get label => switch (this) {
-        income => "analytics_income".tr,
-        expenses => "analytics_expenses".tr,
-        total => "analytics_total".tr,
-      };
+      await selectByWalletId(walletId, filter, detail);
 }

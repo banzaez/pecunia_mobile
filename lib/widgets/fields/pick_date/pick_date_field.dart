@@ -4,7 +4,10 @@ import 'package:pecunia/styles/app_border_style.dart';
 import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/util/ext_datetime.dart';
 import 'package:pecunia/widgets/app_bottom_sheet.dart';
+import 'package:pecunia/widgets/fields/pick_date/pick_date_type.dart';
 import 'package:pecunia/widgets/fields/pick_date/pick_date_value.dart';
+
+export 'package:pecunia/widgets/fields/pick_date/pick_date_type.dart';
 
 class PickDateField extends StatelessWidget {
   const PickDateField({
@@ -37,7 +40,7 @@ class PickDateField extends StatelessWidget {
             ).paddingOnly(bottom: 64),
           ),
         ),
-        onLongPress: () => onChanged(initDate!),
+        onLongPress: initDate != null ? () => onChanged(initDate!) : null,
         child: Container(
           decoration: BoxDecoration(
             color: isSelected ? AppColors.primary : AppColors.backgroundContent,
@@ -52,41 +55,35 @@ class PickDateField extends StatelessWidget {
 
   // ----------GENERATE-VALUES-------------------------------------------------------------------
 
-  List<Widget> _getValues({required List<int> values}) {
-    final list = List.generate(values.length, (index) {
-      final date = changeDate(values[index]);
-
-      return PickDateValue(
-        onTap: onChanged,
-        date: date,
-        format: format,
-        isSelected: getCurrentValue() == values[index],
-      );
-    });
-
-    return list;
-  }
+  List<Widget> _getValues({required List<int> values}) =>
+      List.generate(values.length, (index) {
+        final date = changeDate(values[index]);
+        return PickDateValue(
+          onTap: onChanged,
+          date: date,
+          format: format,
+          isSelected: getCurrentValue() == values[index],
+        );
+      });
 
   // ----------CHANGE-DATE-----------------------------------------------------------------------
 
   DateTime changeDate(int value) {
-    DateTime currentDate = initDate ?? DateTime.now();
+    final currentDate = initDate ?? DateTime.now();
 
-    DateTime dateTime = DateTime(
-      type == DateType.year ? value : currentDate.year,
-      type == DateType.month ? value : currentDate.month,
-    );
+    final int targetYear = type == DateType.year ? value : currentDate.year;
+    final int targetMonth = type == DateType.month ? value : currentDate.month;
+    final int maxDay = DateTime(targetYear, targetMonth + 1, 0).day;
+    final int targetDay =
+        type == DateType.day ? value : currentDate.day.clamp(1, maxDay);
 
-    final day = currentDate.day > dateTime.daysInMonth ? dateTime.daysInMonth : currentDate.day;
-
-    dateTime = DateTime(
-      type == DateType.year ? value : currentDate.year,
-      type == DateType.month ? value : currentDate.month,
-      type == DateType.day ? value : day,
+    return DateTime(
+      targetYear,
+      targetMonth,
+      targetDay,
       type == DateType.hour ? value : currentDate.hour,
       type == DateType.minute ? value : currentDate.minute,
     );
-    return dateTime;
   }
 
   int getCurrentValue() => switch (type) {
@@ -94,14 +91,6 @@ class PickDateField extends StatelessWidget {
         DateType.month => initDate?.month ?? 0,
         DateType.day => initDate?.day ?? 0,
         DateType.hour => initDate?.hour ?? 0,
-        DateType.minute => initDate?.minute ?? 0
+        DateType.minute => initDate?.minute ?? 0,
       };
-}
-
-enum DateType {
-  year,
-  month,
-  day,
-  hour,
-  minute,
 }

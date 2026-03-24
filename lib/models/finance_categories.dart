@@ -1,7 +1,7 @@
-import 'package:get/get.dart';
 import 'package:pecunia/models/finance_category.dart';
 
-class FinanceCategories extends GetxController {
+class FinanceCategories {
+  FinanceCategories._();
   // Статические категории доходов
   // --------------------------------------------------------------------------------------------
   static const FinanceCategory salary = FinanceCategory(1, "rfc_salary", []);
@@ -146,83 +146,56 @@ class FinanceCategories extends GetxController {
   // --------------------------------------------------------------------------------------------
   static const FinanceCategory transfer = FinanceCategory(27, "rfc_transfer", []);
 
-  // Получение всех категорий в одном списке
   // --------------------------------------------------------------------------------------------
-  static List<FinanceCategory> allCategories = [
+
+  static late final List<FinanceCategory> incomeCategories = _buildIncomeCategories();
+
+  static late final List<FinanceCategory> expenseCategories = _buildExpenseCategories();
+
+  static late final List<FinanceCategory> allCategories = [
     ...incomeCategories,
     ...expenseCategories,
   ];
 
-  // категории доходов
+  static late final Map<int, FinanceCategory> _cache = _buildCache();
+
   // --------------------------------------------------------------------------------------------
-  static List<FinanceCategory> get incomeCategories {
+
+  static List<FinanceCategory> _buildIncomeCategories() {
     final list = [
-      salary,
-      bonuses,
-      gifts,
-      sales,
-      investments,
-      rent,
-      freelance,
-      dividends,
-      taxRefunds,
-      cashback,
-      transfer,
+      salary, bonuses, gifts, sales, investments,
+      rent, freelance, dividends, taxRefunds, cashback, transfer,
     ];
-
-    list.sort((a, b) => a.name[0].compareTo(b.name));
+    list.sort((a, b) => a.name.compareTo(b.name));
     list.add(otherIncome);
-
-    return list;
+    return List.unmodifiable(list);
   }
 
-  // категории доходов
-  // --------------------------------------------------------------------------------------------
-  static List<FinanceCategory> get expenseCategories {
+  static List<FinanceCategory> _buildExpenseCategories() {
     final list = [
-      auto,
-      foodAndDrinks,
-      transport,
-      housing,
-      clothingAndFootwear,
-      health,
-      entertainment,
-      sportsAndFitness,
-      education,
-      loansAndDebts,
-      pets,
-      giftsAndCharity,
-      internetAndCommunication,
-      personalExpenses,
-      investmentsExpenses,
-      transfer,
+      auto, foodAndDrinks, transport, housing, clothingAndFootwear,
+      health, entertainment, sportsAndFitness, education, loansAndDebts,
+      pets, giftsAndCharity, internetAndCommunication, personalExpenses,
+      investmentsExpenses, transfer,
     ];
-
     list.sort((a, b) => a.name.compareTo(b.name));
     list.add(otherExpenses);
-
-    return list;
+    return List.unmodifiable(list);
   }
 
-  // Функция для поиска категории по id
-  static FinanceCategory? getCategoryById(int id) {
-    // Рекурсивная функция для поиска по подкатегориям
-    FinanceCategory? searchCategory(FinanceCategory category) {
-      if (category.id == id) return category;
-
-      for (var subcategory in category.subcategories) {
-        var result = searchCategory(subcategory);
-        if (result != null) return result;
+  static Map<int, FinanceCategory> _buildCache() {
+    final map = <int, FinanceCategory>{};
+    void add(FinanceCategory cat) {
+      map[cat.id] = cat;
+      for (final sub in cat.subcategories) {
+        add(sub);
       }
-      return null;
     }
-
-    // Перебор всех категорий
-    for (var category in allCategories) {
-      var result = searchCategory(category);
-      if (result != null) return result;
+    for (final cat in allCategories) {
+      add(cat);
     }
-    // Если категория не найдена
-    return null;
+    return Map.unmodifiable(map);
   }
+
+  static FinanceCategory? getCategoryById(int id) => _cache[id];
 }

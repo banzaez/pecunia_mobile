@@ -142,6 +142,7 @@ class UaTranslation extends AppTranslation {
         "backup_restarting_body": "Натисніть тут, щоб відкрити додаток знову.",
         "wallets_title": "Мої гаманці",
         "wallets_button": "мої гаманці",
+        "transactions_title": "Транзакції",
         "error": "Помилка",
         "backup_error_msg": 'Обраний файл не у форматі "db"',
 

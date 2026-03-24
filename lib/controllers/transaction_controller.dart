@@ -28,6 +28,8 @@ class TransactionController extends BaseController {
 
   void addListenerSQL(Function(String type) listener) => _listeners.add(listener);
 
+  void removeListenerSQL(Function(String type) listener) => _listeners.remove(listener);
+
   void notifyListenersSQL(String type) {
     for (var listener in _listeners) {
       listener.call(type);

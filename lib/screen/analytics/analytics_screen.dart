@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pecunia/provider/sql_analytics.dart';
+import 'package:pecunia/models/analytics_filter.dart';
 import 'package:pecunia/screen/analytics/analytics_controller.dart';
 import 'package:pecunia/screen/analytics/widgets/analytics_category_item.dart';
 import 'package:pecunia/screen/analytics/widgets/analytics_graph.dart';
@@ -11,7 +11,6 @@ import 'package:pecunia/util/ext_string.dart';
 import 'package:pecunia/widgets/custom_app_bar.dart';
 import 'package:pecunia/widgets/fields/app_switch.dart';
 import 'package:pecunia/widgets/fields/pick_date/pick_date.dart';
-import 'package:pecunia/widgets/fields/pick_date/pick_date_field.dart';
 
 class AnalyticsScreen extends GetView<AnalyticsController> {
   const AnalyticsScreen({super.key});

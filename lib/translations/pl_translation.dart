@@ -144,6 +144,7 @@ class PlTranslation extends AppTranslation {
         "backup_restarting_body": "Kliknij tutaj, aby ponownie otworzyć aplikację.",
         "wallets_title": "Moje portfele",
         "wallets_button": "moje portfele",
+        "transactions_title": "Transakcje",
         "error": "Błąd",
         "backup_error_msg": 'Wybrany plik nie jest w formacie "db"',
 

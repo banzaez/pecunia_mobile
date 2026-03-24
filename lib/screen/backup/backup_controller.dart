@@ -31,9 +31,9 @@ class BackupController extends GetxController {
   // -----------BACKUP-----------------------------------------------------------------------------
 
   Future<void> archiving() async {
-    FilePicker.platform.saveFile(
-      fileName: "penunia_backup_${DateTime.now().toFormat("yyyyMMdd")}.db",
-      bytes: file.readAsBytesSync(),
+    await FilePicker.platform.saveFile(
+      fileName: "pecunia_backup_${DateTime.now().toFormat("yyyyMMdd")}.db",
+      bytes: await file.readAsBytes(),
     );
   }
 

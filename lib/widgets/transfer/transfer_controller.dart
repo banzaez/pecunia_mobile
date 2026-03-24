@@ -108,15 +108,18 @@ class TransferController extends GetxController {
       exchangeRate.number.toDouble().formatDouble,
     ]);
 
-    final transaction = Transaction.empty();
-    transaction.walletId = from!.id;
-    transaction.category = FinanceCategories.transfer;
-    transaction.description = description;
-    transaction.amount = -amount.number.toDouble();
-    _transactionController.addSQL(transaction);
+    final fromTransaction = Transaction.empty();
+    fromTransaction.walletId = from!.id;
+    fromTransaction.category = FinanceCategories.transfer;
+    fromTransaction.description = description;
+    fromTransaction.amount = -amount.number.toDouble();
+    await _transactionController.addSQL(fromTransaction);
 
-    transaction.walletId = to!.id;
-    transaction.amount = total.number.toDouble();
-    _transactionController.addSQL(transaction);
+    final toTransaction = Transaction.empty();
+    toTransaction.walletId = to!.id;
+    toTransaction.category = FinanceCategories.transfer;
+    toTransaction.description = description;
+    toTransaction.amount = total.number.toDouble();
+    await _transactionController.addSQL(toTransaction);
   }
 }

@@ -17,7 +17,7 @@ class HomeController extends BaseController {
   final Rxn<Wallet> _currentWallet = Rxn<Wallet>();
   Wallet get currentWallet => _currentWallet.value!;
   set currentWallet(Wallet? wallet) {
-    AppController.isRoundUp = wallet?.isRoundUp ?? false;
+    AppController.isRoundUp.value = wallet?.isRoundUp ?? false;
 
     _currentWallet.value = wallet;
     _transactionController.walletId = wallet?.id ?? 0;
@@ -31,6 +31,8 @@ class HomeController extends BaseController {
 
   int get currentIndex => _walletController.wallets.indexWhere((e) => e.id == currentWallet.id);
 
+  late final Function(String) _walletListener;
+
   // ----------INIT-------------------------------------------------------------------------------
 
   @override
@@ -38,13 +40,22 @@ class HomeController extends BaseController {
     super.onInit();
     currentWallet = _walletController.wallets.firstOrNull;
 
-    _walletController.addListenerSQL((String type) {
+    _walletListener = (String type) {
       switch (type) {
-        case "init": currentWallet = _walletController.wallets.first;
-        case "delete": currentWallet = _walletController.wallets.first;
-        case "update": refreshPage();
+        case "init":
+        case "delete":
+          currentWallet = _walletController.wallets.first;
+        case "update":
+          refreshPage();
       }
-    });
+    };
+    _walletController.addListenerSQL(_walletListener);
+  }
+
+  @override
+  void onClose() {
+    _walletController.removeListenerSQL(_walletListener);
+    super.onClose();
   }
 
   void refreshPage() {

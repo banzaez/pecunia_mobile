@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 
 class StorageController extends GetxController {
   final GetStorage _getStorage = GetStorage();
+  final CurrencyService _currencyService = CurrencyService();
 
   final _currencyKey = "currency";
   final _localeKey = "locale";
@@ -27,7 +28,7 @@ class StorageController extends GetxController {
 
   Currency? get currency {
     final String? currencyCode = _getStorage.read(_currencyKey);
-    return CurrencyService().findByCode(currencyCode);
+    return _currencyService.findByCode(currencyCode);
   }
 
   set currency(Currency? value) => value == null
