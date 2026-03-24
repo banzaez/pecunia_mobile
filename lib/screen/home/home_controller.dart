@@ -16,9 +16,9 @@ class HomeController extends BaseController {
 
   final Rxn<Wallet> _currentWallet = Rxn<Wallet>();
   Wallet get currentWallet => _currentWallet.value!;
+
   set currentWallet(Wallet? wallet) {
     AppController.isRoundUp.value = wallet?.isRoundUp ?? false;
-
     _currentWallet.value = wallet;
     _transactionController.walletId = wallet?.id ?? 0;
   }
@@ -31,39 +31,35 @@ class HomeController extends BaseController {
 
   int get currentIndex => _walletController.wallets.indexWhere((e) => e.id == currentWallet.id);
 
-  late final Function(String) _walletListener;
-
   // ----------INIT-------------------------------------------------------------------------------
 
   @override
   void onInit() {
     super.onInit();
-    currentWallet = _walletController.wallets.firstOrNull;
 
-    _walletListener = (String type) {
-      switch (type) {
-        case "init":
-        case "delete":
-          currentWallet = _walletController.wallets.first;
-        case "update":
-          refreshPage();
-      }
-    };
-    _walletController.addListenerSQL(_walletListener);
+    ever(_walletController.wallets, _onWalletsChanged);
+
+    if (_walletController.wallets.isNotEmpty) {
+      currentWallet = _walletController.wallets.first;
+    }
   }
 
-  @override
-  void onClose() {
-    _walletController.removeListenerSQL(_walletListener);
-    super.onClose();
+  void _onWalletsChanged(List<Wallet> wallets) {
+    if (wallets.isEmpty) return;
+
+    final currentId = _currentWallet.value?.id;
+    final stillExists = currentId != null && wallets.any((w) => w.id == currentId);
+
+    if (!stillExists) {
+      currentWallet = wallets.first;
+    } else {
+      final updated = wallets.firstWhere((w) => w.id == currentId);
+      AppController.isRoundUp.value = updated.isRoundUp;
+      _currentWallet.value = updated;
+    }
   }
 
-  void refreshPage() {
-    _currentWallet.refresh();
-    currentWallet = currentWallet;
-  }
-
-  // ----------SWIPE-LIFT-RIGHT------------------------------------------------------------------
+  // ----------SWIPE-LEFT-RIGHT------------------------------------------------------------------
 
   void swipeWallet(int offset) {
     var index = currentIndex - offset;
@@ -77,5 +73,4 @@ class HomeController extends BaseController {
   void goToAnalytics() => _appController.goToScreen(AppScreens.analytics);
 
   void goToProfile() => _appController.goToScreen(AppScreens.profile);
-
 }

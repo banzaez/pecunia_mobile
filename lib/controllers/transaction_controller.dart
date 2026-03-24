@@ -13,30 +13,17 @@ class TransactionController extends BaseController {
 
   set walletId(int id) {
     _walletId.value = id;
-    refreshTransactions();
-    refreshTotal();
+    _refresh();
   }
 
   final Rx<AnalyticsTotal> analyticsTotal = AnalyticsTotal(0, 0, 0).obs;
 
-
   final RxList<Transaction> transactions = RxList();
 
-  final List<Function(String type)> _listeners = [];
-
-  // -----------LISTENERS-SQL--------------------------------------------------------------------
-
-  void addListenerSQL(Function(String type) listener) => _listeners.add(listener);
-
-  void removeListenerSQL(Function(String type) listener) => _listeners.remove(listener);
-
-  void notifyListenersSQL(String type) {
-    for (var listener in _listeners) {
-      listener.call(type);
-    }
-  }
-
   // -----------SQL------------------------------------------------------------------------------
+
+  Future<void> _refresh() =>
+      Future.wait([refreshTransactions(), refreshTotal()]);
 
   Future<void> refreshTransactions() async =>
       transactions.value = await _sqlProvider.transactions.selectByWalletId(_walletId.value);
@@ -47,24 +34,23 @@ class TransactionController extends BaseController {
   Future<void> addSQL(Transaction transaction) async {
     if (transaction.walletId == 0) transaction.walletId = _walletId.value;
     await _sqlProvider.transactions.add(value: transaction);
-    await refreshTransactions();
-    await refreshTotal();
-    notifyListenersSQL("add");
+    await _refresh();
   }
 
   Future<void> updateSQL(Transaction transaction) async {
     if (transaction.walletId == 0) transaction.walletId = _walletId.value;
     await _sqlProvider.transactions.update(value: transaction);
-    await refreshTransactions();
-    await refreshTotal();
-    notifyListenersSQL("update");
+    await _refresh();
   }
 
   Future<void> deleteSQL(int id) async {
     await _sqlProvider.transactions.delete(id: id);
-    await refreshTransactions();
-    await refreshTotal();
-    notifyListenersSQL("delete");
+    await _refresh();
+  }
+
+  Future<void> addTransferSQL(Transaction from, Transaction to) async {
+    await _sqlProvider.transactions.addBatch(values: [from, to]);
+    await _refresh();
   }
 
   Future<List<Transaction>> selectByWalletIdAndCategoryAndByPeriod(

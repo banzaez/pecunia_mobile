@@ -79,6 +79,7 @@ class SettingTransactionController extends BaseController {
   // ----------SQL-------------------------------------------------------------------------------
 
   bool save() {
+    if (!isOk()) return false;
     updateValues();
 
     transaction.id == 0

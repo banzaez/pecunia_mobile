@@ -49,7 +49,7 @@ class BackupScreen extends GetView<BackupController> {
             children: [
               _text(controller.filename, "backup_filename".tr),
               AppSpaces.v32,
-              _text("${controller.size}KB", "backup_size".tr),
+              Obx(() => _text("${controller.size}KB", "backup_size".tr)),
             ],
           ),
           AppSpaces.v24,

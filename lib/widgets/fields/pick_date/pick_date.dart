@@ -79,12 +79,12 @@ class PickDate extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           PickDateField(
-            onChanged: (value) => onChanged(value, DateType.day),
-            type: DateType.day,
+            onChanged: (value) => onChanged(value, DateType.year),
+            type: DateType.year,
             initDate: initDate,
-            format: formatDay,
-            values: valuesDay,
-            isSelected: isDaySelected,
+            format: formatYear,
+            values: valuesYear,
+            isSelected: isYearSelected,
           ),
           AppSpaces.h8,
           PickDateField(
@@ -97,12 +97,12 @@ class PickDate extends StatelessWidget {
           ),
           AppSpaces.h8,
           PickDateField(
-            onChanged: (value) => onChanged(value, DateType.year),
-            type: DateType.year,
+            onChanged: (value) => onChanged(value, DateType.day),
+            type: DateType.day,
             initDate: initDate,
-            format: formatYear,
-            values: valuesYear,
-            isSelected: isYearSelected,
+            format: formatDay,
+            values: valuesDay,
+            isSelected: isDaySelected,
           ),
         ],
       );

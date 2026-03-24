@@ -26,6 +26,14 @@ class SQLTableTransactions {
         value.toJson()..remove("_id"),
       );
 
+  Future<void> addBatch({required List<Transaction> values}) async {
+    await _database.transaction((txn) async {
+      for (final value in values) {
+        await txn.insert(tableName, value.toJson()..remove("_id"));
+      }
+    });
+  }
+
   Future<void> update({required Transaction value}) async => await _database.update(
         tableName,
         value.toJson(),
@@ -69,6 +77,40 @@ class SQLTableTransactions {
 
     return List.generate(result.length, (index) => Transaction.fromJson(result[index]));
   }
+
+  // ----------AVAILABLE DATES------------------------------------------------------------------
+
+  Future<List<int>> availableYears(int walletId) async {
+    final result = await _database.rawQuery(
+      "SELECT DISTINCT CAST(strftime('%Y', $columnCreatedAt) AS INTEGER) AS y "
+      "FROM $tableName WHERE $columnWalletId = ? ORDER BY y DESC",
+      [walletId],
+    );
+    return result.map((r) => r['y'] as int).toList();
+  }
+
+  Future<List<int>> availableMonths(int walletId, int year) async {
+    final result = await _database.rawQuery(
+      "SELECT DISTINCT CAST(strftime('%m', $columnCreatedAt) AS INTEGER) AS m "
+      "FROM $tableName WHERE $columnWalletId = ? "
+      "AND CAST(strftime('%Y', $columnCreatedAt) AS INTEGER) = ? ORDER BY m",
+      [walletId, year],
+    );
+    return result.map((r) => r['m'] as int).toList();
+  }
+
+  Future<List<int>> availableDays(int walletId, int year, int month) async {
+    final paddedMonth = month.toString().padLeft(2, '0');
+    final result = await _database.rawQuery(
+      "SELECT DISTINCT CAST(strftime('%d', $columnCreatedAt) AS INTEGER) AS d "
+      "FROM $tableName WHERE $columnWalletId = ? "
+      "AND strftime('%Y-%m', $columnCreatedAt) = ? ORDER BY d",
+      [walletId, '$year-$paddedMonth'],
+    );
+    return result.map((r) => r['d'] as int).toList();
+  }
+
+  // --------------------------------------------------------------------------------------------
 
   Future<AnalyticsTotal> selectTotalByWallet(int walletId) async {
     final now = DateTime.now();

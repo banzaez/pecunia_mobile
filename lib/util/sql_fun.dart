@@ -9,7 +9,7 @@ String fromDateTime(DateTime value) => DateFormat("yyyy-MM-ddTHH:mm:ssZ").format
 
 int toInt(String value) => int.tryParse(value) ?? 0;
 
-int? fromCategory(FinanceCategory? category) => category?.id ?? -1;
+int? fromCategory(FinanceCategory? category) => category?.id;
 
 FinanceCategory? toCategory(int? value) =>
     value == null ? null : FinanceCategories.getCategoryById(value);

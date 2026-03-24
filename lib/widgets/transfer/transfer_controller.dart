@@ -113,13 +113,13 @@ class TransferController extends GetxController {
     fromTransaction.category = FinanceCategories.transfer;
     fromTransaction.description = description;
     fromTransaction.amount = -amount.number.toDouble();
-    await _transactionController.addSQL(fromTransaction);
 
     final toTransaction = Transaction.empty();
     toTransaction.walletId = to!.id;
     toTransaction.category = FinanceCategories.transfer;
     toTransaction.description = description;
     toTransaction.amount = total.number.toDouble();
-    await _transactionController.addSQL(toTransaction);
+
+    await _transactionController.addTransferSQL(fromTransaction, toTransaction);
   }
 }

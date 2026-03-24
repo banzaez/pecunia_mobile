@@ -15,7 +15,7 @@ class BackupController extends GetxController {
 
   late final File file;
   late final String filename;
-  late final int size;
+  final RxInt size = 0.obs;
 
   // -----------INIT-----------------------------------------------------------------------------
 
@@ -25,7 +25,11 @@ class BackupController extends GetxController {
 
     file = File(_sqlProvider.databasePath);
     filename = _sqlProvider.filename;
-    size = file.lengthSync() ~/ (1024);
+    _loadSize();
+  }
+
+  Future<void> _loadSize() async {
+    size.value = (await file.length()) ~/ 1024;
   }
 
   // -----------BACKUP-----------------------------------------------------------------------------
@@ -62,17 +66,14 @@ class BackupController extends GetxController {
   }
 
   Future<void> recoveryCloud(String fileId) async {
-    // Запрос на скачивание файла
     final mediaStream = await google.drive.getFileMedia(fileId);
 
-    // Сохранение файла локально
     final localFile = File(_sqlProvider.databasePath);
 
     final fileSink = localFile.openWrite();
     await mediaStream.stream.pipe(fileSink);
     await fileSink.close();
 
-    // Перезапуск приложения
     Restart.restartApp(
       notificationTitle: 'backup_restarting'.tr,
       notificationBody: 'backup_restarting_body'.tr,
