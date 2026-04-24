@@ -40,7 +40,7 @@ class BackupController extends GetxController {
       final String backupPath = await _sqlProvider.createBackupSnapshot();
       final backupFile = File(backupPath);
 
-      await FilePicker.platform.saveFile(
+      await FilePicker.saveFile(
         fileName: "pecunia_backup_${DateTime.now().toFormat("yyyyMMdd")}.db",
         bytes: await backupFile.readAsBytes(),
       );
@@ -53,7 +53,7 @@ class BackupController extends GetxController {
   }
 
   Future<void> recovery() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    FilePickerResult? result = await FilePicker.pickFiles();
 
     if (result == null) return;
 
