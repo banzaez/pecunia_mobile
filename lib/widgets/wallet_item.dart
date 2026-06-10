@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:pecunia/controllers/wallet_controller.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/models/wallet.dart';
+import 'package:pecunia/providers/wallet_notifier.dart';
 import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 
-class WalletItem extends StatelessWidget {
+class WalletItem extends ConsumerWidget {
   const WalletItem({super.key, required this.wallet, required this.isEditing});
 
   final Wallet wallet;
   final bool isEditing;
 
   @override
-  Widget build(BuildContext context) => Card(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    return Card(
       color: Colors.white10,
       child: ListTile(
         leading: CircleAvatar(
@@ -24,7 +27,7 @@ class WalletItem extends StatelessWidget {
         ),
         title: Text.rich(TextSpan(
           children: [
-            TextSpan(text: "${"wallet_item_name".tr}: ", style: AppTextStyle.text12w400()),
+            TextSpan(text: "${l10n.walletItemName}: ", style: AppTextStyle.text12w400()),
             TextSpan(text: wallet.name),
           ],
         )),
@@ -32,39 +35,48 @@ class WalletItem extends StatelessWidget {
             ? Text.rich(TextSpan(
                 children: [
                   TextSpan(
-                      text: "${"wallet_item_description".tr}: ", style: AppTextStyle.text12w400()),
+                      text: "${l10n.walletItemDescription}: ", style: AppTextStyle.text12w400()),
                   TextSpan(text: wallet.description),
                 ],
               ))
             : null,
         trailing: isEditing
             ? IconButton(
-                onPressed: () => _confirmDismiss().then((value) {
-                  if (value == true) Get.find<WalletController>().deleteSQL(wallet.id);
+                onPressed: () => _confirmDismiss(context).then((value) {
+                  if (value == true) {
+                    ref.read(walletNotifierProvider.notifier).deleteSQL(wallet.id);
+                  }
                 }),
                 icon: const Icon(Icons.close, color: AppColors.edit),
               )
             : null,
-      ));
+      ),
+    );
+  }
 
   // --------------------------------------------------------------------------------------------
 
-  Future<bool?> _confirmDismiss() async => await Get.defaultDialog(
-        title: "dialog_delete_title".tr,
-        middleText: "dialog_delete_content".tr,
-        confirm: TextButton(
-          onPressed: () => Get.backLegacy(result: true),
-          child: Text(
-            "dialog_delete_delete".tr,
-            style: AppTextStyle.text16w600(color: Colors.red),
+  Future<bool?> _confirmDismiss(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    return await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.dialogDeleteTitle),
+        content: Text(l10n.dialogDeleteContent),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(l10n.dialogDeleteCancel, style: AppTextStyle.text16w600()),
           ),
-        ),
-        cancel: TextButton(
-          onPressed: () => Get.backLegacy(result: false),
-          child: Text(
-            "dialog_delete_cancel".tr,
-            style: AppTextStyle.text16w600(),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(
+              l10n.dialogDeleteDelete,
+              style: AppTextStyle.text16w600(color: Colors.red),
+            ),
           ),
-        ),
-      );
+        ],
+      ),
+    );
+  }
 }

@@ -1,43 +1,83 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:get/get.dart';
-import 'package:pecunia/controllers/google_controller.dart';
-import 'package:pecunia/controllers/transaction_controller.dart';
-import 'package:pecunia/controllers/wallet_controller.dart';
-import 'package:pecunia/provider/sql_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pecunia/providers/google_notifier.dart';
+import 'package:pecunia/providers/sql_provider_ref.dart';
+import 'package:pecunia/providers/transaction_notifier.dart';
+import 'package:pecunia/providers/wallet_notifier.dart';
 import 'package:pecunia/util/ext_datetime.dart';
 
-class BackupController extends GetxController {
-  final SQLProvider _sqlProvider = Get.find();
-  final GoogleController google = Get.find();
+// ---------------------------------------------------------------------------
+// State
+// ---------------------------------------------------------------------------
 
-  // -----------VARIABLES-------------------------------------------------------------------------
+class BackupState {
+  final String filename;
+  final int sizeKb;
+  final bool isLoading;
+  final String? snackMessage;
+  final bool isError;
 
-  late final File file;
-  late final String filename;
-  final RxInt size = 0.obs;
+  const BackupState({
+    this.filename = '',
+    this.sizeKb = 0,
+    this.isLoading = false,
+    this.snackMessage,
+    this.isError = false,
+  });
 
-  // -----------INIT-----------------------------------------------------------------------------
+  BackupState copyWith({
+    String? filename,
+    int? sizeKb,
+    bool? isLoading,
+    String? snackMessage,
+    bool? isError,
+    bool clearSnack = false,
+  }) =>
+      BackupState(
+        filename: filename ?? this.filename,
+        sizeKb: sizeKb ?? this.sizeKb,
+        isLoading: isLoading ?? this.isLoading,
+        snackMessage: clearSnack ? null : (snackMessage ?? this.snackMessage),
+        isError: isError ?? this.isError,
+      );
+}
 
+// ---------------------------------------------------------------------------
+// BackupNotifier
+// ---------------------------------------------------------------------------
+
+class BackupNotifier extends Notifier<BackupState> {
   @override
-  void onInit() {
-    super.onInit();
-
-    file = File(_sqlProvider.databasePath);
-    filename = _sqlProvider.filename;
-    _loadSize();
+  BackupState build() {
+    final sqlProvider = ref.read(sqlProviderProvider);
+    Future.microtask(() async {
+      final file = File(sqlProvider.databasePath);
+      final sizeKb = (await file.length()) ~/ 1024;
+      state = state.copyWith(filename: sqlProvider.filename, sizeKb: sizeKb);
+    });
+    return const BackupState();
   }
 
-  Future<void> _loadSize() async {
-    size.value = (await file.length()) ~/ 1024;
+  Future<void> _refreshSize() async {
+    final file = File(ref.read(sqlProviderProvider).databasePath);
+    final sizeKb = (await file.length()) ~/ 1024;
+    state = state.copyWith(sizeKb: sizeKb);
   }
 
-  // -----------BACKUP-----------------------------------------------------------------------------
+  Future<void> _refreshAll() async {
+    await ref.read(walletNotifierProvider.notifier).refreshWallets();
+    await ref.read(transactionNotifierProvider.notifier).refreshAll();
+  }
+
+  // -----------BACKUP---------------------------------------------------------------------------
 
   Future<void> archiving() async {
+    state = state.copyWith(isLoading: true, clearSnack: true);
     try {
-      final String backupPath = await _sqlProvider.createBackupSnapshot();
+      final sqlProvider = ref.read(sqlProviderProvider);
+      final backupPath = await sqlProvider.createBackupSnapshot();
       final backupFile = File(backupPath);
 
       await FilePicker.saveFile(
@@ -46,43 +86,39 @@ class BackupController extends GetxController {
       );
 
       if (await backupFile.exists()) await backupFile.delete();
-      Get.snackbar("success".tr, "backup_saved_success".tr);
+      state = state.copyWith(isLoading: false, snackMessage: '__saved__', isError: false);
     } catch (e) {
-      Get.snackbar("error".tr, "backup_error_msg".tr);
+      state = state.copyWith(isLoading: false, snackMessage: '__error__', isError: true);
     }
   }
 
-  Future<void> recovery() async {
-    FilePickerResult? result = await FilePicker.pickFiles();
-
-    if (result == null) return;
+  Future<bool> recovery() async {
+    final result = await FilePicker.pickFiles();
+    if (result == null) return false;
 
     final path = result.files.single.path!;
     final backupFile = File(path);
 
     if (!await _isSqliteFile(backupFile)) {
-      await Future.delayed(const Duration(milliseconds: 300));
-      Get.snackbar("error".tr, "backup_error_msg".tr);
-      return;
+      state = state.copyWith(snackMessage: '__format_error__', isError: true);
+      return false;
     }
 
+    state = state.copyWith(isLoading: true, clearSnack: true);
     try {
-      // Закрываем БД перед заменой файла
-      await _sqlProvider.close();
-
-      await backupFile.copy(_sqlProvider.databasePath);
-
-      await _sqlProvider.init();
-      await Get.find<WalletController>().refreshWallets();
-      await Get.find<TransactionController>().refreshTransactions();
-
-      Get.offAllNamed('/');
-      Get.snackbar("success".tr, "backup_restored_success".tr);
-      _loadSize();
+      final sqlProvider = ref.read(sqlProviderProvider);
+      await sqlProvider.close();
+      await backupFile.copy(sqlProvider.databasePath);
+      await sqlProvider.init();
+      await _refreshAll();
+      await _refreshSize();
+      state = state.copyWith(isLoading: false, snackMessage: '__restored__', isError: false);
+      return true;
     } catch (e) {
-      Get.snackbar("error".tr, "backup_error_msg".tr);
-      // Пытаемся переинициализировать БД, если что-то пошло не так
-      await _sqlProvider.init();
+      final sqlProvider = ref.read(sqlProviderProvider);
+      await sqlProvider.init();
+      state = state.copyWith(isLoading: false, snackMessage: '__error__', isError: true);
+      return false;
     }
   }
 
@@ -98,23 +134,49 @@ class BackupController extends GetxController {
   }
 
   Future<void> recoveryCloud(String fileId) async {
-    final mediaStream = await google.drive.getFileMedia(fileId);
+    final googleState = ref.read(googleNotifierProvider);
+    if (!googleState.hasDrive || googleState.client == null) return;
 
-    // Закрываем БД перед заменой файла
-    await _sqlProvider.close();
+    state = state.copyWith(isLoading: true, clearSnack: true);
+    try {
+      final driveNotifier = ref.read(googleDriveNotifierProvider.notifier);
+      final mediaStream = await driveNotifier.getFileMedia(fileId);
+      if (mediaStream == null) throw Exception("Файл не найден");
+      final sqlProvider = ref.read(sqlProviderProvider);
+      await sqlProvider.close();
 
-    final localFile = File(_sqlProvider.databasePath);
+      final localFile = File(sqlProvider.databasePath);
+      final fileSink = localFile.openWrite();
+      await mediaStream.stream.pipe(fileSink);
+      await fileSink.close();
 
-    final fileSink = localFile.openWrite();
-    await mediaStream.stream.pipe(fileSink);
-    await fileSink.close();
+      await sqlProvider.init();
+      await _refreshAll();
+      await _refreshSize();
+      state = state.copyWith(isLoading: false, snackMessage: '__restored__', isError: false);
+    } catch (e) {
+      state = state.copyWith(isLoading: false, snackMessage: '__error__', isError: true);
+    }
+  }
 
-    await _sqlProvider.init();
-    await Get.find<WalletController>().refreshWallets();
-    await Get.find<TransactionController>().refreshTransactions();
+  void clearSnack() => state = state.copyWith(clearSnack: true);
 
-    Get.offAllNamed('/');
-    Get.snackbar("success".tr, "backup_restored_success".tr);
-    _loadSize();
+  Future<void> createCloudBackup() async {
+    final googleState = ref.read(googleNotifierProvider);
+    if (!googleState.hasDrive || googleState.client == null) return;
+    final sqlProvider = ref.read(sqlProviderProvider);
+
+    final driveNotifier = ref.read(googleDriveNotifierProvider.notifier);
+    await driveNotifier.createFile(
+      sqlProvider.databasePath,
+      onSuccess: () =>
+          state = state.copyWith(snackMessage: '__saved__', isError: false),
+      onError: (e) =>
+          state = state.copyWith(snackMessage: '__error__', isError: true),
+    );
   }
 }
+
+final backupNotifierProvider = NotifierProvider<BackupNotifier, BackupState>(
+  BackupNotifier.new,
+);

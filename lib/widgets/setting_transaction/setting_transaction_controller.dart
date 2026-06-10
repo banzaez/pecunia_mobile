@@ -1,98 +1,86 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:pecunia/controllers/base_controller.dart';
-import 'package:pecunia/controllers/transaction_controller.dart';
 import 'package:pecunia/models/finance_category.dart';
 import 'package:pecunia/models/transaction.dart';
 import 'package:pecunia/widgets/fields/category_field.dart';
 import 'package:pecunia/widgets/fields/number_field.dart';
 
-class SettingTransactionController extends BaseController {
+/// Чистый ChangeNotifier — заменяет GetxController для SettingTransaction формы.
+class SettingTransactionController extends ChangeNotifier {
   SettingTransactionController({required TransactionType type, Transaction? transaction}) {
-    _type.value = type;
+    _type = type;
     this.transaction = transaction ?? Transaction.empty();
+    _init();
   }
 
-  final TransactionController _transactionController = Get.find();
-
-  late final Transaction transaction;
+  late Transaction transaction;
 
   final NumberEditingController amount = NumberEditingController();
   final TextEditingController description = TextEditingController();
-  final Rx<DateTime> datetime = Rx<DateTime>(DateTime.now());
+  DateTime datetime = DateTime.now();
 
-  final Rxn<FinanceCategory> _category = Rxn();
-  FinanceCategory? get category => _category.value;
+  FinanceCategory? _category;
+  FinanceCategory? get category => _category;
   set category(FinanceCategory? value) {
-    _category.value = value;
-    subcategory = null;
+    _category = value;
+    _subcategory = null;
+    notifyListeners();
   }
 
-  final Rxn<FinanceCategory> _subcategory = Rxn();
-  FinanceCategory? get subcategory => _subcategory.value;
-  set subcategory(FinanceCategory? value) => _subcategory.value = value;
+  FinanceCategory? _subcategory;
+  FinanceCategory? get subcategory => _subcategory;
+  set subcategory(FinanceCategory? value) {
+    _subcategory = value;
+    notifyListeners();
+  }
 
-  final Rx<TransactionType> _type = TransactionType.income.obs;
-  TransactionType get type => _type.value;
-
-  set type(TransactionType type) {
+  TransactionType _type = TransactionType.income;
+  TransactionType get type => _type;
+  set type(TransactionType value) {
     category = null;
-    _type.value = type;
+    _type = value;
+    notifyListeners();
   }
 
-  final errorAmount = RxnString();
-  final errorCategory = RxnString();
-
-  bool get hasError => errorAmount.value != null || errorCategory.value != null;
+  String? errorAmount;
+  String? errorCategory;
 
   // ----------INIT------------------------------------------------------------------------------
 
-  @override
-  void onClose() {
-    amount.dispose();
-    description.dispose();
-    super.onClose();
+  void _init() {
+    _type = transaction.id == 0 ? _type : transaction.type;
+    amount.number = transaction.id == 0 ? 0 : transaction.amount.abs();
+    _category = transaction.category;
+    _subcategory = transaction.subcategory;
+    description.text = transaction.description;
+    datetime = transaction.createdAt;
   }
 
   @override
-  void onInit() {
-    super.onInit();
-
-    type = transaction.id == 0 ? type : transaction.type;
-    amount.number = transaction.id == 0 ? null : transaction.amount.abs();
-    category = transaction.category;
-    subcategory = transaction.subcategory;
-    description.text = transaction.description;
-    datetime.value = transaction.createdAt;
+  void dispose() {
+    amount.dispose();
+    description.dispose();
+    super.dispose();
   }
 
   // ----------VALUES----------------------------------------------------------------------------
 
   void updateValues() {
     transaction.amount = (amount.number * type.i).toDouble();
-    transaction.category = category;
-    transaction.subcategory = subcategory;
+    transaction.category = _category;
+    transaction.subcategory = _subcategory;
     transaction.description = description.text;
-    transaction.createdAt = datetime.value;
+    transaction.createdAt = datetime;
   }
 
-  bool isOk() {
-    errorAmount.value = amount.text.isEmpty ? "tran_item_error_amount".tr : null;
-    errorCategory.value = category == null ? "tran_item_error_category".tr : null;
-
-    return !hasError;
+  bool isOk(String amountError, String categoryError) {
+    errorAmount = amount.text.isEmpty ? amountError : null;
+    errorCategory = _category == null ? categoryError : null;
+    notifyListeners();
+    return errorAmount == null && errorCategory == null;
   }
 
-  // ----------SQL-------------------------------------------------------------------------------
-
-  bool save() {
-    if (!isOk()) return false;
-    updateValues();
-
-    transaction.id == 0
-        ? _transactionController.addSQL(transaction)
-        : _transactionController.updateSQL(transaction);
-
-    return true;
+  void setDatetime(DateTime value) {
+    datetime = value;
+    notifyListeners();
   }
 }

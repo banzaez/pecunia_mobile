@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:pecunia/styles/app_border_style.dart';
 import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/util/ext_datetime.dart';
@@ -32,18 +31,22 @@ class PickDateField extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GestureDetector(
         onTap: () => appBottomSheet(
+          context,
           SizedBox(
             width: double.infinity,
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              children: _getValues(values: values),
-            ).paddingOnly(bottom: 64),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 64),
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                children: _getValues(values: values),
+              ),
+            ),
           ),
         ),
         onLongPress: initDate != null ? () => onChanged(initDate!) : null,
         child: Container(
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary : AppColors.backgroundContent,
+            color: isSelected ? AppColors.primary : AppColors.backgroundContent(context),
             borderRadius: AppBorderStyle.borderRadius,
           ),
           padding: const EdgeInsets.all(12),

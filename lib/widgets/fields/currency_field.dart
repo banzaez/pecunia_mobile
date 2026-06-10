@@ -1,11 +1,11 @@
 import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:pecunia/provider/settings_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pecunia/providers/settings_notifier.dart';
 import 'package:pecunia/styles/app_border_style.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 
-class CurrencyField extends StatelessWidget {
+class CurrencyField extends ConsumerWidget {
   const CurrencyField({super.key, required this.onChange, required this.currency, this.errorText});
 
   final ValueChanged<Currency> onChange;
@@ -13,42 +13,47 @@ class CurrencyField extends StatelessWidget {
   final String? errorText;
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-        onTap: () => showCurrencyPicker(
-          context: context,
-          showFlag: true,
-          showSearchField: true,
-          showCurrencyName: true,
-          showCurrencyCode: true,
-          favorite: [
-            Get.find<SettingsProvider>().currency?.code ?? "",
-          ],
-          onSelect: onChange,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                border: AppBorderStyle.borderSideBox,
-                borderRadius: AppBorderStyle.borderRadius,
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              height: 48,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(currency?.name ?? ""),
-                  Text(currency?.symbol ?? ""),
-                  Text(currency?.code ?? ""),
-                ],
-              ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(settingsNotifierProvider);
+    return GestureDetector(
+      onTap: () => showCurrencyPicker(
+        context: context,
+        showFlag: true,
+        showSearchField: true,
+        showCurrencyName: true,
+        showCurrencyCode: true,
+        favorite: [
+          settings.currency?.code ?? "",
+        ],
+        onSelect: onChange,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: AppBorderStyle.borderSideBox,
+              borderRadius: AppBorderStyle.borderRadius,
             ),
-            if (errorText != null)
-              Text(errorText!, style: AppTextStyle.text12w400(color: Colors.red))
-                  .paddingOnly(left: 16, top: 4),
-          ],
-        ),
-      );
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            height: 48,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(currency?.name ?? ""),
+                Text(currency?.symbol ?? ""),
+                Text(currency?.code ?? ""),
+              ],
+            ),
+          ),
+          if (errorText != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 16, top: 4),
+              child: Text(errorText!, style: AppTextStyle.text12w400(color: Colors.red)),
+            ),
+        ],
+      ),
+    );
+  }
 }

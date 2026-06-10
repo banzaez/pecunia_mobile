@@ -11,7 +11,7 @@ class AnalyticsTotal {
   @JsonKey(defaultValue: 0)
   final double expense;
 
-  AnalyticsTotal(
+  const AnalyticsTotal(
     this.total,
     this.income,
     this.expense,

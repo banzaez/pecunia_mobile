@@ -1,147 +1,156 @@
-import 'package:get/get.dart';
-import 'package:pecunia/controllers/app_controller.dart';
-import 'package:pecunia/controllers/base_controller.dart';
-import 'package:pecunia/controllers/transaction_controller.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pecunia/models/analytics.dart';
 import 'package:pecunia/models/analytics_filter.dart';
-import 'package:pecunia/provider/sql_provider.dart';
+import 'package:pecunia/providers/sql_provider_ref.dart';
+import 'package:pecunia/providers/transaction_notifier.dart';
 import 'package:pecunia/screen/transactions/transactions_arguments.dart';
 import 'package:pecunia/util/ext_datetime.dart';
 import 'package:pecunia/widgets/fields/pick_date/pick_date_type.dart';
 
-class AnalyticsController extends BaseController {
-  final AppController _appController = Get.find();
-  final SQLProvider _sqlProvider = Get.find();
-  final TransactionController _transactionController = Get.find();
+// ---------------------------------------------------------------------------
+// State
+// ---------------------------------------------------------------------------
 
-  final RxList<Analytics> _analytics = RxList();
+class AnalyticsState {
+  final List<Analytics> category;
+  final DateTime date;
+  final DateType period;
+  final AnalyticsFilter filter;
+  final bool isLoading;
+  final List<int> valuesYear;
+  final List<int> valuesMonth;
+  final List<int> valuesDay;
 
-  final Rx<DateTime> _date = DateTime.now().startOfDay.obs;
-  DateTime get date => _date.value;
+  AnalyticsState({
+    this.category = const [],
+    DateTime? date,
+    this.period = DateType.year,
+    this.filter = AnalyticsFilter.total,
+    this.isLoading = false,
+    this.valuesYear = const [],
+    this.valuesMonth = const [],
+    this.valuesDay = const [],
+  }) : date = date ?? DateTime.now();
 
-  final Rx<DateType> _period = DateType.year.obs;
-  DateType get period => _period.value;
+  AnalyticsState copyWith({
+    List<Analytics>? category,
+    DateTime? date,
+    DateType? period,
+    AnalyticsFilter? filter,
+    bool? isLoading,
+    List<int>? valuesYear,
+    List<int>? valuesMonth,
+    List<int>? valuesDay,
+  }) =>
+      AnalyticsState(
+        category: category ?? this.category,
+        date: date ?? this.date,
+        period: period ?? this.period,
+        filter: filter ?? this.filter,
+        isLoading: isLoading ?? this.isLoading,
+        valuesYear: valuesYear ?? this.valuesYear,
+        valuesMonth: valuesMonth ?? this.valuesMonth,
+        valuesDay: valuesDay ?? this.valuesDay,
+      );
 
-  final RxBool _detail = false.obs;
-  bool get detail => _detail.value;
-  set detail(bool value) {
-    _detail.value = value;
-    _refreshAnalytics();
-  }
+  // ----------DATA-------------------------------------------------------------------------------
 
-  final Rx<AnalyticsFilter> _filter = AnalyticsFilter.total.obs;
-  AnalyticsFilter get filter => _filter.value;
-  set filter(AnalyticsFilter value) {
-    _filter.value = value;
-    _refreshAnalytics();
-  }
+  double get total => category.fold(0.0, (acc, e) => acc + e.total);
 
-  // Доступные значения для пикера дат — загружаются из БД независимо от текущего фильтра
-  final RxList<int> _valuesYear = <int>[].obs;
-  final RxList<int> _valuesMonth = <int>[].obs;
-  final RxList<int> _valuesDay = <int>[].obs;
+  List<DateTime> get interval => switch (period) {
+        DateType.year => [date.startOfYear, date.endOfYear],
+        DateType.month => [date.startOfMonth, date.endOfMonth],
+        DateType.day || DateType.hour || DateType.minute => [date.startOfDay, date.endOfDay],
+      };
 
-  List<int> get valuesYear => _valuesYear;
-  List<int> get valuesMonth => _valuesMonth;
-  List<int> get valuesDay => _valuesDay;
+  String periodStr(String locale) => switch (period) {
+        DateType.year => date.toFormat("yyyy"),
+        DateType.month => date.toFormat("MMMM yyyy"),
+        DateType.day || DateType.hour || DateType.minute => date.toFormat("dd MMMM yyyy"),
+      };
+}
 
-  //----------INIT-------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// AnalyticsNotifier
+// ---------------------------------------------------------------------------
 
+class AnalyticsNotifier extends Notifier<AnalyticsState> {
   @override
-  void onInit() {
-    super.onInit();
-    _refreshAll();
+  AnalyticsState build() {
+    Future.microtask(() => _refreshAll());
+    return AnalyticsState(date: DateTime.now().startOfDay);
   }
 
-  //----------NAVIGATION-------------------------------------------------------------------------
+  int get _walletId => ref.read(transactionNotifierProvider).walletId;
 
-  void goToDetails({required int categoryId}) {
-    final TransactionsArguments arguments = TransactionsArguments(
-      walletId: _transactionController.walletId,
-      categoryId: categoryId,
-      startDate: interval.first,
-      endDate: interval.last,
-    );
-    _appController.goToScreen(AppScreens.transactions, arguments: arguments);
+  Future<void> _refreshAll() async {
+    state = state.copyWith(isLoading: true);
+    await Future.wait([
+      _refreshAnalytics(),
+      _loadAvailableYears(),
+      _loadAvailableMonths(),
+      _loadAvailableDays(),
+    ]);
+    state = state.copyWith(isLoading: false);
   }
 
-  //----------DATE SELECTION---------------------------------------------------------------------
+  Future<void> _refreshAnalytics() async {
+    final result = await ref.read(sqlProviderProvider).analytics.selectByWalletId(
+          walletId: _walletId,
+          filter: state.filter,
+          detail: false,
+          startDate: state.interval.first,
+          endDate: state.interval.last,
+        );
+    state = state.copyWith(category: result);
+  }
+
+  Future<void> _loadAvailableYears() async {
+    final years = await ref.read(sqlProviderProvider).transactions.availableYears(_walletId);
+    state = state.copyWith(valuesYear: years);
+  }
+
+  Future<void> _loadAvailableMonths() async {
+    final months = await ref
+        .read(sqlProviderProvider)
+        .transactions
+        .availableMonths(_walletId, state.date.year);
+    state = state.copyWith(valuesMonth: months);
+  }
+
+  Future<void> _loadAvailableDays() async {
+    final days = await ref
+        .read(sqlProviderProvider)
+        .transactions
+        .availableDays(_walletId, state.date.year, state.date.month);
+    state = state.copyWith(valuesDay: days);
+  }
+
+  void setFilter(AnalyticsFilter value) {
+    state = state.copyWith(filter: value);
+    _refreshAnalytics();
+  }
 
   void setDate(DateTime value, DateType type) {
-    final prevYear = _date.value.year;
-    final prevMonth = _date.value.month;
-    _date.value = value.startOfDay;
-    _period.value = type;
+    final prev = state.date;
+    state = state.copyWith(date: value.startOfDay, period: type);
     _refreshAnalytics();
-    if (_date.value.year != prevYear) {
+    if (value.year != prev.year) {
       _loadAvailableMonths();
       _loadAvailableDays();
-    } else if (_date.value.month != prevMonth) {
+    } else if (value.month != prev.month) {
       _loadAvailableDays();
     }
   }
 
-  //----------DATA-------------------------------------------------------------------------------
-
-  List<Analytics> get category => _analytics;
-
-  double? get total => _analytics.fold(0.0, (value, e) => (value ?? 0) + e.total);
-
-  List<DateTime> get interval => switch (_period.value) {
-        DateType.year => [date.startOfYear, date.endOfYear],
-        DateType.month => [date.startOfMonth, date.endOfMonth],
-        DateType.day ||
-        DateType.hour ||
-        DateType.minute =>
-          [date.startOfDay, date.endOfDay],
-      };
-
-  String get periodStr => switch (period) {
-        DateType.year => date.toFormat("yyyy"),
-        DateType.month => date.toFormat("MMMM yyyy"),
-        DateType.day ||
-        DateType.hour ||
-        DateType.minute =>
-          date.toFormat("dd MMMM yyyy"),
-      };
-
-  //----------LOAD-------------------------------------------------------------------------------
-
-  Future<void> _refreshAll() => Future.wait([
-        _refreshAnalytics(),
-        _loadAvailableYears(),
-        _loadAvailableMonths(),
-        _loadAvailableDays(),
-      ]);
-
-  Future<void> _refreshAnalytics() async {
-    _analytics.value = await _sqlProvider.analytics.selectByWalletId(
-      walletId: _transactionController.walletId,
-      filter: filter,
-      detail: detail,
-      startDate: interval.first,
-      endDate: interval.last,
-    );
-  }
-
-  Future<void> _loadAvailableYears() async {
-    _valuesYear.value = await _sqlProvider.transactions.availableYears(
-      _transactionController.walletId,
-    );
-  }
-
-  Future<void> _loadAvailableMonths() async {
-    _valuesMonth.value = await _sqlProvider.transactions.availableMonths(
-      _transactionController.walletId,
-      _date.value.year,
-    );
-  }
-
-  Future<void> _loadAvailableDays() async {
-    _valuesDay.value = await _sqlProvider.transactions.availableDays(
-      _transactionController.walletId,
-      _date.value.year,
-      _date.value.month,
-    );
-  }
+  TransactionsArguments buildDetailsArgs(int categoryId) => TransactionsArguments(
+        walletId: _walletId,
+        categoryId: categoryId,
+        startDate: state.interval.first,
+        endDate: state.interval.last,
+      );
 }
+
+final analyticsNotifierProvider = NotifierProvider<AnalyticsNotifier, AnalyticsState>(
+  AnalyticsNotifier.new,
+);

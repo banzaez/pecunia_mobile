@@ -1,13 +1,13 @@
-import 'package:get/get.dart';
+import 'package:pecunia/l10n/app_localizations.dart';
 
 enum AnalyticsFilter {
   income,
   expenses,
   total;
 
-  String get label => switch (this) {
-        income => "analytics_income".tr,
-        expenses => "analytics_expenses".tr,
-        total => "analytics_total".tr,
+  String label(AppLocalizations l10n) => switch (this) {
+        income => l10n.analyticsIncome,
+        expenses => l10n.analyticsExpenses,
+        total => l10n.analyticsTotal,
       };
 }

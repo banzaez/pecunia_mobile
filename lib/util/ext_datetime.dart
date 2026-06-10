@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 extension DateTimeExtension on DateTime {
-  String get _locale => Localizations.localeOf(Get.context!).toString();
+  String get _locale => Intl.getCurrentLocale();
 
   String get formatDDMMYYYY => DateFormat("dd.MM.yyyy", _locale).format(this);
 
@@ -28,8 +26,9 @@ extension DateTimeExtension on DateTime {
   DateTime get startOfMonth => DateTime(year, month, 1);
 
   DateTime get endOfMonth {
-    DateTime startOfNextMonth =
-        (month < 12) ? DateTime(year, month + 1, 1) : DateTime(year + 1, 1, 1);
+    DateTime startOfNextMonth = (month < 12)
+        ? DateTime(year, month + 1, 1)
+        : DateTime(year + 1, 1, 1);
     return startOfNextMonth.subtract(const Duration(milliseconds: 1));
   }
 

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/models/wallet.dart';
+import 'package:pecunia/providers/settings_notifier.dart';
+import 'package:pecunia/providers/wallet_notifier.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/widgets/app_bottom_sheet.dart';
@@ -9,89 +12,147 @@ import 'package:pecunia/widgets/fields/base_field.dart';
 import 'package:pecunia/widgets/fields/currency_field.dart';
 import 'package:pecunia/widgets/setting_wallet/setting_wallet_controller.dart';
 
-class SettingWallet extends StatelessWidget {
+class SettingWallet extends ConsumerWidget {
   const SettingWallet({super.key, this.update});
 
   final Wallet? update;
 
   @override
-  Widget build(BuildContext context) => update == null
+  Widget build(BuildContext context, WidgetRef ref) => update == null
       ? TextButton.icon(
-          onPressed: _setting,
+          onPressed: () => _setting(context, ref),
           icon: const Icon(Icons.add_circle),
           label: Text(
-            "setting_wallet_button_add".tr,
+            AppLocalizations.of(context).settingWalletButtonAdd,
             style: AppTextStyle.text14w400(),
           ),
         )
       : IconButton(
-          onPressed: _setting,
+          onPressed: () => _setting(context, ref),
           icon: const Icon(Icons.settings),
         );
 
-  Future<void> _setting() async => appBottomSheet(SingleChildScrollView(
-        child: GetX<SettingWalletController>(
-          init: SettingWalletController(wallet: update),
-          builder: (controller) => Column(
-            children: [
-              AppSpaces.v8,
-              Center(
-                child: Text(
-                  update == null ? "setting_wallet_title_add".tr : "setting_wallet_title_update".tr,
-                  textAlign: TextAlign.center,
-                ),
+  Future<void> _setting(BuildContext context, WidgetRef ref) async {
+    final defaultCurrency = ref.read(settingsNotifierProvider).currency;
+    await appBottomSheet(
+      context,
+      _SettingWalletSheet(wallet: update, defaultCurrency: defaultCurrency),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Internal sheet widget
+// ---------------------------------------------------------------------------
+
+class _SettingWalletSheet extends ConsumerStatefulWidget {
+  const _SettingWalletSheet({this.wallet, this.defaultCurrency});
+
+  final Wallet? wallet;
+  final dynamic defaultCurrency;
+
+  @override
+  ConsumerState<_SettingWalletSheet> createState() => _SettingWalletSheetState();
+}
+
+class _SettingWalletSheetState extends ConsumerState<_SettingWalletSheet> {
+  late SettingWalletController _ctrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = SettingWalletController(
+      wallet: widget.wallet,
+      defaultCurrency: widget.defaultCurrency,
+    );
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return ListenableBuilder(
+      listenable: _ctrl,
+      builder: (_, __) => SingleChildScrollView(
+        child: Column(
+          children: [
+            AppSpaces.v8,
+            Center(
+              child: Text(
+                widget.wallet == null ? l10n.settingWalletTitleAdd : l10n.settingWalletTitleUpdate,
+                textAlign: TextAlign.center,
               ),
-              AppSpaces.v16,
-              BaseField(
-                controller: controller.nameController,
-                errorText: controller.errorName.value,
-              ),
-              Text("setting_wallet_name".tr),
-              AppSpaces.v16,
-              BaseField(
-                controller: controller.descriptionController,
-              ),
-              Text("setting_wallet_description".tr),
-              AppSpaces.v16,
-              CurrencyField(
-                onChange: (value) => controller.currency.value = value,
-                currency: controller.currency.value,
-                errorText: controller.errorCurrency.value,
-              ),
-              Text("setting_wallet_currency".tr),
-              AppSpaces.v16,
-              AppSwitch<bool>(
-                onChange: (value) => controller.showBalance.value = value,
-                values: [
-                  AppSwitchValue(label: "no".tr, value: false),
-                  AppSwitchValue(label: "yes".tr, value: true),
-                ],
-                value: controller.showBalance.value,
-                width: 256,
-              ),
-              Text("setting_wallet_show_balance".tr),
-              AppSpaces.v16,
-              AppSwitch<bool>(
-                onChange: (value) => controller.isRoundUp.value = value,
-                values: [
-                  AppSwitchValue(label: "no".tr, value: false),
-                  AppSwitchValue(label: "yes".tr, value: true),
-                ],
-                value: controller.isRoundUp.value,
-                width: 256,
-              ),
-              Text("setting_wallet_is_round_up".tr),
-              AppSpaces.v32,
-              ElevatedButton(
-                onPressed: () {
-                  if (!controller.isOk()) return;
-                  Get.backLegacy(result: controller.save());
-                },
-                child: Text("setting_wallet_button_save".tr),
-              ),
-              AppSpaces.v32,
-            ],
-          ),
+            ),
+            AppSpaces.v16,
+            BaseField(
+              controller: _ctrl.nameController,
+              errorText: _ctrl.errorName,
+            ),
+            Text(l10n.settingWalletName),
+            AppSpaces.v16,
+            BaseField(
+              controller: _ctrl.descriptionController,
+            ),
+            Text(l10n.settingWalletDescription),
+            AppSpaces.v16,
+            CurrencyField(
+              onChange: (value) => _ctrl.currency = value,
+              currency: _ctrl.currency,
+              errorText: _ctrl.errorCurrency,
+            ),
+            Text(l10n.settingWalletCurrency),
+            AppSpaces.v16,
+            AppSwitch<bool>(
+              onChange: (value) => _ctrl.showBalance = value,
+              values: [
+                AppSwitchValue(label: l10n.no, value: false),
+                AppSwitchValue(label: l10n.yes, value: true),
+              ],
+              value: _ctrl.showBalance,
+              width: 256,
+            ),
+            Text(l10n.settingWalletShowBalance),
+            AppSpaces.v16,
+            AppSwitch<bool>(
+              onChange: (value) => _ctrl.isRoundUp = value,
+              values: [
+                AppSwitchValue(label: l10n.no, value: false),
+                AppSwitchValue(label: l10n.yes, value: true),
+              ],
+              value: _ctrl.isRoundUp,
+              width: 256,
+            ),
+            Text(l10n.settingWalletIsRoundUp),
+            AppSpaces.v32,
+            ElevatedButton(
+              onPressed: _save,
+              child: Text(l10n.settingWalletButtonSave),
+            ),
+            AppSpaces.v32,
+          ],
         ),
-      ));
+      ),
+    );
+  }
+
+  void _save() {
+    final l10n = AppLocalizations.of(context);
+    if (!_ctrl.isOk(l10n.settingWalletErrorName, l10n.settingWalletErrorCurrency)) return;
+    _ctrl.updateValues();
+
+    final notifier = ref.read(walletNotifierProvider.notifier);
+    final wallet = _ctrl.wallet;
+    if (wallet.id == 0) {
+      notifier.addSQL(wallet);
+    } else {
+      notifier.updateSQL(wallet);
+    }
+
+    Navigator.of(context).pop();
+  }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/models/wallet.dart';
 import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/widgets/dialogs/dialog_choose_wallet.dart';
@@ -12,19 +12,25 @@ class WalletField extends StatelessWidget {
   final Wallet? initValue;
 
   @override
-  Widget build(BuildContext context) => DialogChooseWallet(
-    onChanged: onChanged,
-    child: initValue == null
-        ? Card(
-          color: AppColors.backgroundContent,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(child: Text("wallet_field_empty".tr)),
-              const Icon(Icons.arrow_drop_up),
-            ],
-          ).paddingSymmetric(horizontal: 16, vertical: 16),
-        )
-        : WalletItem(wallet: initValue!, isEditing: false),
-  );
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return DialogChooseWallet(
+      onChanged: onChanged,
+      child: initValue == null
+          ? Card(
+              color: AppColors.backgroundContent(context),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(child: Text(l10n.walletFieldEmpty)),
+                    const Icon(Icons.arrow_drop_up),
+                  ],
+                ),
+              ),
+            )
+          : WalletItem(wallet: initValue!, isEditing: false),
+    );
+  }
 }

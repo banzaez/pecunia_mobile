@@ -1,78 +1,101 @@
 import 'dart:math';
 
-import 'package:get/get.dart';
-import 'package:pecunia/controllers/app_controller.dart';
-import 'package:pecunia/provider/settings_provider.dart';
-import 'package:pecunia/controllers/base_controller.dart';
-import 'package:pecunia/controllers/transaction_controller.dart';
-import 'package:pecunia/controllers/wallet_controller.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pecunia/models/analytics_total.dart';
 import 'package:pecunia/models/transaction.dart';
 import 'package:pecunia/models/wallet.dart';
+import 'package:pecunia/providers/settings_notifier.dart';
+import 'package:pecunia/providers/transaction_notifier.dart';
+import 'package:pecunia/providers/wallet_notifier.dart';
 
-class HomeController extends BaseController {
-  final AppController _appController = Get.find();
-  final TransactionController _transactionController = Get.find();
-  final WalletController _walletController = Get.find();
+// ---------------------------------------------------------------------------
+// State
+// ---------------------------------------------------------------------------
 
-  final Rxn<Wallet> _currentWallet = Rxn<Wallet>();
-  Wallet get currentWallet => _currentWallet.value!;
+class HomeState {
+  final Wallet? currentWallet;
+  final bool isInitializing;
 
-  set currentWallet(Wallet? wallet) {
-    Get.find<SettingsProvider>().isRoundUp.value = wallet?.isRoundUp ?? false;
-    _currentWallet.value = wallet;
-    _transactionController.changeWallet(wallet?.id ?? 0);
-  }
+  const HomeState({this.currentWallet, this.isInitializing = true});
 
-  List<Wallet> get wallets => _walletController.wallets.value;
-  AnalyticsTotal get total => _transactionController.analyticsTotal.value;
-  List<Transaction> get transactions => _transactionController.transactions.value;
+  HomeState copyWith({Wallet? currentWallet, bool? isInitializing}) => HomeState(
+        currentWallet: currentWallet ?? this.currentWallet,
+        isInitializing: isInitializing ?? this.isInitializing,
+      );
+}
 
-  bool get isInitializing => _currentWallet.value == null;
+// ---------------------------------------------------------------------------
+// HomeNotifier
+// ---------------------------------------------------------------------------
 
-  int get currentIndex => _walletController.wallets.indexWhere((e) => e.id == currentWallet.id);
-
-  // ----------INIT-------------------------------------------------------------------------------
-
+class HomeNotifier extends Notifier<HomeState> {
   @override
-  void onInit() {
-    super.onInit();
+  HomeState build() {
+    // Listen wallet changes
+    ref.listen(walletNotifierProvider, (prev, next) {
+      if (next.wallets.isNotEmpty) {
+        _onWalletsChanged(next.wallets);
+      } else {
+        state = const HomeState(isInitializing: true);
+      }
+    });
 
-    ever(_walletController.wallets, _onWalletsChanged);
-
-    if (_walletController.wallets.isNotEmpty) {
-      currentWallet = _walletController.wallets.first;
+    // Initial load
+    final wallets = ref.read(walletNotifierProvider).wallets;
+    if (wallets.isNotEmpty) {
+      final firstWallet = wallets.first;
+      _selectWallet(firstWallet);
+      return HomeState(currentWallet: firstWallet, isInitializing: false);
     }
+
+    return const HomeState(isInitializing: true);
   }
 
   void _onWalletsChanged(List<Wallet> wallets) {
-    if (wallets.isEmpty) {
-      _currentWallet.value = null;
-      return;
-    }
-
-    final currentId = _currentWallet.value?.id;
+    final currentId = state.currentWallet?.id;
     final stillExists = currentId != null && wallets.any((w) => w.id == currentId);
 
     if (!stillExists) {
-      currentWallet = wallets.first;
+      _selectWallet(wallets.first);
+      state = HomeState(currentWallet: wallets.first, isInitializing: false);
     } else {
-      currentWallet = wallets.firstWhere((w) => w.id == currentId);
+      final updated = wallets.firstWhere((w) => w.id == currentId);
+      _selectWallet(updated);
+      state = HomeState(currentWallet: updated, isInitializing: false);
     }
   }
 
-  // ----------SWIPE-LEFT-RIGHT------------------------------------------------------------------
-
-  void swipeWallet(int offset) {
-    var index = currentIndex - offset;
-    index = max(0, index);
-    index = min(index, _walletController.wallets.length - 1);
-    currentWallet = _walletController.wallets[index];
+  void _selectWallet(Wallet wallet) {
+    ref.read(settingsNotifierProvider.notifier).setRoundUp(wallet.isRoundUp);
+    ref.read(transactionNotifierProvider.notifier).changeWallet(wallet.id);
   }
 
-  // ----------NAVIGATION------------------------------------------------------------------------
+  void selectWallet(Wallet wallet) {
+    _selectWallet(wallet);
+    state = HomeState(currentWallet: wallet, isInitializing: false);
+  }
 
-  void goToAnalytics() => _appController.goToScreen(AppScreens.analytics);
+  // -----------GETTERS---------------------------------------------------------
 
-  void goToProfile() => _appController.goToScreen(AppScreens.profile);
+  List<Wallet> get wallets => ref.read(walletNotifierProvider).wallets;
+  AnalyticsTotal get total => ref.read(transactionNotifierProvider).analyticsTotal;
+  List<Transaction> get transactions => ref.read(transactionNotifierProvider).transactions;
+
+  int get currentIndex =>
+      wallets.indexWhere((e) => e.id == state.currentWallet?.id);
+
+  // -----------SWIPE-----------------------------------------------------------
+
+  void swipeWallet(int offset) {
+    final wallets = ref.read(walletNotifierProvider).wallets;
+    if (wallets.isEmpty) return;
+    var index = currentIndex - offset;
+    index = max(0, index);
+    index = min(index, wallets.length - 1);
+    selectWallet(wallets[index]);
+  }
 }
+
+final homeNotifierProvider = NotifierProvider<HomeNotifier, HomeState>(
+  HomeNotifier.new,
+);

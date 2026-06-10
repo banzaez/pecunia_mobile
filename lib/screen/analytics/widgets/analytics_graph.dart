@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/models/analytics.dart';
 import 'package:pecunia/styles/app_border_style.dart';
 import 'package:pecunia/styles/app_text_style.dart';
@@ -19,7 +20,7 @@ class AnalyticsGraph extends StatelessWidget {
       ),
       sectionsSpace: 0,
       centerSpaceRadius: 0,
-      sections: _graphItem(),
+      sections: _graphItem(context),
     ),
   );
 
@@ -35,17 +36,20 @@ class AnalyticsGraph extends StatelessWidget {
         child: Text(name, style: AppTextStyle.text12w600(color: Colors.black)),
       );
 
-  List<PieChartSectionData> _graphItem() => List.generate(data.length, (index) {
-        final background = Colors.primaries[index % Colors.primaries.length];
-        final item = data[index];
-        return PieChartSectionData(
-          color: background,
-          badgeWidget: _badge(name: item.category?.name ?? "", color: background),
-          badgePositionPercentageOffset: .98,
-          radius: isTotal ?  item.total.isNegative ? 100 : 80 : 100,
-          title: item.total.formatSum,
-          titleStyle: AppTextStyle.text10w600(),
-          value: item.total.abs(),
-        );
-      });
+  List<PieChartSectionData> _graphItem(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return List.generate(data.length, (index) {
+      final background = Colors.primaries[index % Colors.primaries.length];
+      final item = data[index];
+      return PieChartSectionData(
+        color: background,
+        badgeWidget: _badge(name: item.category?.localizedName(l10n) ?? "", color: background),
+        badgePositionPercentageOffset: .98,
+        radius: isTotal ?  item.total.isNegative ? 100 : 80 : 100,
+        title: item.total.formatSum,
+        titleStyle: AppTextStyle.text10w600(),
+        value: item.total.abs(),
+      );
+    });
+  }
 }

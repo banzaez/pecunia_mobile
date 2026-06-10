@@ -1,48 +1,58 @@
 import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:pecunia/controllers/base_controller.dart';
-import 'package:pecunia/provider/settings_provider.dart';
-import 'package:pecunia/controllers/wallet_controller.dart';
 import 'package:pecunia/models/wallet.dart';
 
-class SettingWalletController extends BaseController {
-  SettingWalletController({required Wallet? wallet}) {
+/// Чистый ChangeNotifier — заменяет GetxController для SettingWallet формы.
+class SettingWalletController extends ChangeNotifier {
+  SettingWalletController({required Wallet? wallet, Currency? defaultCurrency}) {
     this.wallet = wallet ?? Wallet.empty();
+    _init(defaultCurrency);
   }
 
-  final SettingsProvider _settingsProvider = Get.find();
-  final WalletController _walletController = Get.find();
-
-  late final Wallet wallet;
+  late Wallet wallet;
 
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
-  final currency = Rxn<Currency>();
-  final showBalance = RxBool(true);
-  final isRoundUp = RxBool(true);
 
-  final errorName = RxnString();
-  final errorCurrency = RxnString();
+  Currency? _currency;
+  Currency? get currency => _currency;
+  set currency(Currency? value) {
+    _currency = value;
+    notifyListeners();
+  }
+
+  bool _showBalance = true;
+  bool get showBalance => _showBalance;
+  set showBalance(bool value) {
+    _showBalance = value;
+    notifyListeners();
+  }
+
+  bool _isRoundUp = true;
+  bool get isRoundUp => _isRoundUp;
+  set isRoundUp(bool value) {
+    _isRoundUp = value;
+    notifyListeners();
+  }
+
+  String? errorName;
+  String? errorCurrency;
 
   // ----------INIT------------------------------------------------------------------------------
 
-  @override
-  void onInit() {
-    super.onInit();
-
+  void _init(Currency? defaultCurrency) {
     nameController.text = wallet.name;
     descriptionController.text = wallet.description;
-    currency.value = wallet.id == 0 ? _settingsProvider.currency : wallet.currency;
-    showBalance.value = wallet.showBalance;
-    isRoundUp.value = wallet.isRoundUp;
+    _currency = wallet.id == 0 ? defaultCurrency : wallet.currency;
+    _showBalance = wallet.showBalance;
+    _isRoundUp = wallet.isRoundUp;
   }
 
   @override
-  void onClose() {
+  void dispose() {
     nameController.dispose();
     descriptionController.dispose();
-    super.onClose();
+    super.dispose();
   }
 
   // ----------VALUES----------------------------------------------------------------------------
@@ -50,26 +60,15 @@ class SettingWalletController extends BaseController {
   void updateValues() {
     wallet.name = nameController.text;
     wallet.description = descriptionController.text;
-    wallet.currency = currency.value;
-    wallet.showBalance = showBalance.value;
-    wallet.isRoundUp = isRoundUp.value;
+    wallet.currency = _currency;
+    wallet.showBalance = _showBalance;
+    wallet.isRoundUp = _isRoundUp;
   }
 
-  bool isOk() {
-    errorName.value = nameController.text.isEmpty ? "setting_wallet_error_name".tr : null;
-    errorCurrency.value = currency.value == null ? "setting_wallet_error_currency".tr : null;
-
-    return errorName.value == null && errorCurrency.value == null;
-  }
-
-  // ----------SQL-------------------------------------------------------------------------------
-
-  bool save() {
-    if (!isOk()) return false;
-    updateValues();
-
-    wallet.id == 0 ? _walletController.addSQL(wallet) : _walletController.updateSQL(wallet);
-
-    return true;
+  bool isOk(String nameError, String currencyError) {
+    errorName = nameController.text.isEmpty ? nameError : null;
+    errorCurrency = _currency == null ? currencyError : null;
+    notifyListeners();
+    return errorName == null && errorCurrency == null;
   }
 }

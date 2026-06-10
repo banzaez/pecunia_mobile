@@ -1,133 +1,107 @@
-import 'package:get/get.dart';
-import 'package:pecunia/controllers/transaction_controller.dart';
-import 'package:pecunia/models/finance_categories.dart';
-import 'package:pecunia/models/transaction.dart';
+import 'package:flutter/material.dart';
 import 'package:pecunia/models/wallet.dart';
-import 'package:pecunia/util/ext_double.dart';
-import 'package:pecunia/util/ext_string.dart';
 import 'package:pecunia/widgets/fields/number_field.dart';
 
-class TransferController extends GetxController {
-  final TransactionController _transactionController = Get.find();
-
-  final Rxn<Wallet> _fromWallet = Rxn();
-  final Rxn<Wallet> _toWallet = Rxn();
-
+/// Чистый ChangeNotifier — заменяет GetxController для Transfer формы.
+class TransferController extends ChangeNotifier {
   final NumberEditingController amount = NumberEditingController();
   final NumberEditingController exchangeRate = NumberEditingController();
   final NumberEditingController total = NumberEditingController();
 
-  final RxBool differentCurrencies = false.obs;
-  final RxBool enableDone = false.obs;
+  bool differentCurrencies = false;
+  bool enableDone = false;
+  bool divisionSign = false;
 
-  final RxnString errorWallet = RxnString();
-  final RxnString errorAmount = RxnString();
-  final RxnString errorExchangeRate = RxnString();
-  final RxnString errorTotal = RxnString();
+  String? errorWallet;
 
-  final RxBool divisionSign = false.obs;
+  Wallet? _from;
+  Wallet? get from => _from;
+  set from(Wallet? wallet) {
+    _from = wallet;
+    changeWallet();
+  }
 
-  // ----------GETS------------------------------------------------------------------------------
+  Wallet? _to;
+  Wallet? get to => _to;
+  set to(Wallet? wallet) {
+    _to = wallet;
+    changeWallet();
+  }
 
-  Wallet? get from => _fromWallet.value;
-
-  set from(Wallet? wallet) => _fromWallet.value = wallet;
-
-  Wallet? get to => _toWallet.value;
-
-  set to(Wallet? wallet) => _toWallet.value = wallet;
-
-  // ----------INIT------------------------------------------------------------------------------
-
-  @override
-  void onClose() {
-    amount.dispose();
-    exchangeRate.dispose();
-    total.dispose();
-    super.onClose();
+  TransferController() {
+    amount.addListener(_onAmountChanged);
+    exchangeRate.addListener(_onAmountChanged);
+    total.addListener(_onTotalChanged);
   }
 
   @override
-  void onInit() {
-    super.onInit();
-    _fromWallet.addListener(() => changeWallet());
-    _toWallet.addListener(() => changeWallet());
-
-    amount.addListener(() => changeAmount());
-    exchangeRate.addListener(() => changeAmount());
-    divisionSign.addListener(() => changeAmount());
-    total.addListener(() => changeTotal());
+  void dispose() {
+    amount.removeListener(_onAmountChanged);
+    exchangeRate.removeListener(_onAmountChanged);
+    total.removeListener(_onTotalChanged);
+    amount.dispose();
+    exchangeRate.dispose();
+    total.dispose();
+    super.dispose();
   }
 
   // ----------CHANGES---------------------------------------------------------------------------
 
-  void checkEnableDone() => enableDone.value = isOk();
+  void toggleDivisionSign() {
+    divisionSign = !divisionSign;
+    changeAmount();
+  }
 
   void changeWallet() {
     exchangeRate.number = 1;
-    differentCurrencies.value = (from != null && to != null && from?.currency != to?.currency);
-    errorWallet.value = from?.id == to?.id ? "transfer_error_wallet".tr : null;
+    differentCurrencies = (_from != null && _to != null && _from?.currency != _to?.currency);
+    errorWallet = _from?.id == _to?.id ? '__wallet_error__' : null;
 
-    if (differentCurrencies.isTrue) {
+    if (differentCurrencies) {
       amount.clear();
     } else {
       total.clear();
     }
 
     checkEnableDone();
+    notifyListeners();
   }
 
-  void changeAmount() {
-    if (differentCurrencies.isFalse) return;
+  void _onAmountChanged() => changeAmount();
 
-    final sum = (divisionSign.isTrue
+  void changeAmount() {
+    if (!differentCurrencies) return;
+
+    final sum = (divisionSign
             ? exchangeRate.number == 0
-                ? 0
+                ? 0.0
                 : amount.number / exchangeRate.number
             : amount.number * exchangeRate.number)
         .toStringAsFixed(2);
     total.number = double.tryParse(sum) ?? 0;
     checkEnableDone();
+    notifyListeners();
   }
 
+  void _onTotalChanged() => changeTotal();
+
   void changeTotal() {
-    if (differentCurrencies.isFalse) amount.number = total.number;
+    if (!differentCurrencies) amount.number = total.number;
     checkEnableDone();
+    notifyListeners();
+  }
+
+  void checkEnableDone() {
+    enableDone = isOk();
   }
 
   // ----------IS OK-----------------------------------------------------------------------------
 
   bool isOk() {
-    if (errorWallet.value != null) return false;
+    if (errorWallet != null) return false;
     if (amount.number == 0) return false;
-    if (differentCurrencies.value && exchangeRate.number == 0) return false;
+    if (differentCurrencies && exchangeRate.number == 0) return false;
     if (total.number == 0) return false;
     return true;
-  }
-
-  // ----------SQL-------------------------------------------------------------------------------
-
-  Future<void> transfer() async {
-    if (from == null || to == null) return;
-
-    final description = "transfer_description".tr.format([
-      from!.name,
-      to!.name,
-      exchangeRate.number.toDouble().formatDouble,
-    ]);
-
-    final fromTransaction = Transaction.empty();
-    fromTransaction.walletId = from!.id;
-    fromTransaction.category = FinanceCategories.transfer;
-    fromTransaction.description = description;
-    fromTransaction.amount = -amount.number.toDouble();
-
-    final toTransaction = Transaction.empty();
-    toTransaction.walletId = to!.id;
-    toTransaction.category = FinanceCategories.transfer;
-    toTransaction.description = description;
-    toTransaction.amount = total.number.toDouble();
-
-    await _transactionController.addTransferSQL(fromTransaction, toTransaction);
   }
 }

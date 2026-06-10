@@ -52,5 +52,5 @@ class NumberField extends StatelessWidget {
 class NumberEditingController extends TextEditingController {
   num get number => num.tryParse(super.text.replaceAll(",", ".")) ?? 0;
 
-  set number(num? value) => value == null ? super.clear() : super.text = value.toString();
+  set number(num? value) => (value == null || value == 0) ? super.clear() : super.text = value.toString();
 }

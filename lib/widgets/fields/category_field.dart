@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/models/finance_categories.dart';
 import 'package:pecunia/models/finance_category.dart';
 import 'package:pecunia/widgets/fields/dropdown_field.dart';
@@ -26,21 +27,25 @@ class CategoryField extends StatelessWidget {
       : FinanceCategories.expenseCategories);
 
   @override
-  Widget build(BuildContext context) => DropdownField(
-        onChanged: onChanged,
-        items: _itemsWidget(),
-        hint: hint,
-        value: value,
-        errorText: error,
-      );
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return DropdownField(
+      onChanged: onChanged,
+      items: _itemsWidget(l10n),
+      hint: hint,
+      value: value,
+      errorText: error,
+    );
+  }
 
   // --------------------------------------------------------------------------------------------
 
-  List<DropdownMenuItem<FinanceCategory>> _itemsWidget() => List.generate(_items.length, (index) {
+  List<DropdownMenuItem<FinanceCategory>> _itemsWidget(AppLocalizations l10n) =>
+      List.generate(_items.length, (index) {
         final item = _items[index];
         return DropdownMenuItem(
           value: item,
-          child: Text(item.name),
+          child: Text(item.localizedName(l10n)),
         );
       });
 }
