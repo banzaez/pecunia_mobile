@@ -20,9 +20,9 @@ class Transfer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => IconButton.filled(
-        onPressed: () => _bottomSheet(context),
-        icon: const Icon(Icons.compare_arrows),
-      );
+    onPressed: () => _bottomSheet(context),
+    icon: const Icon(Icons.compare_arrows),
+  );
 
   // --------------------------------------------------------------------------------------------
 
@@ -61,9 +61,11 @@ class _TransferSheetState extends ConsumerState<_TransferSheet> {
     final l10n = AppLocalizations.of(context);
     return ListenableBuilder(
       listenable: _ctrl,
-      builder: (_, __) {
+      builder: (_, _) {
         // Resolve error message from l10n
-        final walletError = _ctrl.errorWallet != null ? l10n.transferErrorWallet : null;
+        final walletError = _ctrl.errorWallet != null
+            ? l10n.transferErrorWallet
+            : null;
 
         return SingleChildScrollView(
           child: Column(
@@ -115,7 +117,9 @@ class _TransferSheetState extends ConsumerState<_TransferSheet> {
                   AppSpaces.h16,
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: _ctrl.enableDone ? () => _onDone(context, l10n) : null,
+                      onPressed: _ctrl.enableDone
+                          ? () => _onDone(context, l10n)
+                          : null,
                       child: Text(l10n.transferDone),
                     ),
                   ),
@@ -130,45 +134,48 @@ class _TransferSheetState extends ConsumerState<_TransferSheet> {
   }
 
   Widget _exchangeRate(BuildContext context, AppLocalizations l10n) => Expanded(
-        child: Row(
-          children: [
-            GestureDetector(
-              onTap: _ctrl.toggleDivisionSign,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.backgroundContent(context),
-                  border: AppBorderStyle.borderSideBox,
-                  borderRadius: AppBorderStyle.borderRadius,
-                ),
-                width: 48,
-                height: 48,
-                child: Center(
-                  child: Text(
-                    _ctrl.divisionSign ? "/" : "*",
-                    style: AppTextStyle.text18w400(),
-                  ),
-                ),
+    child: Row(
+      children: [
+        GestureDetector(
+          onTap: _ctrl.toggleDivisionSign,
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.backgroundContent(context),
+              border: AppBorderStyle.borderSideBox,
+              borderRadius: AppBorderStyle.borderRadius,
+            ),
+            width: 48,
+            height: 48,
+            child: Center(
+              child: Text(
+                _ctrl.divisionSign ? "/" : "*",
+                style: AppTextStyle.text18w400(),
               ),
             ),
-            AppSpaces.h8,
-            Flexible(
-              child: NumberField(
-                controller: _ctrl.exchangeRate,
-                decimal: 5,
-                enabled: _ctrl.differentCurrencies,
-                labelText: l10n.transferExchangeRate,
-              ),
-            ),
-          ],
+          ),
         ),
-      );
+        AppSpaces.h8,
+        Flexible(
+          child: NumberField(
+            controller: _ctrl.exchangeRate,
+            decimal: 5,
+            enabled: _ctrl.differentCurrencies,
+            labelText: l10n.transferExchangeRate,
+          ),
+        ),
+      ],
+    ),
+  );
 
   void _onDone(BuildContext context, AppLocalizations l10n) {
     if (!_ctrl.isOk()) return;
     _executeTransfer(context, l10n);
   }
 
-  Future<void> _executeTransfer(BuildContext context, AppLocalizations l10n) async {
+  Future<void> _executeTransfer(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) async {
     final from = _ctrl.from;
     final to = _ctrl.to;
     if (from == null || to == null) return;
@@ -191,7 +198,9 @@ class _TransferSheetState extends ConsumerState<_TransferSheet> {
     toTransaction.description = description;
     toTransaction.amount = _ctrl.total.number.toDouble();
 
-    await ref.read(transactionNotifierProvider.notifier).addTransferSQL(fromTransaction, toTransaction);
+    await ref
+        .read(transactionNotifierProvider.notifier)
+        .addTransferSQL(fromTransaction, toTransaction);
     if (context.mounted) Navigator.of(context).pop(true);
   }
 }

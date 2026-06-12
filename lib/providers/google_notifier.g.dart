@@ -47,7 +47,7 @@ abstract class _$GoogleNotifier extends $Notifier<GoogleAuthState> {
   GoogleAuthState build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<GoogleAuthState, GoogleAuthState>;
     final element =
         ref.element
@@ -57,7 +57,7 @@ abstract class _$GoogleNotifier extends $Notifier<GoogleAuthState> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -100,7 +100,7 @@ abstract class _$GoogleDriveNotifier extends $Notifier<GoogleDriveState> {
   GoogleDriveState build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<GoogleDriveState, GoogleDriveState>;
     final element =
         ref.element
@@ -110,6 +110,6 @@ abstract class _$GoogleDriveNotifier extends $Notifier<GoogleDriveState> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

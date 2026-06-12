@@ -21,30 +21,30 @@ class SettingTransaction extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Padding(
-        padding: const EdgeInsets.only(bottom: 32),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () => setting(context, ref, TransactionType.expense),
-                  child: Text(AppLocalizations.of(context).homeButtonExpense),
-                ),
-              ),
-              AppSpaces.h8,
-              const Transfer(),
-              AppSpaces.h8,
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () => setting(context, ref, TransactionType.income),
-                  child: Text(AppLocalizations.of(context).homeButtonIncome),
-                ),
-              ),
-            ],
+    padding: const EdgeInsets.only(bottom: 32),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () => setting(context, ref, TransactionType.expense),
+              child: Text(AppLocalizations.of(context).homeButtonExpense),
+            ),
           ),
-        ),
-      );
+          AppSpaces.h8,
+          const Transfer(),
+          AppSpaces.h8,
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () => setting(context, ref, TransactionType.income),
+              child: Text(AppLocalizations.of(context).homeButtonIncome),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 
   static Future<void> setting(
     BuildContext context,
@@ -101,7 +101,7 @@ class _SettingTransactionSheetState
     final l10n = AppLocalizations.of(context);
     return ListenableBuilder(
       listenable: _ctrl,
-      builder: (_, __) => SingleChildScrollView(
+      builder: (_, _) => SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -146,8 +146,14 @@ class _SettingTransactionSheetState
                   AppSwitch(
                     onChange: (value) => _ctrl.type = value,
                     values: [
-                      AppSwitchValue(label: l10n.settingTranExpenses, value: TransactionType.expense),
-                      AppSwitchValue(label: l10n.settingTranIncome, value: TransactionType.income),
+                      AppSwitchValue(
+                        label: l10n.settingTranExpenses,
+                        value: TransactionType.expense,
+                      ),
+                      AppSwitchValue(
+                        label: l10n.settingTranIncome,
+                        value: TransactionType.income,
+                      ),
                     ],
                     value: _ctrl.type,
                   ),
@@ -160,10 +166,7 @@ class _SettingTransactionSheetState
               initDate: _ctrl.datetime,
             ),
             AppSpaces.v32,
-            ElevatedButton(
-              onPressed: _save,
-              child: Text(l10n.settingTranSave),
-            ),
+            ElevatedButton(onPressed: _save, child: Text(l10n.settingTranSave)),
             AppSpaces.v32,
           ],
         ),
@@ -173,7 +176,8 @@ class _SettingTransactionSheetState
 
   void _save() {
     final l10n = AppLocalizations.of(context);
-    if (!_ctrl.isOk(l10n.tranItemErrorAmount, l10n.tranItemErrorCategory)) return;
+    if (!_ctrl.isOk(l10n.tranItemErrorAmount, l10n.tranItemErrorCategory))
+      return;
     _ctrl.updateValues();
 
     final notifier = ref.read(transactionNotifierProvider.notifier);

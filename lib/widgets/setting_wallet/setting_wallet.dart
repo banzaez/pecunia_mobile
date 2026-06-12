@@ -52,7 +52,8 @@ class _SettingWalletSheet extends ConsumerStatefulWidget {
   final dynamic defaultCurrency;
 
   @override
-  ConsumerState<_SettingWalletSheet> createState() => _SettingWalletSheetState();
+  ConsumerState<_SettingWalletSheet> createState() =>
+      _SettingWalletSheetState();
 }
 
 class _SettingWalletSheetState extends ConsumerState<_SettingWalletSheet> {
@@ -78,13 +79,15 @@ class _SettingWalletSheetState extends ConsumerState<_SettingWalletSheet> {
     final l10n = AppLocalizations.of(context);
     return ListenableBuilder(
       listenable: _ctrl,
-      builder: (_, __) => SingleChildScrollView(
+      builder: (_, _) => SingleChildScrollView(
         child: Column(
           children: [
             AppSpaces.v8,
             Center(
               child: Text(
-                widget.wallet == null ? l10n.settingWalletTitleAdd : l10n.settingWalletTitleUpdate,
+                widget.wallet == null
+                    ? l10n.settingWalletTitleAdd
+                    : l10n.settingWalletTitleUpdate,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -95,9 +98,7 @@ class _SettingWalletSheetState extends ConsumerState<_SettingWalletSheet> {
             ),
             Text(l10n.settingWalletName),
             AppSpaces.v16,
-            BaseField(
-              controller: _ctrl.descriptionController,
-            ),
+            BaseField(controller: _ctrl.descriptionController),
             Text(l10n.settingWalletDescription),
             AppSpaces.v16,
             CurrencyField(
@@ -142,7 +143,11 @@ class _SettingWalletSheetState extends ConsumerState<_SettingWalletSheet> {
 
   void _save() {
     final l10n = AppLocalizations.of(context);
-    if (!_ctrl.isOk(l10n.settingWalletErrorName, l10n.settingWalletErrorCurrency)) return;
+    if (!_ctrl.isOk(
+      l10n.settingWalletErrorName,
+      l10n.settingWalletErrorCurrency,
+    ))
+      return;
     _ctrl.updateValues();
 
     final notifier = ref.read(walletNotifierProvider.notifier);

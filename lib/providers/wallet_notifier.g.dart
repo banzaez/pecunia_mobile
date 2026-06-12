@@ -47,7 +47,7 @@ abstract class _$WalletNotifier extends $Notifier<WalletState> {
   WalletState build();
   @$mustCallSuper
   @override
-  void runBuild() {
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<WalletState, WalletState>;
     final element =
         ref.element
@@ -57,6 +57,6 @@ abstract class _$WalletNotifier extends $Notifier<WalletState> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    return element.handleCreate(ref, build);
   }
 }

@@ -28,7 +28,11 @@ class BackupScreen extends ConsumerWidget {
 
   // ----------SNACKBAR--------------------------------------------------------------------------
 
-  void _listenSnack(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
+  void _listenSnack(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) {
     ref.listen<BackupState>(backupNotifierProvider, (prev, next) {
       final msg = next.snackMessage;
       if (msg == null || msg == prev?.snackMessage) return;
@@ -41,10 +45,12 @@ class BackupScreen extends ConsumerWidget {
         _ => l10n.error,
       };
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(text),
-        backgroundColor: next.isError ? Colors.red : Colors.green,
-      ));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(text),
+          backgroundColor: next.isError ? Colors.red : Colors.green,
+        ),
+      );
 
       ref.read(backupNotifierProvider.notifier).clearSnack();
 
@@ -57,7 +63,8 @@ class BackupScreen extends ConsumerWidget {
 
   // --------------------------------------------------------------------------------------------
 
-  Widget _body(BuildContext context, WidgetRef ref, AppLocalizations l10n) => Center(
+  Widget _body(BuildContext context, WidgetRef ref, AppLocalizations l10n) =>
+      Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -72,12 +79,12 @@ class BackupScreen extends ConsumerWidget {
   // ----------LOCAL-BACKUP----------------------------------------------------------------------
 
   Widget _text(String value, String hint) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(value, style: AppTextStyle.text18w400()),
-          Text(hint, style: AppTextStyle.text14w400()),
-        ],
-      );
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Text(value, style: AppTextStyle.text18w400()),
+      Text(hint, style: AppTextStyle.text14w400()),
+    ],
+  );
 
   Widget _localBackup(WidgetRef ref, AppLocalizations l10n) {
     final state = ref.watch(backupNotifierProvider);
@@ -96,7 +103,8 @@ class BackupScreen extends ConsumerWidget {
         SizedBox(
           width: 256,
           child: ElevatedButton(
-            onPressed: () => ref.read(backupNotifierProvider.notifier).archiving(),
+            onPressed: () =>
+                ref.read(backupNotifierProvider.notifier).archiving(),
             child: Text(l10n.backupArchiving),
           ),
         ),
@@ -104,7 +112,8 @@ class BackupScreen extends ConsumerWidget {
         SizedBox(
           width: 256,
           child: ElevatedButton(
-            onPressed: () => ref.read(backupNotifierProvider.notifier).recovery(),
+            onPressed: () =>
+                ref.read(backupNotifierProvider.notifier).recovery(),
             child: Text(l10n.backupRecovery),
           ),
         ),
@@ -114,19 +123,25 @@ class BackupScreen extends ConsumerWidget {
 
   // ----------Google-Drive----------------------------------------------------------------------
 
-  Widget _googleBackup(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
+  Widget _googleBackup(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) {
     final google = ref.watch(googleNotifierProvider);
     return Expanded(
       child: Column(
         children: [
           google.isSignedIn
               ? ButtonSocial(
-                  onPressed: () => ref.read(googleNotifierProvider.notifier).signOut(),
+                  onPressed: () =>
+                      ref.read(googleNotifierProvider.notifier).signOut(),
                   label: l10n.signOutWithGoogle,
                   icon: Assets.pngIconGoogle,
                 )
               : ButtonSocial(
-                  onPressed: () => ref.read(googleNotifierProvider.notifier).signIn(),
+                  onPressed: () =>
+                      ref.read(googleNotifierProvider.notifier).signIn(),
                   label: l10n.signInWithGoogle,
                   icon: Assets.pngIconGoogle,
                 ),
@@ -136,51 +151,53 @@ class BackupScreen extends ConsumerWidget {
     );
   }
 
-  Widget _listItem(BuildContext context, WidgetRef ref, String name, String id, AppLocalizations l10n) =>
-      Container(
-        decoration: BoxDecoration(
-          borderRadius: AppBorderStyle.borderRadius,
-          color: Colors.white10,
+  Widget _listItem(
+    BuildContext context,
+    WidgetRef ref,
+    String name,
+    String id,
+    AppLocalizations l10n,
+  ) => Container(
+    decoration: BoxDecoration(
+      borderRadius: AppBorderStyle.borderRadius,
+      color: Colors.white10,
+    ),
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    child: Row(
+      children: [
+        AppSpaces.h16,
+        Text(name, style: AppTextStyle.text12w600(color: Colors.white)),
+        const Spacer(),
+        IconButton(
+          onPressed: () {
+            _confirmDialog(
+              context: context,
+              ref: ref,
+              l10n: l10n,
+              onConfirm: () => ref
+                  .read(googleDriveNotifierProvider.notifier)
+                  .deleteFile(id, onSuccess: () {}, onError: (e) {}),
+              title: l10n.backupCloudDialogDelete,
+              content: l10n.backupCloudDialogDeleteContent,
+            );
+          },
+          icon: Icon(Icons.delete, color: Colors.red.shade400),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        child: Row(
-          children: [
-            AppSpaces.h16,
-            Text(name, style: AppTextStyle.text12w600(color: Colors.white)),
-            const Spacer(),
-            IconButton(
-              onPressed: () {
-                _confirmDialog(
-                  context: context,
-                  ref: ref,
-                  l10n: l10n,
-                  onConfirm: () => ref
-                      .read(googleDriveNotifierProvider.notifier)
-                      .deleteFile(
-                        id,
-                        onSuccess: () {},
-                        onError: (e) {},
-                      ),
-                  title: l10n.backupCloudDialogDelete,
-                  content: l10n.backupCloudDialogDeleteContent,
-                );
-              },
-              icon: Icon(Icons.delete, color: Colors.red.shade400),
-            ),
-            IconButton(
-              onPressed: () => _confirmDialog(
-                context: context,
-                ref: ref,
-                l10n: l10n,
-                onConfirm: () => ref.read(backupNotifierProvider.notifier).recoveryCloud(id),
-                title: l10n.backupCloudDialogRecovery,
-                content: l10n.backupCloudDialogRecoveryContent,
-              ),
-              icon: Icon(Icons.download, color: Colors.blue.shade400),
-            ),
-          ],
+        IconButton(
+          onPressed: () => _confirmDialog(
+            context: context,
+            ref: ref,
+            l10n: l10n,
+            onConfirm: () =>
+                ref.read(backupNotifierProvider.notifier).recoveryCloud(id),
+            title: l10n.backupCloudDialogRecovery,
+            content: l10n.backupCloudDialogRecoveryContent,
+          ),
+          icon: Icon(Icons.download, color: Colors.blue.shade400),
         ),
-      );
+      ],
+    ),
+  );
 
   Widget _listFiles(
     BuildContext context,
@@ -203,7 +220,9 @@ class BackupScreen extends ConsumerWidget {
           driveState.isLoading
               ? const CircularProgressIndicator()
               : ElevatedButton(
-                  onPressed: () => ref.read(backupNotifierProvider.notifier).createCloudBackup(),
+                  onPressed: () => ref
+                      .read(backupNotifierProvider.notifier)
+                      .createCloudBackup(),
                   child: Text(l10n.backupCreateCloudRecovery),
                 ),
           AppSpaces.v32,
@@ -223,7 +242,7 @@ class BackupScreen extends ConsumerWidget {
                       driveFiles[index].id!,
                       l10n,
                     ),
-                    separatorBuilder: (_, __) => AppSpaces.v8,
+                    separatorBuilder: (_, _) => AppSpaces.v8,
                   ),
                 ),
         ],
@@ -256,7 +275,10 @@ class BackupScreen extends ConsumerWidget {
               onConfirm();
               Navigator.of(ctx).pop(true);
             },
-            child: Text(l10n.yes, style: AppTextStyle.text16w600(color: Colors.red)),
+            child: Text(
+              l10n.yes,
+              style: AppTextStyle.text16w600(color: Colors.red),
+            ),
           ),
         ],
       ),
