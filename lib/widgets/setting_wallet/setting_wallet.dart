@@ -146,8 +146,9 @@ class _SettingWalletSheetState extends ConsumerState<_SettingWalletSheet> {
     if (!_ctrl.isOk(
       l10n.settingWalletErrorName,
       l10n.settingWalletErrorCurrency,
-    ))
+    )) {
       return;
+    }
     _ctrl.updateValues();
 
     final notifier = ref.read(walletNotifierProvider.notifier);

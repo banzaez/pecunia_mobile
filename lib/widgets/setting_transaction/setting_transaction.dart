@@ -176,8 +176,9 @@ class _SettingTransactionSheetState
 
   void _save() {
     final l10n = AppLocalizations.of(context);
-    if (!_ctrl.isOk(l10n.tranItemErrorAmount, l10n.tranItemErrorCategory))
+    if (!_ctrl.isOk(l10n.tranItemErrorAmount, l10n.tranItemErrorCategory)) {
       return;
+    }
     _ctrl.updateValues();
 
     final notifier = ref.read(transactionNotifierProvider.notifier);
