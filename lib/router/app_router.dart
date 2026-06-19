@@ -6,6 +6,7 @@ import 'package:pecunia/screen/profile/profile_screen.dart';
 import 'package:pecunia/screen/transactions/transactions_arguments.dart';
 import 'package:pecunia/screen/transactions/transactions_screen.dart';
 import 'package:pecunia/screen/wallets/wallets_screen.dart';
+import 'package:pecunia/screen/profile/donate_screen.dart';
 import 'package:pecunia/widgets/route_error_screen.dart';
 
 enum AppRoute {
@@ -14,7 +15,8 @@ enum AppRoute {
   backup,
   profile,
   transactions,
-  wallets;
+  wallets,
+  donate;
 
   String get path => switch (this) {
         home => '/',
@@ -23,6 +25,7 @@ enum AppRoute {
         profile => '/profile',
         transactions => '/transactions',
         wallets => '/wallets',
+        donate => '/donate',
       };
 
   String get name => switch (this) {
@@ -32,6 +35,7 @@ enum AppRoute {
         profile => 'profile',
         transactions => 'transactions',
         wallets => 'wallets',
+        donate => 'donate',
       };
 }
 
@@ -74,6 +78,11 @@ final appRouter = GoRouter(
       path: AppRoute.wallets.path,
       name: AppRoute.wallets.name,
       builder: (context, state) => const WalletsScreen(),
+    ),
+    GoRoute(
+      path: AppRoute.donate.path,
+      name: AppRoute.donate.name,
+      builder: (context, state) => const DonateScreen(),
     ),
   ],
 );

@@ -12,6 +12,7 @@ import 'package:pecunia/screen/home/widgets/home_transaction_list.dart';
 import 'package:pecunia/widgets/setting_wallet/setting_wallet.dart';
 import 'package:pecunia/widgets/list_edge_fade.dart';
 
+
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -24,9 +25,8 @@ class HomeScreen extends ConsumerWidget {
       child: homeState.isInitializing
           ? const Material(child: Center(child: CircularProgressIndicator()))
           : Scaffold(
-              extendBody: true,
               appBar: _appBar(context, homeState),
-              body: _body(context, ref, isRoundUp, homeState),
+              body: HomeScreenBody(isRoundUp: isRoundUp, homeState: homeState),
             ),
     );
   }
@@ -42,58 +42,63 @@ class HomeScreen extends ConsumerWidget {
           ),
         ],
       );
+}
 
-  Widget _body(BuildContext context, WidgetRef ref, bool isRoundUp, HomeState homeState) {
-    final bottomSafe = MediaQuery.viewPaddingOf(context).bottom;
-    const actionPanelContentHeight = 64.0;
-    const walletDotsHeight = 40.0;
+class HomeScreenBody extends StatelessWidget {
+  const HomeScreenBody({
+    super.key,
+    required this.isRoundUp,
+    required this.homeState,
+  });
+
+  final bool isRoundUp;
+  final HomeState homeState;
+
+  @override
+  Widget build(BuildContext context) {
     const topFadeHeight = 24.0;
-    const bottomFadeExtension = 36.0;
     const listInsetTrim = 12.0;
-    final bottomOverlayHeight =
-        actionPanelContentHeight + walletDotsHeight + bottomSafe + 4;
-    final bottomScrimHeight = bottomOverlayHeight + bottomFadeExtension;
 
     final showBalance = homeState.currentWallet?.showBalance ?? false;
     final topContentHeight = showBalance ? 148.0 : 56.0;
     final topOverlayHeight = topContentHeight + topFadeHeight * 0.5;
 
-    return MediaQuery.removePadding(
-      context: context,
-      removeBottom: true,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: HomeTransactionList(
-              isRoundUp: isRoundUp,
-              topPadding: topOverlayHeight - listInsetTrim,
-              bottomPadding: bottomScrimHeight - listInsetTrim,
-            ),
+    final systemBottom = MediaQuery.viewPaddingOf(context).bottom;
+    final bottomPadding = 140.0 + systemBottom;
+    const bottomFadeHeight = 110.0;
+
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: HomeTransactionList(
+            isRoundUp: isRoundUp,
+            topPadding: topOverlayHeight - listInsetTrim,
+            bottomPadding: bottomPadding,
           ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: bottomScrimHeight,
-            child: ListEdgeFade(
-              height: bottomScrimHeight,
-              forBottomNav: true,
-            ),
+        ),
+        const Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: bottomFadeHeight,
+          child: ListEdgeFade(
+            height: bottomFadeHeight,
+            forBottomNav: true,
           ),
-          const Positioned(
-            left: 0,
-            right: 0,
-            top: 0,
-            child: HomeTopOverlay(fadeHeight: topFadeHeight),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: HomeBottomOverlay(bottomSafe: bottomSafe),
-          ),
-        ],
-      ),
+        ),
+        const Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: HomeBottomOverlay(),
+        ),
+        const Positioned(
+          left: 0,
+          right: 0,
+          top: 0,
+          child: HomeTopOverlay(fadeHeight: topFadeHeight),
+        ),
+      ],
     );
   }
 }

@@ -54,8 +54,6 @@ class BaseField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
-
     return TextFormField(
         onChanged: onChanged,
         autofocus: autofocus,
@@ -71,7 +69,7 @@ class BaseField extends StatelessWidget {
         maxLength: maxLength,
         maxLines: maxLines,
         obscureText: obscureText,
-        scrollPadding: EdgeInsets.only(bottom: keyboardInset + 96),
+        scrollPadding: const EdgeInsets.only(bottom: 88),
         decoration: AppBorderStyle.inputDecoration(
           context,
           prefixIcon: prefixIcon,

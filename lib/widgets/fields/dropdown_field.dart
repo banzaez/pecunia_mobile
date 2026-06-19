@@ -30,5 +30,7 @@ class DropdownField<T> extends StatelessWidget {
         hint: Text(hint),
         items: items,
         initialValue: value,
+        borderRadius: BorderRadius.circular(16),
+        icon: const Icon(Icons.keyboard_arrow_down_rounded),
       );
 }

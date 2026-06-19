@@ -6,6 +6,7 @@ import 'package:pecunia/models/transaction_type.dart';
 import 'package:pecunia/providers/wallet_notifier.dart';
 import 'package:pecunia/screen/home/home_controller.dart';
 import 'package:pecunia/styles/app_panel_style.dart';
+import 'package:pecunia/screen/home/home_bottom_layout.dart';
 import 'package:pecunia/screen/home/widgets/wallet_dots.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/widgets/app_bottom_sheet.dart';
@@ -13,17 +14,16 @@ import 'package:pecunia/widgets/setting_transaction/setting_transaction.dart';
 import 'package:pecunia/widgets/transfer/transfer_sheet.dart';
 
 class HomeBottomOverlay extends ConsumerWidget {
-  const HomeBottomOverlay({super.key, required this.bottomSafe});
-
-  final double bottomSafe;
+  const HomeBottomOverlay({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final panelColor = appPanelColor(context);
 
-    final currentWalletId =
-        ref.watch(homeNotifierProvider.select((s) => s.currentWallet?.id));
+    final currentWalletId = ref.watch(
+      homeNotifierProvider.select((s) => s.currentWallet?.id),
+    );
     final wallets = ref.watch(walletNotifierProvider.select((s) => s.wallets));
     final currentIndex = wallets.indexWhere((e) => e.id == currentWalletId);
 
@@ -33,9 +33,9 @@ class HomeBottomOverlay extends ConsumerWidget {
         : Colors.black.withValues(alpha: 0.05);
 
     final floatingActionBar = Container(
-      margin: EdgeInsets.fromLTRB(24, 0, 24, bottomSafe > 0 ? bottomSafe : 16),
+      margin: const EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
-        color: panelColor.withValues(alpha: 0.65),
+        color: panelColor.withValues(alpha: 0.45),
         borderRadius: BorderRadius.circular(30),
         border: Border.all(color: borderColor),
         boxShadow: [
@@ -43,7 +43,7 @@ class HomeBottomOverlay extends ConsumerWidget {
             color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.06),
             blurRadius: 16,
             offset: const Offset(0, 8),
-          )
+          ),
         ],
       ),
       child: ClipRRect(
@@ -61,7 +61,10 @@ class HomeBottomOverlay extends ConsumerWidget {
                   label: l10n.homeButtonExpense,
                   color: const Color(0xFFC62828),
                   isDark: isDark,
-                  onTap: () => SettingTransaction.setting(context, TransactionType.expense),
+                  onTap: () => SettingTransaction.setting(
+                    context,
+                    TransactionType.expense,
+                  ),
                 ),
                 _centralButton(
                   context,
@@ -74,7 +77,10 @@ class HomeBottomOverlay extends ConsumerWidget {
                   label: l10n.homeButtonIncome,
                   color: const Color(0xFF2E7D32),
                   isDark: isDark,
-                  onTap: () => SettingTransaction.setting(context, TransactionType.income),
+                  onTap: () => SettingTransaction.setting(
+                    context,
+                    TransactionType.income,
+                  ),
                 ),
               ],
             ),
@@ -83,17 +89,20 @@ class HomeBottomOverlay extends ConsumerWidget {
       ),
     );
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        WalletDots(
-          walletCount: wallets.length,
-          currentIndex: currentIndex,
-          onSwipe: (offset) =>
-              ref.read(homeNotifierProvider.notifier).swipeWallet(offset),
-        ),
-        floatingActionBar,
-      ],
+    return Padding(
+      padding: EdgeInsets.only(bottom: HomeBottomLayout.bottomInset(context)),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          WalletDots(
+            walletCount: wallets.length,
+            currentIndex: currentIndex,
+            onSwipe: (offset) =>
+                ref.read(homeNotifierProvider.notifier).swipeWallet(offset),
+          ),
+          floatingActionBar,
+        ],
+      ),
     );
   }
 
@@ -122,6 +131,9 @@ class HomeBottomOverlay extends ConsumerWidget {
                 const SizedBox(height: 4),
                 Text(
                   label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
                   style: AppTextStyle.text12w600(
                     color: isDark ? Colors.white70 : Colors.black87,
                   ),
@@ -140,14 +152,8 @@ class HomeBottomOverlay extends ConsumerWidget {
     required VoidCallback onTap,
   }) {
     final gradientColors = isDark
-        ? [
-            const Color(0xFF3F51B5),
-            const Color(0xFF5C6BC0),
-          ]
-        : [
-            const Color(0xFF3F51B5),
-            const Color(0xFF303F9F),
-          ];
+        ? [const Color(0xFF3F51B5), const Color(0xFF5C6BC0)]
+        : [const Color(0xFF3F51B5), const Color(0xFF303F9F)];
 
     return Material(
       color: Colors.transparent,
@@ -169,7 +175,7 @@ class HomeBottomOverlay extends ConsumerWidget {
                 color: const Color(0xFF3F51B5).withValues(alpha: 0.3),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
-              )
+              ),
             ],
           ),
           child: const Icon(

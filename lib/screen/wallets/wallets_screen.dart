@@ -62,7 +62,9 @@ class _WalletsScreenState extends ConsumerState<WalletsScreen> {
               ],
             ),
             AppSpaces.v16,
-            _listWallets(),
+            Expanded(
+              child: _listWallets(),
+            ),
           ],
         ),
       );
@@ -71,8 +73,9 @@ class _WalletsScreenState extends ConsumerState<WalletsScreen> {
 
   Widget _listWallets() {
     final wallets = ref.watch(walletNotifierProvider).wallets;
+    final systemBottom = MediaQuery.paddingOf(context).bottom;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.fromLTRB(16, 0, 16, systemBottom + 16),
       child: SingleChildScrollView(
         child: FlexBuilder(
           itemCount: wallets.length,

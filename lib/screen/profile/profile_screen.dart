@@ -35,7 +35,9 @@ class ProfileScreen extends ConsumerWidget {
       SingleChildScrollView(
         child: SizedBox(
           height: MediaQuery.sizeOf(context).height -
-              (MediaQuery.paddingOf(context).top + kToolbarHeight),
+              (MediaQuery.paddingOf(context).top +
+                  MediaQuery.paddingOf(context).bottom +
+                  kToolbarHeight),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -92,6 +94,14 @@ class ProfileScreen extends ConsumerWidget {
             child: ElevatedButton(
               onPressed: () => context.push(AppRoute.backup.path),
               child: Text(l10n.backupButton),
+            ),
+          ),
+          AppSpaces.v16,
+          SizedBox(
+            width: 256,
+            child: ElevatedButton(
+              onPressed: () => context.push(AppRoute.donate.path),
+              child: Text(l10n.profileDonate),
             ),
           ),
         ],

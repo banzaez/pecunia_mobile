@@ -202,5 +202,15 @@
   "dateToday": "Today",
   "dateYesterday": "Yesterday",
   "emptyHistoryTitle": "History is empty",
-  "emptyHistoryDesc": "Your recent transactions for this wallet will appear here."
+  "emptyHistoryDesc": "Your recent transactions for this wallet will appear here.",
+  "profileDonate": "support project",
+  "donateTitle": "Support Project",
+  "donateThanks": "Thanks for using Pecunia!",
+  "donateDescription": "If you like the app, you can support the author with a donation or write your feedback and suggestions to the email.",
+  "donateContactAuthor": "Contact the author",
+  "donateCrypto": "Donate crypto",
+  "donateCoinNetwork": "Coin / Network",
+  "donateWalletAddress": "Wallet address",
+  "donateCopy": "Copy",
+  "donateCopied": "Address copied to clipboard"
 }

@@ -201,5 +201,15 @@
   "dateToday": "Aujourd'hui",
   "dateYesterday": "Hier",
   "emptyHistoryTitle": "L'historique est vide",
-  "emptyHistoryDesc": "Vos transactions récentes pour ce portefeuille apparaîtront ici."
+  "emptyHistoryDesc": "Vos transactions récentes pour ce portefeuille apparaîtront ici.",
+  "profileDonate": "soutenir le projet",
+  "donateTitle": "Soutenir le Projet",
+  "donateThanks": "Merci d'utiliser Pecunia!",
+  "donateDescription": "Si vous aimez l'application, vous pouvez soutenir l'auteur par un don ou écrire vos commentaires et suggestions par email.",
+  "donateContactAuthor": "Contacter l'auteur",
+  "donateCrypto": "Faire un don en crypto",
+  "donateCoinNetwork": "Coin / Réseau",
+  "donateWalletAddress": "Adresse du portefeuille",
+  "donateCopy": "Copier",
+  "donateCopied": "Adresse copiée dans le presse-papiers"
 }

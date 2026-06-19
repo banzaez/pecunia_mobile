@@ -3,6 +3,7 @@ import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/models/finance_categories.dart';
 import 'package:pecunia/models/finance_category.dart';
 import 'package:pecunia/models/transaction_type.dart';
+import 'package:pecunia/util/category_icon_helper.dart';
 import 'package:pecunia/widgets/fields/dropdown_field.dart';
 
 class CategoryField extends StatelessWidget {
@@ -44,9 +45,17 @@ class CategoryField extends StatelessWidget {
   List<DropdownMenuItem<FinanceCategory>> _itemsWidget(AppLocalizations l10n) =>
       List.generate(_items.length, (index) {
         final item = _items[index];
+        final icon = CategoryIconHelper.getIcon(item.name);
         return DropdownMenuItem(
           value: item,
-          child: Text(item.localizedName(l10n)),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 20),
+              const SizedBox(width: 12),
+              Text(item.localizedName(l10n)),
+            ],
+          ),
         );
       });
 }

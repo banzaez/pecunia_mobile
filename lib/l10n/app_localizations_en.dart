@@ -564,4 +564,35 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get emptyHistoryDesc =>
       'Your recent transactions for this wallet will appear here.';
+
+  @override
+  String get profileDonate => 'support project';
+
+  @override
+  String get donateTitle => 'Support Project';
+
+  @override
+  String get donateThanks => 'Thanks for using Pecunia!';
+
+  @override
+  String get donateDescription =>
+      'If you like the app, you can support the author with a donation or write your feedback and suggestions to the email.';
+
+  @override
+  String get donateContactAuthor => 'Contact the author';
+
+  @override
+  String get donateCrypto => 'Donate crypto';
+
+  @override
+  String get donateCoinNetwork => 'Coin / Network';
+
+  @override
+  String get donateWalletAddress => 'Wallet address';
+
+  @override
+  String get donateCopy => 'Copy';
+
+  @override
+  String get donateCopied => 'Address copied to clipboard';
 }

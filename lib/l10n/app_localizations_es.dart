@@ -567,4 +567,35 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get emptyHistoryDesc =>
       'Aquí se mostrarán sus transacciones recientes para esta billetera.';
+
+  @override
+  String get profileDonate => 'apoyar proyecto';
+
+  @override
+  String get donateTitle => 'Apoyar Proyecto';
+
+  @override
+  String get donateThanks => '¡Gracias por usar Pecunia!';
+
+  @override
+  String get donateDescription =>
+      'Si te gusta la aplicación, puedes apoyar al autor con una donación o escribir tus comentarios y sugerencias al correo.';
+
+  @override
+  String get donateContactAuthor => 'Contactar al autor';
+
+  @override
+  String get donateCrypto => 'Donar cripto';
+
+  @override
+  String get donateCoinNetwork => 'Moneda / Red';
+
+  @override
+  String get donateWalletAddress => 'Dirección de billetera';
+
+  @override
+  String get donateCopy => 'Copiar';
+
+  @override
+  String get donateCopied => 'Dirección copiada al portapapeles';
 }

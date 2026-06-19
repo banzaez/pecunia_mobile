@@ -564,4 +564,35 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get emptyHistoryDesc =>
       'Тут відображатимуться ваші нещодавні транзакції для цього гаманця.';
+
+  @override
+  String get profileDonate => 'підтримати проект';
+
+  @override
+  String get donateTitle => 'Підтримка проекту';
+
+  @override
+  String get donateThanks => 'Дякуємо за використання Pecunia!';
+
+  @override
+  String get donateDescription =>
+      'Якщо вам подобається додаток, ви можете підтримати автора за допомогою донату або написати свої відгуки та побажання на пошту.';
+
+  @override
+  String get donateContactAuthor => 'Зв\'язатися з автором';
+
+  @override
+  String get donateCrypto => 'Донат криптовалютою';
+
+  @override
+  String get donateCoinNetwork => 'Монета / Мережа';
+
+  @override
+  String get donateWalletAddress => 'Адреса гаманця';
+
+  @override
+  String get donateCopy => 'Скопіювати';
+
+  @override
+  String get donateCopied => 'Адресу скопійовано в буфер обміну';
 }

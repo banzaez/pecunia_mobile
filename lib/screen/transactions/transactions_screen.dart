@@ -317,7 +317,10 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
           child: filtered.isEmpty
               ? _emptyState(l10n, isSearchEmpty: true)
               : ListView.builder(
-                  padding: const EdgeInsets.only(bottom: 16, top: 4),
+                  padding: EdgeInsets.only(
+                    bottom: 16.0 + MediaQuery.paddingOf(context).bottom,
+                    top: 4,
+                  ),
                   itemCount: filtered.length,
                   itemBuilder: (_, index) {
                     final item = filtered[index];

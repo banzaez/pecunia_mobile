@@ -563,4 +563,35 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get emptyHistoryDesc =>
       'Tutaj będą wyświetlane Twoje ostatnie transakcje dla tego portfela.';
+
+  @override
+  String get profileDonate => 'wesprzyj projekt';
+
+  @override
+  String get donateTitle => 'Wsparcie Projektu';
+
+  @override
+  String get donateThanks => 'Dziękujemy za korzystanie z Pecunii!';
+
+  @override
+  String get donateDescription =>
+      'Jeśli podoba Ci się aplikacja, możesz wesprzeć autora darowizną lub napisać swoje opinie i sugestie na e-mail.';
+
+  @override
+  String get donateContactAuthor => 'Skontaktuj się z autorem';
+
+  @override
+  String get donateCrypto => 'Przekaż darowiznę w krypto';
+
+  @override
+  String get donateCoinNetwork => 'Moneta / Sieć';
+
+  @override
+  String get donateWalletAddress => 'Adres portfela';
+
+  @override
+  String get donateCopy => 'Kopiuj';
+
+  @override
+  String get donateCopied => 'Adres skopiowany do schowka';
 }

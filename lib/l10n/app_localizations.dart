@@ -1185,6 +1185,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your recent transactions for this wallet will appear here.'**
   String get emptyHistoryDesc;
+
+  /// No description provided for @profileDonate.
+  ///
+  /// In en, this message translates to:
+  /// **'support project'**
+  String get profileDonate;
+
+  /// No description provided for @donateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Support Project'**
+  String get donateTitle;
+
+  /// No description provided for @donateThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks for using Pecunia!'**
+  String get donateThanks;
+
+  /// No description provided for @donateDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'If you like the app, you can support the author with a donation or write your feedback and suggestions to the email.'**
+  String get donateDescription;
+
+  /// No description provided for @donateContactAuthor.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact the author'**
+  String get donateContactAuthor;
+
+  /// No description provided for @donateCrypto.
+  ///
+  /// In en, this message translates to:
+  /// **'Donate crypto'**
+  String get donateCrypto;
+
+  /// No description provided for @donateCoinNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Coin / Network'**
+  String get donateCoinNetwork;
+
+  /// No description provided for @donateWalletAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet address'**
+  String get donateWalletAddress;
+
+  /// No description provided for @donateCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get donateCopy;
+
+  /// No description provided for @donateCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Address copied to clipboard'**
+  String get donateCopied;
 }
 
 class _AppLocalizationsDelegate

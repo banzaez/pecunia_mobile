@@ -201,5 +201,15 @@
   "dateToday": "Dzisiaj",
   "dateYesterday": "Wczoraj",
   "emptyHistoryTitle": "Historia jest pusta",
-  "emptyHistoryDesc": "Tutaj będą wyświetlane Twoje ostatnie transakcje dla tego portfela."
+  "emptyHistoryDesc": "Tutaj będą wyświetlane Twoje ostatnie transakcje dla tego portfela.",
+  "profileDonate": "wesprzyj projekt",
+  "donateTitle": "Wsparcie Projektu",
+  "donateThanks": "Dziękujemy za korzystanie z Pecunii!",
+  "donateDescription": "Jeśli podoba Ci się aplikacja, możesz wesprzeć autora darowizną lub napisać swoje opinie i sugestie na e-mail.",
+  "donateContactAuthor": "Skontaktuj się z autorem",
+  "donateCrypto": "Przekaż darowiznę w krypto",
+  "donateCoinNetwork": "Moneta / Sieć",
+  "donateWalletAddress": "Adres portfela",
+  "donateCopy": "Kopiuj",
+  "donateCopied": "Adres skopiowany do schowka"
 }

@@ -570,4 +570,35 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get emptyHistoryDesc =>
       'Vos transactions récentes pour ce portefeuille apparaîtront ici.';
+
+  @override
+  String get profileDonate => 'soutenir le projet';
+
+  @override
+  String get donateTitle => 'Soutenir le Projet';
+
+  @override
+  String get donateThanks => 'Merci d\'utiliser Pecunia!';
+
+  @override
+  String get donateDescription =>
+      'Si vous aimez l\'application, vous pouvez soutenir l\'auteur par un don ou écrire vos commentaires et suggestions par email.';
+
+  @override
+  String get donateContactAuthor => 'Contacter l\'auteur';
+
+  @override
+  String get donateCrypto => 'Faire un don en crypto';
+
+  @override
+  String get donateCoinNetwork => 'Coin / Réseau';
+
+  @override
+  String get donateWalletAddress => 'Adresse du portefeuille';
+
+  @override
+  String get donateCopy => 'Copier';
+
+  @override
+  String get donateCopied => 'Adresse copiée dans le presse-papiers';
 }

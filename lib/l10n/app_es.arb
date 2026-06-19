@@ -201,5 +201,15 @@
   "dateToday": "Hoy",
   "dateYesterday": "Ayer",
   "emptyHistoryTitle": "El historial está vacío",
-  "emptyHistoryDesc": "Aquí se mostrarán sus transacciones recientes para esta billetera."
+  "emptyHistoryDesc": "Aquí se mostrarán sus transacciones recientes para esta billetera.",
+  "profileDonate": "apoyar proyecto",
+  "donateTitle": "Apoyar Proyecto",
+  "donateThanks": "¡Gracias por usar Pecunia!",
+  "donateDescription": "Si te gusta la aplicación, puedes apoyar al autor con una donación o escribir tus comentarios y sugerencias al correo.",
+  "donateContactAuthor": "Contactar al autor",
+  "donateCrypto": "Donar cripto",
+  "donateCoinNetwork": "Moneda / Red",
+  "donateWalletAddress": "Dirección de billetera",
+  "donateCopy": "Copiar",
+  "donateCopied": "Dirección copiada al portapapeles"
 }

@@ -564,4 +564,35 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get emptyHistoryDesc =>
       'Здесь будут отображаться ваши недавние транзакции по этому кошельку.';
+
+  @override
+  String get profileDonate => 'поддержать проект';
+
+  @override
+  String get donateTitle => 'Поддержка проекта';
+
+  @override
+  String get donateThanks => 'Спасибо за использование Pecunia!';
+
+  @override
+  String get donateDescription =>
+      'Если вам нравится приложение, вы можете поддержать автора с помощью доната или написать свои отзывы и пожелания на почту.';
+
+  @override
+  String get donateContactAuthor => 'Связаться с автором';
+
+  @override
+  String get donateCrypto => 'Донат криптовалютой';
+
+  @override
+  String get donateCoinNetwork => 'Монета / Сеть';
+
+  @override
+  String get donateWalletAddress => 'Адрес кошелька';
+
+  @override
+  String get donateCopy => 'Скопировать';
+
+  @override
+  String get donateCopied => 'Адрес скопирован в буфер обмена';
 }
