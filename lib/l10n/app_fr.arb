@@ -178,5 +178,10 @@
   "backupCloudDialogRecovery": "Confirmer la récupération",
   "backupCloudDialogRecoveryContent": "Êtes-vous sûr de vouloir récupérer ce fichier ?",
   "backupCreateCloudRecovery": "Créer une récupération dans le cloud",
-  "backupCloudEmpty": "Le cloud est vide"
+  "backupCloudEmpty": "Le cloud est vide",
+  "startupErrorTitle": "Échec du démarrage de l'application",
+  "startupErrorRetry": "Réessayer",
+  "dataLoadError": "Échec du chargement des données",
+  "routeErrorTitle": "Page introuvable",
+  "routeErrorHome": "Accueil"
 }

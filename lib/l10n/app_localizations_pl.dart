@@ -489,4 +489,19 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get backupCloudEmpty => 'Chmura jest pusta';
+
+  @override
+  String get startupErrorTitle => 'Nie udało się uruchomić aplikacji';
+
+  @override
+  String get startupErrorRetry => 'Spróbuj ponownie';
+
+  @override
+  String get dataLoadError => 'Nie udało się załadować danych';
+
+  @override
+  String get routeErrorTitle => 'Nie znaleziono strony';
+
+  @override
+  String get routeErrorHome => 'Strona główna';
 }

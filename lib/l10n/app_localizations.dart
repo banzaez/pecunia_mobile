@@ -1047,6 +1047,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The cloud is empty'**
   String get backupCloudEmpty;
+
+  /// No description provided for @startupErrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to start the app'**
+  String get startupErrorTitle;
+
+  /// No description provided for @startupErrorRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get startupErrorRetry;
+
+  /// No description provided for @dataLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load data'**
+  String get dataLoadError;
+
+  /// No description provided for @routeErrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Page not found'**
+  String get routeErrorTitle;
+
+  /// No description provided for @routeErrorHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to home'**
+  String get routeErrorHome;
 }
 
 class _AppLocalizationsDelegate

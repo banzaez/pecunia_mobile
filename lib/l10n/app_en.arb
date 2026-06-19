@@ -179,5 +179,10 @@
   "backupCloudDialogRecovery": "Confirm recovery",
   "backupCloudDialogRecoveryContent": "Are you sure you want to recover this file?",
   "backupCreateCloudRecovery": "Create cloud recovery",
-  "backupCloudEmpty": "The cloud is empty"
+  "backupCloudEmpty": "The cloud is empty",
+  "startupErrorTitle": "Failed to start the app",
+  "startupErrorRetry": "Retry",
+  "dataLoadError": "Failed to load data",
+  "routeErrorTitle": "Page not found",
+  "routeErrorHome": "Go to home"
 }

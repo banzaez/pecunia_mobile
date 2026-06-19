@@ -7,6 +7,7 @@ import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/widgets/custom_app_bar.dart';
 import 'package:pecunia/widgets/flex_builder.dart';
+import 'package:pecunia/widgets/provider_error_listener.dart';
 import 'package:pecunia/widgets/setting_wallet/setting_wallet.dart';
 import 'package:pecunia/widgets/wallet_item.dart';
 
@@ -23,6 +24,13 @@ class _WalletsScreenState extends ConsumerState<WalletsScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    listenProviderError(
+      ref,
+      context,
+      provider: walletNotifierProvider,
+      selectError: (state) => (state as WalletState?)?.error,
+      clearError: () => ref.read(walletNotifierProvider.notifier).clearError(),
+    );
     return Scaffold(
       appBar: CustomAppBar(title: l10n.walletsTitle),
       body: _body(context, l10n),

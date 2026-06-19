@@ -49,16 +49,30 @@ class SQLTableTransactions {
 
   // ----------QUERY-----------------------------------------------------------------------------
 
-  Future<List<Transaction>> selectByWalletId(int walletId) async {
+  Future<List<Transaction>> selectByWalletId(
+    int walletId, {
+    int? limit,
+    int? offset,
+  }) async {
     List<Map<String, Object?>> result = await _database.query(
       tableName,
       columns: null,
       where: "$columnWalletId = ?",
       whereArgs: [walletId],
       orderBy: "$columnCreatedAt DESC",
+      limit: limit,
+      offset: offset,
     );
 
     return result.map((e) => Transaction.fromJson(e)).toList();
+  }
+
+  Future<int> countByWalletId(int walletId) async {
+    final result = await _database.rawQuery(
+      'SELECT COUNT(*) AS count FROM $tableName WHERE $columnWalletId = ?',
+      [walletId],
+    );
+    return (result.first['count'] as int?) ?? 0;
   }
 
   Future<List<Transaction>> selectByWalletIdAndCategoryAndByPeriod(

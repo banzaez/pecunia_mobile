@@ -178,5 +178,10 @@
   "backupCloudDialogRecovery": "Підтвердити відновлення",
   "backupCloudDialogRecoveryContent": "Ви впевнені, що хочете відновити цей файл?",
   "backupCreateCloudRecovery": "Створити резервну копію в хмарі",
-  "backupCloudEmpty": "Хмара порожня"
+  "backupCloudEmpty": "Хмара порожня",
+  "startupErrorTitle": "Не вдалося запустити додаток",
+  "startupErrorRetry": "Повторити",
+  "dataLoadError": "Не вдалося завантажити дані",
+  "routeErrorTitle": "Сторінку не знайдено",
+  "routeErrorHome": "На головну"
 }

@@ -493,4 +493,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get backupCloudEmpty => 'Le cloud est vide';
+
+  @override
+  String get startupErrorTitle => 'Échec du démarrage de l\'application';
+
+  @override
+  String get startupErrorRetry => 'Réessayer';
+
+  @override
+  String get dataLoadError => 'Échec du chargement des données';
+
+  @override
+  String get routeErrorTitle => 'Page introuvable';
+
+  @override
+  String get routeErrorHome => 'Accueil';
 }

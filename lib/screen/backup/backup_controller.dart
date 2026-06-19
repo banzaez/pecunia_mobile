@@ -7,6 +7,7 @@ import 'package:pecunia/providers/sql_provider_ref.dart';
 import 'package:pecunia/providers/transaction_notifier.dart';
 import 'package:pecunia/providers/wallet_notifier.dart';
 import 'package:pecunia/util/ext_datetime.dart';
+import 'package:pecunia/util/sqlite_file.dart';
 
 // ---------------------------------------------------------------------------
 // State
@@ -99,7 +100,7 @@ class BackupNotifier extends Notifier<BackupState> {
     final path = result.files.single.path!;
     final backupFile = File(path);
 
-    if (!await _isSqliteFile(backupFile)) {
+    if (!await isSqliteFile(backupFile)) {
       state = state.copyWith(snackMessage: '__format_error__', isError: true);
       return false;
     }
@@ -122,40 +123,47 @@ class BackupNotifier extends Notifier<BackupState> {
     }
   }
 
-  Future<bool> _isSqliteFile(File file) async {
-    try {
-      if (await file.length() < 16) return false;
-      final bytes = await file.openRead(0, 16).first;
-      final header = String.fromCharCodes(bytes);
-      return header.startsWith("SQLite format 3");
-    } catch (e) {
-      return false;
-    }
-  }
-
   Future<void> recoveryCloud(String fileId) async {
     final googleState = ref.read(googleNotifierProvider);
     if (!googleState.hasDrive || googleState.client == null) return;
 
     state = state.copyWith(isLoading: true, clearSnack: true);
+    final sqlProvider = ref.read(sqlProviderProvider);
+    File? tempFile;
+
     try {
       final driveNotifier = ref.read(googleDriveNotifierProvider.notifier);
       final mediaStream = await driveNotifier.getFileMedia(fileId);
-      if (mediaStream == null) throw Exception("Файл не найден");
-      final sqlProvider = ref.read(sqlProviderProvider);
-      await sqlProvider.close();
+      if (mediaStream == null) throw Exception('Файл не найден');
 
-      final localFile = File(sqlProvider.databasePath);
-      final fileSink = localFile.openWrite();
+      final tempDir = await Directory.systemTemp.createTemp('pecunia_cloud_restore');
+      tempFile = File('${tempDir.path}/restore.db');
+      final fileSink = tempFile.openWrite();
       await mediaStream.stream.pipe(fileSink);
       await fileSink.close();
 
+      if (!await isSqliteFile(tempFile)) {
+        state = state.copyWith(
+          isLoading: false,
+          snackMessage: '__format_error__',
+          isError: true,
+        );
+        return;
+      }
+
+      await sqlProvider.close();
+      await tempFile.copy(sqlProvider.databasePath);
       await sqlProvider.init();
       await _refreshAll();
       await _refreshSize();
       state = state.copyWith(isLoading: false, snackMessage: '__restored__', isError: false);
     } catch (e) {
+      await sqlProvider.init();
       state = state.copyWith(isLoading: false, snackMessage: '__error__', isError: true);
+    } finally {
+      if (tempFile != null && await tempFile.exists()) {
+        await tempFile.delete();
+      }
     }
   }
 

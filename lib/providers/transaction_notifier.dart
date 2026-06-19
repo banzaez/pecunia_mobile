@@ -10,10 +10,14 @@ part 'transaction_notifier.g.dart';
 // ---------------------------------------------------------------------------
 
 class TransactionState {
+  static const int pageSize = 50;
+
   final int walletId;
   final List<Transaction> transactions;
   final AnalyticsTotal analyticsTotal;
   final bool isLoading;
+  final bool isLoadingMore;
+  final bool hasMore;
   final String? error;
 
   const TransactionState({
@@ -21,6 +25,8 @@ class TransactionState {
     this.transactions = const [],
     AnalyticsTotal? analyticsTotal,
     this.isLoading = false,
+    this.isLoadingMore = false,
+    this.hasMore = false,
     this.error,
   }) : analyticsTotal = analyticsTotal ?? const AnalyticsTotal(0, 0, 0);
 
@@ -29,6 +35,8 @@ class TransactionState {
     List<Transaction>? transactions,
     AnalyticsTotal? analyticsTotal,
     bool? isLoading,
+    bool? isLoadingMore,
+    bool? hasMore,
     String? error,
     bool clearError = false,
   }) =>
@@ -37,6 +45,8 @@ class TransactionState {
         transactions: transactions ?? this.transactions,
         analyticsTotal: analyticsTotal ?? this.analyticsTotal,
         isLoading: isLoading ?? this.isLoading,
+        isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+        hasMore: hasMore ?? this.hasMore,
         error: clearError ? null : (error ?? this.error),
       );
 }
@@ -47,6 +57,8 @@ class TransactionState {
 
 @Riverpod(keepAlive: true, name: 'transactionNotifierProvider')
 class TransactionNotifier extends _$TransactionNotifier {
+  bool _loadMoreInFlight = false;
+
   @override
   TransactionState build() => const TransactionState();
 
@@ -70,11 +82,47 @@ class TransactionNotifier extends _$TransactionNotifier {
   }
 
   Future<void> _refreshTransactions() async {
-    final list = await ref
-        .read(sqlProviderProvider)
-        .transactions
-        .selectByWalletId(state.walletId);
-    state = state.copyWith(transactions: list);
+    final sql = ref.read(sqlProviderProvider).transactions;
+    final walletId = state.walletId;
+    final list = await sql.selectByWalletId(
+      walletId,
+      limit: TransactionState.pageSize,
+      offset: 0,
+    );
+    final total = await sql.countByWalletId(walletId);
+    state = state.copyWith(
+      transactions: list,
+      hasMore: list.length < total,
+    );
+  }
+
+  Future<void> loadMore() async {
+    if (!state.hasMore || state.isLoadingMore || state.isLoading || _loadMoreInFlight) {
+      return;
+    }
+
+    _loadMoreInFlight = true;
+    state = state.copyWith(isLoadingMore: true, clearError: true);
+    try {
+      final sql = ref.read(sqlProviderProvider).transactions;
+      final offset = state.transactions.length;
+      final list = await sql.selectByWalletId(
+        state.walletId,
+        limit: TransactionState.pageSize,
+        offset: offset,
+      );
+      final total = await sql.countByWalletId(state.walletId);
+      final merged = [...state.transactions, ...list];
+      state = state.copyWith(
+        transactions: merged,
+        hasMore: merged.length < total,
+        isLoadingMore: false,
+      );
+    } catch (e) {
+      state = state.copyWith(isLoadingMore: false, error: e.toString());
+    } finally {
+      _loadMoreInFlight = false;
+    }
   }
 
   Future<void> _refreshTotal() async {
@@ -145,4 +193,6 @@ class TransactionNotifier extends _$TransactionNotifier {
             startDate,
             endDate,
           );
+
+  void clearError() => state = state.copyWith(clearError: true);
 }

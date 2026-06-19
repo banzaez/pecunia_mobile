@@ -491,4 +491,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get backupCloudEmpty => 'La nube está vacía';
+
+  @override
+  String get startupErrorTitle => 'No se pudo iniciar la aplicación';
+
+  @override
+  String get startupErrorRetry => 'Reintentar';
+
+  @override
+  String get dataLoadError => 'No se pudieron cargar los datos';
+
+  @override
+  String get routeErrorTitle => 'Página no encontrada';
+
+  @override
+  String get routeErrorHome => 'Ir al inicio';
 }

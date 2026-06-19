@@ -30,7 +30,8 @@ class AnalyticsScreen extends ConsumerWidget {
 
   Widget _body(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
     final state = ref.watch(analyticsNotifierProvider);
-    final periodStr = state.periodStr('');
+    final locale = Localizations.localeOf(context).toString();
+    final periodStr = state.periodStr(locale);
 
     return Column(
       children: [
@@ -124,7 +125,6 @@ class AnalyticsScreen extends ConsumerWidget {
     AppLocalizations l10n,
   ) =>
       ListView.builder(
-        shrinkWrap: true,
         itemCount: state.category.length,
         itemBuilder: (_, index) {
           final analytics = state.category[index];

@@ -93,4 +93,6 @@ class WalletNotifier extends _$WalletNotifier {
   }
 
   void setEditing(bool value) => state = state.copyWith(isEditing: value);
+
+  void clearError() => state = state.copyWith(clearError: true);
 }

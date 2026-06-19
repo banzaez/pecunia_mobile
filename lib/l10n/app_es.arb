@@ -178,5 +178,10 @@
   "backupCloudDialogRecovery": "Confirmar recuperación",
   "backupCloudDialogRecoveryContent": "¿Estás seguro de que deseas recuperar este archivo?",
   "backupCreateCloudRecovery": "Crear recuperación en la nube",
-  "backupCloudEmpty": "La nube está vacía"
+  "backupCloudEmpty": "La nube está vacía",
+  "startupErrorTitle": "No se pudo iniciar la aplicación",
+  "startupErrorRetry": "Reintentar",
+  "dataLoadError": "No se pudieron cargar los datos",
+  "routeErrorTitle": "Página no encontrada",
+  "routeErrorHome": "Ir al inicio"
 }

@@ -75,26 +75,46 @@ class AnalyticsState {
 // ---------------------------------------------------------------------------
 
 class AnalyticsNotifier extends Notifier<AnalyticsState> {
+  int _refreshGeneration = 0;
+
   @override
   AnalyticsState build() {
-    Future.microtask(() => _refreshAll());
+    ref.listen(transactionNotifierProvider, (prev, next) {
+      if (next.walletId > 0 && prev?.walletId != next.walletId) {
+        _refreshAll();
+      }
+    });
+
+    final walletId = ref.read(transactionNotifierProvider).walletId;
+    if (walletId > 0) {
+      Future.microtask(_refreshAll);
+    }
+
     return AnalyticsState(date: DateTime.now().startOfDay);
   }
 
   int get _walletId => ref.read(transactionNotifierProvider).walletId;
 
   Future<void> _refreshAll() async {
+    if (_walletId <= 0) return;
+
+    final generation = ++_refreshGeneration;
     state = state.copyWith(isLoading: true);
     await Future.wait([
-      _refreshAnalytics(),
-      _loadAvailableYears(),
-      _loadAvailableMonths(),
-      _loadAvailableDays(),
+      _refreshAnalytics(generation),
+      _loadAvailableYears(generation),
+      _loadAvailableMonths(generation),
+      _loadAvailableDays(generation),
     ]);
-    state = state.copyWith(isLoading: false);
+    if (generation == _refreshGeneration) {
+      state = state.copyWith(isLoading: false);
+    }
   }
 
-  Future<void> _refreshAnalytics() async {
+  Future<void> _refreshAnalytics([int? generation]) async {
+    final gen = generation ?? ++_refreshGeneration;
+    if (_walletId <= 0) return;
+
     final result = await ref.read(sqlProviderProvider).analytics.selectByWalletId(
           walletId: _walletId,
           filter: state.filter,
@@ -102,27 +122,40 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
           startDate: state.interval.first,
           endDate: state.interval.last,
         );
+    if (gen != _refreshGeneration) return;
     state = state.copyWith(category: result);
   }
 
-  Future<void> _loadAvailableYears() async {
+  Future<void> _loadAvailableYears([int? generation]) async {
+    final gen = generation ?? _refreshGeneration;
+    if (_walletId <= 0) return;
+
     final years = await ref.read(sqlProviderProvider).transactions.availableYears(_walletId);
+    if (gen != _refreshGeneration) return;
     state = state.copyWith(valuesYear: years);
   }
 
-  Future<void> _loadAvailableMonths() async {
+  Future<void> _loadAvailableMonths([int? generation]) async {
+    final gen = generation ?? _refreshGeneration;
+    if (_walletId <= 0) return;
+
     final months = await ref
         .read(sqlProviderProvider)
         .transactions
         .availableMonths(_walletId, state.date.year);
+    if (gen != _refreshGeneration) return;
     state = state.copyWith(valuesMonth: months);
   }
 
-  Future<void> _loadAvailableDays() async {
+  Future<void> _loadAvailableDays([int? generation]) async {
+    final gen = generation ?? _refreshGeneration;
+    if (_walletId <= 0) return;
+
     final days = await ref
         .read(sqlProviderProvider)
         .transactions
         .availableDays(_walletId, state.date.year, state.date.month);
+    if (gen != _refreshGeneration) return;
     state = state.copyWith(valuesDay: days);
   }
 
@@ -134,12 +167,13 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
   void setDate(DateTime value, DateType type) {
     final prev = state.date;
     state = state.copyWith(date: value.startOfDay, period: type);
-    _refreshAnalytics();
+    final generation = ++_refreshGeneration;
+    _refreshAnalytics(generation);
     if (value.year != prev.year) {
-      _loadAvailableMonths();
-      _loadAvailableDays();
+      _loadAvailableMonths(generation);
+      _loadAvailableDays(generation);
     } else if (value.month != prev.month) {
-      _loadAvailableDays();
+      _loadAvailableDays(generation);
     }
   }
 

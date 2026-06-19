@@ -53,6 +53,7 @@ dev_dependencies:
 
   retrofit_generator: ^10.2.7
   riverpod_generator: ^4.0.4
+  sqflite_common_ffi: ^2.3.6
 
 flutter_launcher_icons:
   android: "launcher_icon"

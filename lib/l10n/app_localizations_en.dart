@@ -489,4 +489,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backupCloudEmpty => 'The cloud is empty';
+
+  @override
+  String get startupErrorTitle => 'Failed to start the app';
+
+  @override
+  String get startupErrorRetry => 'Retry';
+
+  @override
+  String get dataLoadError => 'Failed to load data';
+
+  @override
+  String get routeErrorTitle => 'Page not found';
+
+  @override
+  String get routeErrorHome => 'Go to home';
 }

@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,31 +9,62 @@ import 'package:pecunia/provider/sql_provider.dart';
 import 'package:pecunia/providers/settings_notifier.dart';
 import 'package:pecunia/providers/sql_provider_ref.dart';
 import 'package:pecunia/router/app_router.dart';
+import 'package:pecunia/screen/startup/startup_error_screen.dart';
 import 'package:pecunia/styles/app_themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:intl/intl.dart';
-import 'dart:ui';
 
-void main() async {
+Future<void> startApp() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  final sqlProvider = SQLProvider();
-  await sqlProvider.init();
-
-  final sharedPreferences = await SharedPreferences.getInstance();
+  final bootstrap = await _bootstrap();
 
   runApp(
     ProviderScope(
       overrides: [
-        sqlProviderProvider.overrideWithValue(sqlProvider),
-        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+        if (bootstrap.sqlProvider != null)
+          sqlProviderProvider.overrideWithValue(bootstrap.sqlProvider!),
+        if (bootstrap.sharedPreferences != null)
+          sharedPreferencesProvider.overrideWithValue(bootstrap.sharedPreferences!),
       ],
-      child: const MyApp(),
+      child: bootstrap.error != null
+          ? StartupErrorScreen(
+              message: bootstrap.error!,
+              onRetry: startApp,
+            )
+          : const MyApp(),
     ),
   );
+}
+
+Future<void> main() async => startApp();
+
+class _BootstrapResult {
+  const _BootstrapResult({this.sqlProvider, this.sharedPreferences, this.error});
+
+  final SQLProvider? sqlProvider;
+  final SharedPreferences? sharedPreferences;
+  final String? error;
+}
+
+Future<_BootstrapResult> _bootstrap() async {
+  try {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+    final sqlProvider = SQLProvider();
+    await sqlProvider.init();
+
+    final sharedPreferences = await SharedPreferences.getInstance();
+
+    return _BootstrapResult(
+      sqlProvider: sqlProvider,
+      sharedPreferences: sharedPreferences,
+    );
+  } catch (e, stackTrace) {
+    debugPrint('Startup error: $e\n$stackTrace');
+    return _BootstrapResult(error: e.toString());
+  }
 }
 
 class MyApp extends ConsumerWidget {

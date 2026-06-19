@@ -129,13 +129,26 @@ class GoogleDriveNotifier extends _$GoogleDriveNotifier {
 
   @override
   GoogleDriveState build() {
-    final googleAuth = ref.watch(googleNotifierProvider);
+    ref.listen(googleNotifierProvider, (prev, next) {
+      if (next.client != null) {
+        if (prev?.client != next.client) {
+          _driveApi = drive_api.DriveApi(next.client!);
+          readFiles();
+        }
+      } else {
+        _driveApi = null;
+        state = const GoogleDriveState();
+      }
+    });
+
+    final googleAuth = ref.read(googleNotifierProvider);
     if (googleAuth.client != null) {
       _driveApi = drive_api.DriveApi(googleAuth.client!);
-      Future.microtask(() => readFiles());
+      Future.microtask(readFiles);
     } else {
       _driveApi = null;
     }
+
     return const GoogleDriveState();
   }
 
@@ -175,6 +188,7 @@ class GoogleDriveNotifier extends _$GoogleDriveNotifier {
       );
 
       if (await dbFile.exists()) await dbFile.delete();
+      state = state.copyWith(isLoading: false);
       await readFiles();
       onSuccess();
     } catch (e) {

@@ -1,34 +1,34 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/models/transaction.dart';
-import 'package:pecunia/providers/transaction_notifier.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/util/ext_datetime.dart';
 import 'package:pecunia/util/ext_double.dart';
 import 'package:pecunia/widgets/setting_transaction/setting_transaction.dart';
 
-import 'package:pecunia/providers/settings_notifier.dart';
-
-class TransactionItem extends ConsumerWidget {
-  const TransactionItem({super.key, required this.transaction});
+class TransactionItem extends StatelessWidget {
+  const TransactionItem({
+    super.key,
+    required this.transaction,
+    required this.isRoundUp,
+    required this.onDelete,
+  });
 
   final Transaction transaction;
+  final bool isRoundUp;
+  final Future<bool> Function() onDelete;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isRoundUp = ref.watch(settingsNotifierProvider).isRoundUp;
-
+  Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => SettingTransaction.setting(context, ref, transaction.type, transaction),
+      onTap: () => SettingTransaction.setting(context, transaction.type, transaction),
       child: Dismissible(
         key: Key(transaction.id.toString()),
-        onDismissed: (direction) =>
-            ref.read(transactionNotifierProvider.notifier).deleteSQL(transaction.id),
-        confirmDismiss: (dir) => _confirmDismiss(context),
+        confirmDismiss: (_) => _confirmDismiss(context),
+        onDismissed: (_) {},
         background: Container(color: Colors.red),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -62,8 +62,6 @@ class TransactionItem extends ConsumerWidget {
       ),
     );
   }
-
-  // --------------------------------------------------------------------------------------------
 
   Widget _label(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -102,11 +100,9 @@ class TransactionItem extends ConsumerWidget {
     }
   }
 
-  // --------------------------------------------------------------------------------------------
-
-  Future<bool?> _confirmDismiss(BuildContext context) async {
+  Future<bool> _confirmDismiss(BuildContext context) async {
     final l10n = AppLocalizations.of(context);
-    return await showDialog<bool>(
+    final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(l10n.dialogDeleteTitle),
@@ -126,5 +122,8 @@ class TransactionItem extends ConsumerWidget {
         ],
       ),
     );
+
+    if (confirmed != true) return false;
+    return onDelete();
   }
 }

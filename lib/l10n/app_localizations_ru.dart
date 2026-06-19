@@ -490,4 +490,19 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get backupCloudEmpty => 'Облако пусто';
+
+  @override
+  String get startupErrorTitle => 'Не удалось запустить приложение';
+
+  @override
+  String get startupErrorRetry => 'Повторить';
+
+  @override
+  String get dataLoadError => 'Не удалось загрузить данные';
+
+  @override
+  String get routeErrorTitle => 'Страница не найдена';
+
+  @override
+  String get routeErrorHome => 'На главную';
 }

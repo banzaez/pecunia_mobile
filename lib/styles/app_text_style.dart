@@ -4,12 +4,15 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTextStyle {
   AppTextStyle._();
 
+  static final String? _fontFamily = GoogleFonts.openSans().fontFamily;
+
   static TextStyle baseStyle({
     Color? color,
     required double fontSize,
     FontWeight? fontWeight,
   }) =>
-      GoogleFonts.openSans(
+      TextStyle(
+        fontFamily: _fontFamily,
         color: color,
         fontSize: fontSize,
         fontWeight: fontWeight ?? FontWeight.normal,

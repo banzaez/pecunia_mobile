@@ -178,5 +178,10 @@
   "backupCloudDialogRecovery": "Подтвердите восстановление",
   "backupCloudDialogRecoveryContent": "Вы уверены, что хотите восстановить этот файл?",
   "backupCreateCloudRecovery": "Создать резервную копию в облаке",
-  "backupCloudEmpty": "Облако пусто"
+  "backupCloudEmpty": "Облако пусто",
+  "startupErrorTitle": "Не удалось запустить приложение",
+  "startupErrorRetry": "Повторить",
+  "dataLoadError": "Не удалось загрузить данные",
+  "routeErrorTitle": "Страница не найдена",
+  "routeErrorHome": "На главную"
 }

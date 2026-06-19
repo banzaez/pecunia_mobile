@@ -13,14 +13,14 @@ import 'package:pecunia/widgets/fields/pick_date/pick_date.dart';
 import 'package:pecunia/widgets/setting_transaction/setting_transaction_controller.dart';
 import 'package:pecunia/widgets/transfer/transfer.dart';
 
-class SettingTransaction extends ConsumerWidget {
+class SettingTransaction extends StatelessWidget {
   const SettingTransaction({super.key, this.transaction, this.onChange});
 
   final ValueChanged? onChange;
   final Transaction? transaction;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => Padding(
+  Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.only(bottom: 32),
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -28,7 +28,7 @@ class SettingTransaction extends ConsumerWidget {
         children: [
           Expanded(
             child: ElevatedButton(
-              onPressed: () => setting(context, ref, TransactionType.expense),
+              onPressed: () => setting(context, TransactionType.expense),
               child: Text(AppLocalizations.of(context).homeButtonExpense),
             ),
           ),
@@ -37,7 +37,7 @@ class SettingTransaction extends ConsumerWidget {
           AppSpaces.h8,
           Expanded(
             child: ElevatedButton(
-              onPressed: () => setting(context, ref, TransactionType.income),
+              onPressed: () => setting(context, TransactionType.income),
               child: Text(AppLocalizations.of(context).homeButtonIncome),
             ),
           ),
@@ -48,17 +48,13 @@ class SettingTransaction extends ConsumerWidget {
 
   static Future<void> setting(
     BuildContext context,
-    WidgetRef ref,
     TransactionType type, [
     Transaction? transaction,
   ]) async {
-    final result = await appBottomSheet<bool>(
+    await appBottomSheet<bool>(
       context,
       _SettingTransactionSheet(type: type, transaction: transaction),
     );
-    if (result == true) {
-      // Refresh handled inside the sheet via ref
-    }
   }
 }
 
@@ -174,21 +170,24 @@ class _SettingTransactionSheetState
     );
   }
 
-  void _save() {
+  void _save() async {
     final l10n = AppLocalizations.of(context);
     if (!_ctrl.isOk(l10n.tranItemErrorAmount, l10n.tranItemErrorCategory)) {
       return;
     }
     _ctrl.updateValues();
 
+    final navigator = Navigator.of(context);
     final notifier = ref.read(transactionNotifierProvider.notifier);
     final transaction = _ctrl.transaction;
     if (transaction.id == 0) {
-      notifier.addSQL(transaction);
+      await notifier.addSQL(transaction);
     } else {
-      notifier.updateSQL(transaction);
+      await notifier.updateSQL(transaction);
     }
 
-    Navigator.of(context).pop(true);
+    if (ref.read(transactionNotifierProvider).error != null) return;
+
+    navigator.pop(true);
   }
 }

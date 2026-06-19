@@ -60,14 +60,17 @@ class HomeNotifier extends Notifier<HomeState> {
       state = HomeState(currentWallet: wallets.first, isInitializing: false);
     } else {
       final updated = wallets.firstWhere((w) => w.id == currentId);
-      _selectWallet(updated);
+      ref.read(settingsNotifierProvider.notifier).setRoundUp(updated.isRoundUp);
       state = HomeState(currentWallet: updated, isInitializing: false);
     }
   }
 
   void _selectWallet(Wallet wallet) {
     ref.read(settingsNotifierProvider.notifier).setRoundUp(wallet.isRoundUp);
-    ref.read(transactionNotifierProvider.notifier).changeWallet(wallet.id);
+    final currentWalletId = ref.read(transactionNotifierProvider).walletId;
+    if (currentWalletId != wallet.id) {
+      ref.read(transactionNotifierProvider.notifier).changeWallet(wallet.id);
+    }
   }
 
   void selectWallet(Wallet wallet) {

@@ -6,6 +6,7 @@ import 'package:pecunia/screen/profile/profile_screen.dart';
 import 'package:pecunia/screen/transactions/transactions_arguments.dart';
 import 'package:pecunia/screen/transactions/transactions_screen.dart';
 import 'package:pecunia/screen/wallets/wallets_screen.dart';
+import 'package:pecunia/widgets/route_error_screen.dart';
 
 enum AppRoute {
   home,
@@ -36,6 +37,7 @@ enum AppRoute {
 
 final appRouter = GoRouter(
   initialLocation: AppRoute.home.path,
+  errorBuilder: (context, state) => RouteErrorScreen(error: state.error),
   routes: [
     GoRoute(
       path: AppRoute.home.path,
@@ -61,7 +63,10 @@ final appRouter = GoRouter(
       path: AppRoute.transactions.path,
       name: AppRoute.transactions.name,
       builder: (context, state) {
-        final args = state.extra as TransactionsArguments;
+        final args = state.extra;
+        if (args is! TransactionsArguments) {
+          return const RouteErrorScreen();
+        }
         return TransactionsScreen(args: args);
       },
     ),

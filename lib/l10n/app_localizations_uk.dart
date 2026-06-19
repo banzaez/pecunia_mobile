@@ -490,4 +490,19 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get backupCloudEmpty => 'Хмара порожня';
+
+  @override
+  String get startupErrorTitle => 'Не вдалося запустити додаток';
+
+  @override
+  String get startupErrorRetry => 'Повторити';
+
+  @override
+  String get dataLoadError => 'Не вдалося завантажити дані';
+
+  @override
+  String get routeErrorTitle => 'Сторінку не знайдено';
+
+  @override
+  String get routeErrorHome => 'На головну';
 }

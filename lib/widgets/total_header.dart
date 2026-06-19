@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/models/analytics_total.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/ext_datetime.dart';
 import 'package:pecunia/util/ext_double.dart';
 
-import 'package:pecunia/providers/settings_notifier.dart';
-
-class TotalHeader extends ConsumerWidget {
-  const TotalHeader({super.key, required this.total});
+class TotalHeader extends StatelessWidget {
+  const TotalHeader({
+    super.key,
+    required this.total,
+    required this.isRoundUp,
+  });
 
   final AnalyticsTotal total;
+  final bool isRoundUp;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final periodStr = DateTime.now().formatMMMM;
-    final isRoundUp = ref.watch(settingsNotifierProvider).isRoundUp;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,8 +43,6 @@ class TotalHeader extends ConsumerWidget {
       ],
     );
   }
-
-  // --------------------------------------------------------------------------------------------
 
   Widget _item({
     required String value,

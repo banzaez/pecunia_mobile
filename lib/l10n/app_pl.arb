@@ -178,5 +178,10 @@
   "backupCloudDialogRecovery": "Potwierdź przywracanie",
   "backupCloudDialogRecoveryContent": "Czy na pewno chcesz przywrócić ten plik?",
   "backupCreateCloudRecovery": "Utwórz kopię zapasową w chmurze",
-  "backupCloudEmpty": "Chmura jest pusta"
+  "backupCloudEmpty": "Chmura jest pusta",
+  "startupErrorTitle": "Nie udało się uruchomić aplikacji",
+  "startupErrorRetry": "Spróbuj ponownie",
+  "dataLoadError": "Nie udało się załadować danych",
+  "routeErrorTitle": "Nie znaleziono strony",
+  "routeErrorHome": "Strona główna"
 }
