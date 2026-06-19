@@ -21,9 +21,14 @@ class AnalyticsTopOverlay extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final state = ref.watch(analyticsNotifierProvider);
     final locale = Localizations.localeOf(context).toString();
-    final periodStr = state.periodStr(locale);
+    final category = ref.watch(analyticsNotifierProvider.select((s) => s.category));
+    final filter = ref.watch(analyticsNotifierProvider.select((s) => s.filter));
+    final total = ref.watch(analyticsNotifierProvider.select((s) => s.total));
+    final isLoading = ref.watch(analyticsNotifierProvider.select((s) => s.isLoading));
+    final periodStr = ref.watch(
+      analyticsNotifierProvider.select((s) => s.periodStr(locale)),
+    );
     final baseColor = homeOverlayBaseColor(context);
     final panelColor = homePanelColor(context);
 
@@ -42,14 +47,43 @@ class AnalyticsTopOverlay extends ConsumerWidget {
                   style: AppTextStyle.text14w400(),
                   textAlign: TextAlign.center,
                 ),
-                 if (state.category.isNotEmpty) ...[
+                if (category.isNotEmpty) ...[
                   AppSpaces.v8,
                   SizedBox(
                     height: graphHeight,
-                    child: AnalyticsGraph(
-                      data: state.category,
-                      isTotal: state.filter == AnalyticsFilter.total,
-                      totalSum: state.total,
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.translucent,
+                            onHorizontalDragEnd: (details) {
+                              if (details.primaryVelocity == null) return;
+                              if (details.primaryVelocity! < 0) {
+                                // Swipe left -> Next period
+                                ref.read(analyticsNotifierProvider.notifier).shiftPeriod(1);
+                              } else if (details.primaryVelocity! > 0) {
+                                // Swipe right -> Previous period
+                                ref.read(analyticsNotifierProvider.notifier).shiftPeriod(-1);
+                              }
+                            },
+                            child: AnalyticsGraph(
+                              data: category,
+                              isTotal: filter == AnalyticsFilter.total,
+                              totalSum: total,
+                            ),
+                          ),
+                        ),
+                        if (isLoading)
+                          const Positioned.fill(
+                            child: Center(
+                              child: SizedBox(
+                                width: 28,
+                                height: 28,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ],

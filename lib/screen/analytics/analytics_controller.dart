@@ -13,20 +13,24 @@ import 'package:pecunia/widgets/fields/pick_date/pick_date_type.dart';
 
 class AnalyticsState {
   final List<Analytics> category;
+  final List<Analytics> subcategory;
   final DateTime date;
   final DateType period;
   final AnalyticsFilter filter;
   final bool isLoading;
+  final String? error;
   final List<int> valuesYear;
   final List<int> valuesMonth;
   final List<int> valuesDay;
 
   AnalyticsState({
     this.category = const [],
+    this.subcategory = const [],
     DateTime? date,
     this.period = DateType.year,
     this.filter = AnalyticsFilter.total,
     this.isLoading = false,
+    this.error,
     this.valuesYear = const [],
     this.valuesMonth = const [],
     this.valuesDay = const [],
@@ -34,20 +38,25 @@ class AnalyticsState {
 
   AnalyticsState copyWith({
     List<Analytics>? category,
+    List<Analytics>? subcategory,
     DateTime? date,
     DateType? period,
     AnalyticsFilter? filter,
     bool? isLoading,
+    String? error,
+    bool clearError = false,
     List<int>? valuesYear,
     List<int>? valuesMonth,
     List<int>? valuesDay,
   }) =>
       AnalyticsState(
         category: category ?? this.category,
+        subcategory: subcategory ?? this.subcategory,
         date: date ?? this.date,
         period: period ?? this.period,
         filter: filter ?? this.filter,
         isLoading: isLoading ?? this.isLoading,
+        error: clearError ? null : (error ?? this.error),
         valuesYear: valuesYear ?? this.valuesYear,
         valuesMonth: valuesMonth ?? this.valuesMonth,
         valuesDay: valuesDay ?? this.valuesDay,
@@ -99,15 +108,22 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
     if (_walletId <= 0) return;
 
     final generation = ++_refreshGeneration;
-    state = state.copyWith(isLoading: true);
-    await Future.wait([
-      _refreshAnalytics(generation),
-      _loadAvailableYears(generation),
-      _loadAvailableMonths(generation),
-      _loadAvailableDays(generation),
-    ]);
-    if (generation == _refreshGeneration) {
-      state = state.copyWith(isLoading: false);
+    state = state.copyWith(isLoading: true, clearError: true);
+    try {
+      await Future.wait([
+        _refreshAnalytics(generation),
+        _loadAvailableYears(generation),
+        _loadAvailableMonths(generation),
+        _loadAvailableDays(generation),
+      ]);
+    } catch (e) {
+      if (generation == _refreshGeneration) {
+        state = state.copyWith(error: e.toString());
+      }
+    } finally {
+      if (generation == _refreshGeneration) {
+        state = state.copyWith(isLoading: false);
+      }
     }
   }
 
@@ -115,16 +131,34 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
     final gen = generation ?? ++_refreshGeneration;
     if (_walletId <= 0) return;
 
-    final result = await ref.read(sqlProviderProvider).analytics.selectByWalletId(
-          walletId: _walletId,
-          filter: state.filter,
-          detail: false,
-          startDate: state.interval.first,
-          endDate: state.interval.last,
-        );
-    if (gen != _refreshGeneration) return;
-    ref.read(selectedCategoryIndexProvider.notifier).reset();
-    state = state.copyWith(category: result);
+    try {
+      final results = await Future.wait([
+        ref.read(sqlProviderProvider).analytics.selectByWalletId(
+              walletId: _walletId,
+              filter: state.filter,
+              detail: false,
+              startDate: state.interval.first,
+              endDate: state.interval.last,
+            ),
+        ref.read(sqlProviderProvider).analytics.selectByWalletId(
+              walletId: _walletId,
+              filter: state.filter,
+              detail: true,
+              startDate: state.interval.first,
+              endDate: state.interval.last,
+            ),
+      ]);
+      if (gen != _refreshGeneration) return;
+      ref.read(selectedCategoryIndexProvider.notifier).reset();
+      state = state.copyWith(
+        category: results[0],
+        subcategory: results[1],
+        clearError: true,
+      );
+    } catch (e) {
+      if (gen != _refreshGeneration) return;
+      state = state.copyWith(error: e.toString());
+    }
   }
 
   Future<void> _loadAvailableYears([int? generation]) async {
@@ -161,8 +195,9 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
   }
 
   void setFilter(AnalyticsFilter value) {
+    if (state.filter == value) return;
     ref.read(selectedCategoryIndexProvider.notifier).reset();
-    state = state.copyWith(filter: value);
+    state = state.copyWith(filter: value, clearError: true);
     _refreshAnalytics();
   }
 
@@ -180,12 +215,30 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
     }
   }
 
-  TransactionsArguments buildDetailsArgs(int categoryId) => TransactionsArguments(
-        walletId: _walletId,
-        categoryId: categoryId,
-        startDate: state.interval.first,
-        endDate: state.interval.last,
-      );
+  void shiftPeriod(int delta) {
+    DateTime nextDate;
+    switch (state.period) {
+      case DateType.year:
+        nextDate = DateTime(state.date.year + delta, state.date.month, state.date.day);
+      case DateType.month:
+        nextDate = DateTime(state.date.year, state.date.month + delta, state.date.day);
+      case DateType.day || DateType.hour || DateType.minute:
+        nextDate = state.date.add(Duration(days: delta));
+    }
+    setDate(nextDate, state.period);
+  }
+
+  TransactionsArguments? buildDetailsArgs(int categoryId) {
+    if (categoryId <= 0 || _walletId <= 0) return null;
+    return TransactionsArguments(
+      walletId: _walletId,
+      categoryId: categoryId,
+      startDate: state.interval.first,
+      endDate: state.interval.last,
+    );
+  }
+
+  void clearError() => state = state.copyWith(clearError: true);
 }
 
 class SelectedCategoryIndex extends Notifier<int?> {

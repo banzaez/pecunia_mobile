@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pecunia/l10n/app_localizations.dart';
-import 'package:pecunia/models/analytics_filter.dart';
 import 'package:pecunia/router/app_router.dart';
 import 'package:pecunia/screen/analytics/analytics_controller.dart';
+import 'package:pecunia/screen/analytics/analytics_palette.dart';
 import 'package:pecunia/screen/analytics/widgets/analytics_category_item.dart';
+import 'package:pecunia/styles/app_text_style.dart';
+import 'package:pecunia/util/app_spaces.dart';
 
 class AnalyticsCategoryList extends ConsumerWidget {
   const AnalyticsCategoryList({
@@ -21,49 +23,88 @@ class AnalyticsCategoryList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final state = ref.watch(analyticsNotifierProvider);
+    final category = state.category;
+    final filter = state.filter;
     final locale = Localizations.localeOf(context).toString();
     final periodStr = state.periodStr(locale);
 
     if (state.category.isEmpty) {
+      final isDark = Theme.of(context).brightness == Brightness.dark;
+      final accentColor = const Color(0xFF3F51B5); // Sleek Indigo
+      
       return Padding(
         padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
         child: Center(
-          child: Text(l10n.analyticsCategoryEmpty(periodStr)),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Glowing Illustration Icon
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          accentColor.withValues(alpha: 0.15),
+                          accentColor.withValues(alpha: 0.05),
+                        ],
+                      ),
+                      border: Border.all(
+                        color: accentColor.withValues(alpha: 0.25),
+                        width: 1.5,
+                      ),
+                      boxShadow: isDark ? null : [
+                        BoxShadow(
+                          color: accentColor.withValues(alpha: 0.04),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                        )
+                      ],
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.analytics_outlined,
+                        color: isDark ? Colors.white70 : accentColor,
+                        size: 32,
+                      ),
+                    ),
+                  ),
+                  AppSpaces.v24,
+                  // Main message
+                  Text(
+                    l10n.analyticsCategoryEmpty(periodStr),
+                    style: AppTextStyle.text15w600(
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  AppSpaces.v8,
+                  // Helpful subtitle
+                  Text(
+                    "Добавьте транзакции или выберите другой период для построения детальных графиков аналитики.",
+                    style: AppTextStyle.text12w400(
+                      color: isDark ? Colors.white38 : Colors.black38,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       );
     }
 
-    final totalSum = state.category.fold<double>(0.0, (sum, item) => sum + item.total.abs());
-    final isTotal = state.filter == AnalyticsFilter.total;
-    final isIncome = state.category.isNotEmpty && state.category.first.total > 0;
-
-    final palette = isTotal 
-        ? [
-            const Color(0xFF3F51B5), // Indigo
-            const Color(0xFF673AB7), // Deep Purple
-            const Color(0xFF00BCD4), // Cyan
-            const Color(0xFF03A9F4), // Light Blue
-            const Color(0xFFE91E63), // Pink
-            const Color(0xFF9C27B0), // Purple
-            const Color(0xFF2196F3), // Blue
-          ]
-        : isIncome 
-            ? [
-                const Color(0xFF2E7D32), // Emerald
-                const Color(0xFF00796B), // Teal
-                const Color(0xFF4CAF50), // Green
-                const Color(0xFF009688), // Mint
-                const Color(0xFF81C784), // Light Green
-                const Color(0xFF66BB6A), 
-              ]
-            : [
-                const Color(0xFFC62828), // Deep Red
-                const Color(0xFFD84315), // Deep Orange
-                const Color(0xFFE64A19), // Orange Red
-                const Color(0xFFF4511E), // Coral
-                const Color(0xFFE57373), // Rose
-                const Color(0xFFF57C00), // Orange
-              ];
+    final totals = category.map((item) => item.total).toList();
+    final totalSum = totals.fold<double>(0, (sum, value) => sum + value.abs());
+    final palette = AnalyticsPalette.forFilter(filter, totals);
 
     return ListView.builder(
       padding: EdgeInsets.only(
@@ -71,10 +112,9 @@ class AnalyticsCategoryList extends ConsumerWidget {
         bottom: bottomPadding,
       ),
       clipBehavior: Clip.none,
-      itemCount: state.category.length,
+      itemCount: category.length,
       itemBuilder: (_, index) {
-        final analytics = state.category[index];
-        final color = palette[index % palette.length];
+        final analytics = category[index];
         return AnalyticsCategoryItem(
           onTap: analytics.category?.id == null
               ? null
@@ -82,12 +122,13 @@ class AnalyticsCategoryList extends ConsumerWidget {
                   final args = ref
                       .read(analyticsNotifierProvider.notifier)
                       .buildDetailsArgs(analytics.category!.id);
+                  if (args == null) return;
                   context.push(AppRoute.transactions.path, extra: args);
                 },
           analytics: analytics,
           index: index,
           totalSum: totalSum,
-          categoryColor: color,
+          categoryColor: AnalyticsPalette.colorAt(palette, index),
         );
       },
     );

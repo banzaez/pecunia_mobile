@@ -19,7 +19,12 @@ class AnalyticsBottomOverlay extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final state = ref.watch(analyticsNotifierProvider);
+    final filter = ref.watch(analyticsNotifierProvider.select((s) => s.filter));
+    final date = ref.watch(analyticsNotifierProvider.select((s) => s.date));
+    final period = ref.watch(analyticsNotifierProvider.select((s) => s.period));
+    final valuesYear = ref.watch(analyticsNotifierProvider.select((s) => s.valuesYear));
+    final valuesMonth = ref.watch(analyticsNotifierProvider.select((s) => s.valuesMonth));
+    final valuesDay = ref.watch(analyticsNotifierProvider.select((s) => s.valuesDay));
     final baseColor = homeOverlayBaseColor(context);
     final panelColor = homePanelColor(context);
 
@@ -61,20 +66,20 @@ class AnalyticsBottomOverlay extends ConsumerWidget {
                               : null,
                     ),
                   ),
-                  value: state.filter,
+                  value: filter,
                 ),
                 AppSpaces.v16,
                 PickDate(
                   onChanged: (value, type) =>
                       ref.read(analyticsNotifierProvider.notifier).setDate(value!, type),
-                  initDate: state.date,
+                  initDate: date,
                   enableTime: false,
-                  isYearSelected: state.period == DateType.year,
-                  isMonthSelected: state.period == DateType.month,
-                  isDaySelected: state.period == DateType.day,
-                  valuesYear: state.valuesYear,
-                  valuesMonth: state.valuesMonth,
-                  valuesDay: state.valuesDay,
+                  isYearSelected: period == DateType.year,
+                  isMonthSelected: period == DateType.month,
+                  isDaySelected: period == DateType.day,
+                  valuesYear: valuesYear,
+                  valuesMonth: valuesMonth,
+                  valuesDay: valuesDay,
                 ),
               ],
             ),

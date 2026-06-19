@@ -7,7 +7,7 @@ import 'package:pecunia/screen/analytics/analytics_controller.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/ext_double.dart';
 
-class AnalyticsGraph extends ConsumerWidget {
+class AnalyticsGraph extends ConsumerStatefulWidget {
   const AnalyticsGraph({
     super.key,
     required this.data,
@@ -20,7 +20,14 @@ class AnalyticsGraph extends ConsumerWidget {
   final double totalSum;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AnalyticsGraph> createState() => _AnalyticsGraphState();
+}
+
+class _AnalyticsGraphState extends ConsumerState<AnalyticsGraph> {
+  double? _oldValue;
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
@@ -28,19 +35,24 @@ class AnalyticsGraph extends ConsumerWidget {
     final selectedIndex = ref.watch(selectedCategoryIndexProvider);
 
     // If an item is selected, display its details in the center, otherwise the grand total.
-    final bool hasSelection = selectedIndex != null && selectedIndex >= 0 && selectedIndex < data.length;
+    final bool hasSelection = selectedIndex != null && selectedIndex >= 0 && selectedIndex < widget.data.length;
     final String centerLabel = hasSelection 
-        ? (data[selectedIndex].category?.localizedName(l10n) ?? "").toUpperCase()
+        ? (widget.data[selectedIndex].category?.localizedName(l10n) ?? "").toUpperCase()
         : l10n.analyticsTotalPeriod.toUpperCase();
-    final String centerValue = hasSelection 
-        ? data[selectedIndex].total.formatSum
-        : totalSum.formatSum;
+        
+    final double targetValue = hasSelection 
+        ? widget.data[selectedIndex].total
+        : widget.totalSum;
+
+    // Track begin/end values for animating amount transitions
+    final double beginValue = _oldValue ?? targetValue;
+    _oldValue = targetValue;
 
     return Stack(
       alignment: Alignment.center,
       children: [
         PieChart(
-          key: ValueKey(data.length),
+          key: ValueKey(widget.data.length),
           PieChartData(
             borderData: FlBorderData(show: false),
             sectionsSpace: 3,
@@ -53,7 +65,7 @@ class AnalyticsGraph extends ConsumerWidget {
                   return;
                 }
                 final touchedSectionIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
-                if (touchedSectionIndex >= 0 && touchedSectionIndex < data.length) {
+                if (touchedSectionIndex >= 0 && touchedSectionIndex < widget.data.length) {
                   // Only respond on tap/click
                   if (event is FlTapUpEvent) {
                     final current = ref.read(selectedCategoryIndexProvider);
@@ -66,7 +78,7 @@ class AnalyticsGraph extends ConsumerWidget {
             sections: _graphItem(context, selectedIndex),
           ),
         ),
-        // Central summary text
+        // Central summary text with Odometer animation
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
@@ -82,14 +94,22 @@ class AnalyticsGraph extends ConsumerWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 4),
-              Text(
-                centerValue,
-                style: AppTextStyle.text22w400(
-                  color: isDark ? Colors.white : Colors.black87,
-                ).copyWith(fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              TweenAnimationBuilder<double>(
+                key: ValueKey(centerLabel), // Animates values smoothly when selection transitions
+                duration: const Duration(milliseconds: 350),
+                curve: Curves.easeOutCubic,
+                tween: Tween<double>(begin: beginValue, end: targetValue),
+                builder: (context, value, child) {
+                  return Text(
+                    value.formatSum,
+                    style: AppTextStyle.text22w400(
+                      color: isDark ? Colors.white : Colors.black87,
+                    ).copyWith(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  );
+                },
               ),
             ],
           ),
@@ -99,10 +119,10 @@ class AnalyticsGraph extends ConsumerWidget {
   }
 
   List<PieChartSectionData> _graphItem(BuildContext context, int? selectedIndex) {
-    final bool isIncome = data.isNotEmpty && data.first.total > 0;
+    final bool isIncome = widget.data.isNotEmpty && widget.data.first.total > 0;
     
     // Modern palettes with beautiful, professional color matching
-    final palette = isTotal 
+    final palette = widget.isTotal 
         ? [
             const Color(0xFF3F51B5), // Indigo
             const Color(0xFF673AB7), // Deep Purple
@@ -130,9 +150,9 @@ class AnalyticsGraph extends ConsumerWidget {
                 const Color(0xFFF57C00), // Orange
               ];
 
-    return List.generate(data.length, (index) {
+    return List.generate(widget.data.length, (index) {
       final color = palette[index % palette.length];
-      final item = data[index];
+      final item = widget.data[index];
       final isTouched = index == selectedIndex;
       
       // Enlarge the sector on touch

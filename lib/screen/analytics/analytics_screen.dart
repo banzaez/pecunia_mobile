@@ -14,6 +14,17 @@ class AnalyticsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
 
+    ref.listen<String?>(
+      analyticsNotifierProvider.select((s) => s.error),
+      (prev, next) {
+        if (next == null || next == prev) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(next), backgroundColor: Colors.red),
+        );
+        ref.read(analyticsNotifierProvider.notifier).clearError();
+      },
+    );
+
     return Scaffold(
       extendBody: true,
       appBar: CustomAppBar(title: l10n.analyticsTitle),

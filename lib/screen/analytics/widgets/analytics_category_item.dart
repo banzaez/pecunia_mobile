@@ -62,6 +62,13 @@ class AnalyticsCategoryItem extends ConsumerWidget {
     return Icons.category_rounded;
   }
 
+  int? _getParentCategoryId(int subcategoryId) {
+    if (subcategoryId >= 100 && subcategoryId <= 999) {
+      return subcategoryId ~/ 10;
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
@@ -72,6 +79,17 @@ class AnalyticsCategoryItem extends ConsumerWidget {
     final selectedIndex = ref.watch(selectedCategoryIndexProvider);
     final isSelected = selectedIndex == index;
     
+    // Watch detailed subcategories from notifier
+    final subcategories = ref.watch(analyticsNotifierProvider.select((s) => s.subcategory));
+    
+    // Filter subcategories that belong to this category
+    final parentId = analytics.category?.id;
+    final matchingSubcategories = parentId == null 
+        ? <Analytics>[]
+        : subcategories.where((subcat) => 
+            subcat.category?.id != null && _getParentCategoryId(subcat.category!.id) == parentId
+          ).toList();
+
     // Use categoryColor from chart if available, otherwise fallback to accentColor
     final displayColor = categoryColor ?? accentColor;
     
@@ -242,6 +260,87 @@ class AnalyticsCategoryItem extends ConsumerWidget {
                         ),
                       ],
                     ),
+                  ],
+                  // Subcategories breakdown when expanded
+                  if (isSelected && matchingSubcategories.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    const Divider(height: 1, thickness: 0.5),
+                    const SizedBox(height: 8),
+                    ...matchingSubcategories.map((subcat) {
+                      final subcatPercentage = analytics.total.abs() > 0 
+                          ? (subcat.total.abs() / analytics.total.abs()) * 100 
+                          : 0.0;
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const SizedBox(width: 4),
+                                Icon(
+                                  _getCategoryIcon(subcat.category?.name),
+                                  color: displayColor.withValues(alpha: 0.7),
+                                  size: 13,
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    subcat.category?.localizedName(l10n) ?? "",
+                                    style: AppTextStyle.text12w400(
+                                      color: isDark ? Colors.white70 : Colors.black87,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                Text(
+                                  subcat.total.formatSum,
+                                  style: AppTextStyle.text12w600(
+                                    color: displayColor,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  "${subcatPercentage.toStringAsFixed(0)}%",
+                                  style: AppTextStyle.text10w600(
+                                    color: isDark ? Colors.white38 : Colors.black38,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 5),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4),
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    height: 2,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: isDark 
+                                          ? Colors.white.withValues(alpha: 0.04) 
+                                          : Colors.black.withValues(alpha: 0.03),
+                                      borderRadius: BorderRadius.circular(1),
+                                    ),
+                                  ),
+                                  FractionallySizedBox(
+                                    widthFactor: subcatPercentage / 100,
+                                    child: Container(
+                                      height: 2,
+                                      decoration: BoxDecoration(
+                                        color: displayColor.withValues(alpha: 0.7),
+                                        borderRadius: BorderRadius.circular(1),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
                   ],
                 ],
               ),
