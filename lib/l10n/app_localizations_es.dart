@@ -520,4 +520,40 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get driveScopeError =>
       'No se concedió acceso a Google Drive. Cierra sesión e inicia sesión de nuevo.';
+
+  @override
+  String get monthlySummary => 'Resumen mensual';
+
+  @override
+  String get searchPlaceholder => 'Buscar por descripción, categoría o monto...';
+
+  @override
+  String get emptySearchTitle => 'No se encontraron resultados';
+
+  @override
+  String get emptySearchDesc =>
+      'Intente cambiar el término de búsqueda o restablecer los filtros.';
+
+  @override
+  String get emptyTransactionsTitle => 'No hay transacciones';
+
+  @override
+  String get emptyTransactionsDesc =>
+      'No se encontraron operaciones en esta categoría para el período seleccionado.';
+
+  @override
+  String get totalForPeriod => 'Total del periodo';
+
+  @override
+  String get dateToday => 'Hoy';
+
+  @override
+  String get dateYesterday => 'Ayer';
+
+  @override
+  String get emptyHistoryTitle => 'El historial está vacío';
+
+  @override
+  String get emptyHistoryDesc =>
+      'Aquí se mostrarán sus transacciones recientes para esta billetera.';
 }

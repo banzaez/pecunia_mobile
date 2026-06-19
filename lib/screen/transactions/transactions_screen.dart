@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pecunia/l10n/app_localizations.dart';
@@ -10,8 +8,10 @@ import 'package:pecunia/providers/transaction_notifier.dart';
 import 'package:pecunia/screen/transactions/transactions_arguments.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
+import 'package:pecunia/util/category_icon_helper.dart';
 import 'package:pecunia/util/ext_double.dart';
 import 'package:pecunia/widgets/custom_app_bar.dart';
+import 'package:pecunia/widgets/staggered_fade_in.dart';
 import 'package:pecunia/widgets/transaction_item.dart';
 
 class TransactionsScreen extends ConsumerStatefulWidget {
@@ -95,111 +95,6 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
     }).toList();
   }
 
-  IconData _getCategoryIcon(String? name) {
-    if (name == null) return Icons.category_rounded;
-    final lower = name.toLowerCase();
-
-    if (lower.contains('salary')) return Icons.payments_rounded;
-    if (lower.contains('bonus')) return Icons.card_giftcard_rounded;
-    if (lower.contains('gift')) return Icons.card_giftcard_rounded;
-    if (lower.contains('invest')) return Icons.trending_up_rounded;
-    if (lower.contains('rent')) return Icons.home_work_rounded;
-    if (lower.contains('freelance')) return Icons.laptop_mac_rounded;
-    if (lower.contains('dividend')) return Icons.account_balance_wallet_rounded;
-    if (lower.contains('cashback')) return Icons.monetization_on_rounded;
-    if (lower.contains('income')) return Icons.arrow_downward_rounded;
-
-    if (lower.contains('food') || lower.contains('restaurant') || lower.contains('cafe')) return Icons.restaurant_rounded;
-    if (lower.contains('grocer')) return Icons.local_grocery_store_rounded;
-    if (lower.contains('publictransport') || lower.contains('bus') || lower.contains('metro')) return Icons.directions_bus_rounded;
-    if (lower.contains('fuel')) return Icons.local_gas_station_rounded;
-    if (lower.contains('parking')) return Icons.local_parking_rounded;
-    if (lower.contains('transport') || lower.contains('auto') || lower.contains('car')) return Icons.directions_car_rounded;
-    if (lower.contains('utilities') || lower.contains('utility')) return Icons.water_drop_rounded;
-    if (lower.contains('repair') || lower.contains('maintenance')) return Icons.build_rounded;
-    if (lower.contains('housing') || lower.contains('mortgage')) return Icons.home_rounded;
-    if (lower.contains('clothing') || lower.contains('footwear') || lower.contains('shop')) return Icons.checkroom_rounded;
-    if (lower.contains('medicine') || lower.contains('doctor') || lower.contains('health')) return Icons.medical_services_rounded;
-    if (lower.contains('insurance')) return Icons.security_rounded;
-    if (lower.contains('movie') || lower.contains('theater') || lower.contains('entertainment') || lower.contains('hobby')) return Icons.sports_esports_rounded;
-    if (lower.contains('travel') || lower.contains('vacation')) return Icons.flight_takeoff_rounded;
-    if (lower.contains('sport') || lower.contains('fitness') || lower.contains('gym')) return Icons.fitness_center_rounded;
-    if (lower.contains('education') || lower.contains('course') || lower.contains('learn')) return Icons.school_rounded;
-    if (lower.contains('loan') || lower.contains('debt')) return Icons.money_off_rounded;
-    if (lower.contains('pet') || lower.contains('vet')) return Icons.pets_rounded;
-    if (lower.contains('charity')) return Icons.favorite_rounded;
-    if (lower.contains('internet') || lower.contains('communication') || lower.contains('phone')) return Icons.wifi_rounded;
-    if (lower.contains('transfer')) return Icons.swap_horiz_rounded;
-
-    return Icons.category_rounded;
-  }
-
-  String _getSearchPlaceholder(String locale) {
-    return switch (locale) {
-      'ru' => 'Поиск по описанию, категории или сумме...',
-      'uk' => 'Пошук за описом, категорією або сумою...',
-      'pl' => 'Szukaj według opisu, kategorii lub kwoty...',
-      'es' => 'Buscar por descripción, categoría o monto...',
-      'fr' => 'Recherche par description, catégorie ou montant...',
-      _ => 'Search by description, category, or amount...',
-    };
-  }
-
-  String _getEmptyTitle(String locale, bool isSearch) {
-    if (isSearch) {
-      return switch (locale) {
-        'ru' => 'Ничего не найдено',
-        'uk' => 'Нічого не знайдено',
-        'pl' => 'Nic nie znaleziono',
-        'es' => 'No se encontraron resultados',
-        'fr' => 'Aucun résultat trouvé',
-        _ => 'No results found',
-      };
-    } else {
-      return switch (locale) {
-        'ru' => 'Транзакции отсутствуют',
-        'uk' => 'Транзакції відсутні',
-        'pl' => 'Brak transakcji',
-        'es' => 'No hay transacciones',
-        'fr' => 'Aucune transaction',
-        _ => 'No transactions',
-      };
-    }
-  }
-
-  String _getEmptyDesc(String locale, bool isSearch) {
-    if (isSearch) {
-      return switch (locale) {
-        'ru' => 'Попробуйте изменить поисковый запрос или сбросить фильтры.',
-        'uk' => 'Спробуйте змінити пошуковий запит або скинути фільтри.',
-        'pl' => 'Spróbuj zmienić zapytanie lub zresetować filtry.',
-        'es' => 'Intente cambiar el término de búsqueda o restablecer los filtros.',
-        'fr' => 'Essayez de modifier votre recherche ou de réinitialiser les filtres.',
-        _ => 'Try changing your search query or clearing the filter.',
-      };
-    } else {
-      return switch (locale) {
-        'ru' => 'В этой категории за выбранный период не найдено ни одной операции.',
-        'uk' => 'У цій категорії за вибраний період не знайдено жодної операції.',
-        'pl' => 'W tej kategorii w wybranym okresie nie znaleziono żadnych operacji.',
-        'es' => 'No se encontraron operaciones en esta categoría para el período seleccionado.',
-        'fr' => 'Aucune opération trouvée dans cette catégorie pour la période sélectionnée.',
-        _ => 'No operations found in this category for the selected period.',
-      };
-    }
-  }
-
-  String _getTotalLabel(String locale) {
-    return switch (locale) {
-      'ru' => 'Всего за период',
-      'uk' => 'Всього за період',
-      'pl' => 'Łącznie za okres',
-      'es' => 'Total del periodo',
-      'fr' => 'Total pour la période',
-      _ => 'Total for period',
-    };
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -215,10 +110,8 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    final locale = Localizations.localeOf(context).languageCode;
-
     if (_transactions.isEmpty) {
-      return _emptyState(locale, isSearchEmpty: false);
+      return _emptyState(l10n, isSearchEmpty: false);
     }
 
     final filtered = _getFilteredTransactions(l10n);
@@ -229,14 +122,17 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
     final isIncome = totalAmount != 0 
         ? totalAmount > 0 
         : FinanceCategories.incomeCategories.any((c) => c.id == category?.id);
-    final accentColor = isIncome ? const Color(0xFF2E7D32) : const Color(0xFFC62828);
 
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
+    final accentColor = isIncome 
+        ? (isDark ? const Color(0xFF30D158) : const Color(0xFF34C759)) 
+        : (isDark ? Colors.white : Colors.black87);
+
     final cardBgColor = isDark 
-        ? Colors.white.withValues(alpha: 0.025) 
-        : Colors.white;
+        ? Colors.white.withValues(alpha: 0.015) 
+        : Colors.white.withValues(alpha: 0.7);
     final borderColor = isDark
         ? Colors.white.withValues(alpha: 0.05)
         : Colors.black.withValues(alpha: 0.04);
@@ -279,7 +175,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
-                      _getCategoryIcon(category?.name),
+                      CategoryIconHelper.getIcon(category?.name),
                       color: accentColor,
                       size: 24,
                     ),
@@ -322,7 +218,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      _getTotalLabel(locale),
+                      l10n.totalForPeriod,
                       style: AppTextStyle.text10w400(
                         color: isDark ? Colors.white38 : Colors.black38,
                       ),
@@ -352,7 +248,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
                 color: isDark ? Colors.white : Colors.black87,
               ),
               decoration: InputDecoration(
-                hintText: _getSearchPlaceholder(locale),
+                hintText: l10n.searchPlaceholder,
                 hintStyle: AppTextStyle.text14w400(
                   color: isDark ? Colors.white30 : Colors.black38,
                 ),
@@ -380,13 +276,13 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
         // 3. Transactions List / Empty State
         Expanded(
           child: filtered.isEmpty
-              ? _emptyState(locale, isSearchEmpty: true)
+              ? _emptyState(l10n, isSearchEmpty: true)
               : ListView.builder(
                   padding: const EdgeInsets.only(bottom: 16, top: 4),
                   itemCount: filtered.length,
                   itemBuilder: (_, index) {
                     final item = filtered[index];
-                    return _StaggeredFadeIn(
+                    return StaggeredFadeIn(
                       key: ValueKey(item.id),
                       index: index,
                       child: TransactionItem(
@@ -403,7 +299,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
     );
   }
 
-  Widget _emptyState(String locale, {required bool isSearchEmpty}) {
+  Widget _emptyState(AppLocalizations l10n, {required bool isSearchEmpty}) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final accentColor = isSearchEmpty ? const Color(0xFF9E9E9E) : const Color(0xFF3F51B5);
@@ -453,7 +349,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
               AppSpaces.v24,
               // Main message
               Text(
-                _getEmptyTitle(locale, isSearchEmpty),
+                isSearchEmpty ? l10n.emptySearchTitle : l10n.emptyTransactionsTitle,
                 style: AppTextStyle.text15w600(
                   color: isDark ? Colors.white : Colors.black87,
                 ),
@@ -462,7 +358,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
               AppSpaces.v8,
               // Helpful subtitle
               Text(
-                _getEmptyDesc(locale, isSearchEmpty),
+                isSearchEmpty ? l10n.emptySearchDesc : l10n.emptyTransactionsDesc,
                 style: AppTextStyle.text12w400(
                   color: isDark ? Colors.white38 : Colors.black38,
                 ),
@@ -475,75 +371,3 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
     );
   }
 }
-
-class _StaggeredFadeIn extends StatefulWidget {
-  const _StaggeredFadeIn({
-    super.key,
-    required this.child,
-    required this.index,
-  });
-
-  final Widget child;
-  final int index;
-
-  @override
-  State<_StaggeredFadeIn> createState() => _StaggeredFadeInState();
-}
-
-class _StaggeredFadeInState extends State<_StaggeredFadeIn>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-  late final Animation<double> _opacityAnimation;
-  late final Animation<Offset> _slideAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
-
-    _opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
-      ),
-    );
-
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0.0, 0.15),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.0, 1.0, curve: Curves.easeOutCubic),
-      ),
-    );
-
-    final delay = Duration(milliseconds: min(widget.index * 40, 300));
-    Future.delayed(delay, () {
-      if (mounted) {
-        _controller.forward();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _opacityAnimation,
-      child: SlideTransition(
-        position: _slideAnimation,
-        child: widget.child,
-      ),
-    );
-  }
-}
-

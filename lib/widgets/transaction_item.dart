@@ -1,10 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/models/transaction.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
+import 'package:pecunia/util/category_icon_helper.dart';
 import 'package:pecunia/util/ext_datetime.dart';
 import 'package:pecunia/util/ext_double.dart';
 import 'package:pecunia/widgets/dialogs/confirm_delete_dialog.dart';
@@ -16,6 +15,7 @@ class TransactionItem extends StatelessWidget {
     required this.transaction,
     required this.isRoundUp,
     required this.onDelete,
+    /// Если true, убирает горизонтальные отступы контейнера (для встроенных списков).
     this.edgeToEdge = false,
   });
 
@@ -24,51 +24,20 @@ class TransactionItem extends StatelessWidget {
   final Future<bool> Function() onDelete;
   final bool edgeToEdge;
 
-  IconData _getCategoryIcon(String? name) {
-    if (name == null) return Icons.category_rounded;
-    final lower = name.toLowerCase();
-    
-    if (lower.contains('salary')) return Icons.payments_rounded;
-    if (lower.contains('bonus')) return Icons.card_giftcard_rounded;
-    if (lower.contains('gift')) return Icons.card_giftcard_rounded;
-    if (lower.contains('invest')) return Icons.trending_up_rounded;
-    if (lower.contains('rent')) return Icons.home_work_rounded;
-    if (lower.contains('freelance')) return Icons.laptop_mac_rounded;
-    if (lower.contains('dividend')) return Icons.account_balance_wallet_rounded;
-    if (lower.contains('cashback')) return Icons.monetization_on_rounded;
-    if (lower.contains('income')) return Icons.arrow_downward_rounded;
-    
-    if (lower.contains('food') || lower.contains('restaurant') || lower.contains('cafe')) return Icons.restaurant_rounded;
-    if (lower.contains('grocer')) return Icons.local_grocery_store_rounded;
-    if (lower.contains('publictransport') || lower.contains('bus') || lower.contains('metro')) return Icons.directions_bus_rounded;
-    if (lower.contains('fuel')) return Icons.local_gas_station_rounded;
-    if (lower.contains('parking')) return Icons.local_parking_rounded;
-    if (lower.contains('transport') || lower.contains('auto') || lower.contains('car')) return Icons.directions_car_rounded;
-    if (lower.contains('utilities') || lower.contains('utility')) return Icons.water_drop_rounded;
-    if (lower.contains('repair') || lower.contains('maintenance')) return Icons.build_rounded;
-    if (lower.contains('housing') || lower.contains('mortgage')) return Icons.home_rounded;
-    if (lower.contains('clothing') || lower.contains('footwear') || lower.contains('shop')) return Icons.checkroom_rounded;
-    if (lower.contains('medicine') || lower.contains('doctor') || lower.contains('health')) return Icons.medical_services_rounded;
-    if (lower.contains('insurance')) return Icons.security_rounded;
-    if (lower.contains('movie') || lower.contains('theater') || lower.contains('entertainment') || lower.contains('hobby')) return Icons.sports_esports_rounded;
-    if (lower.contains('travel') || lower.contains('vacation')) return Icons.flight_takeoff_rounded;
-    if (lower.contains('sport') || lower.contains('fitness') || lower.contains('gym')) return Icons.fitness_center_rounded;
-    if (lower.contains('education') || lower.contains('course') || lower.contains('learn')) return Icons.school_rounded;
-    if (lower.contains('loan') || lower.contains('debt')) return Icons.money_off_rounded;
-    if (lower.contains('pet') || lower.contains('vet')) return Icons.pets_rounded;
-    if (lower.contains('charity')) return Icons.favorite_rounded;
-    if (lower.contains('internet') || lower.contains('communication') || lower.contains('phone')) return Icons.wifi_rounded;
-    if (lower.contains('transfer')) return Icons.swap_horiz_rounded;
-    
-    return Icons.category_rounded;
-  }
 
   @override
   Widget build(BuildContext context) {
     final isIncome = transaction.amount > 0;
-    final accentColor = isIncome ? const Color(0xFF2E7D32) : const Color(0xFFC62828); // generic green/red
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
+    final amountColor = isIncome 
+        ? (isDark ? const Color(0xFF30D158) : const Color(0xFF34C759)) 
+        : (isDark ? Colors.white : Colors.black87);
+
+    final iconColor = isDark ? Colors.white70 : Colors.black87;
+    final iconBgColor = isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.03);
+    final iconBorderColor = isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.08);
 
     final cardBgColor = isDark 
         ? Colors.white.withValues(alpha: 0.03) 
@@ -97,41 +66,31 @@ class TransactionItem extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             onTap: () => SettingTransaction.setting(context, transaction.type, transaction),
-            splashColor: accentColor.withValues(alpha: 0.08),
-            highlightColor: accentColor.withValues(alpha: 0.04),
+            splashColor: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.04),
+            highlightColor: (isDark ? Colors.white : Colors.black).withValues(alpha: 0.02),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Row(
                 children: [
-                  // Vertical accent direction bar
-                  Container(
-                    width: 3.5,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: accentColor,
-                      borderRadius: BorderRadius.circular(1.75),
-                    ),
-                  ),
-                  AppSpaces.h12,
-                  // Double ring category icon style
+                  // Double ring category icon style (monochrome/neutral)
                   Container(
                     padding: const EdgeInsets.all(1.5),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: accentColor.withValues(alpha: 0.25),
+                        color: iconBorderColor,
                         width: 1,
                       ),
                     ),
                     child: Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: accentColor.withValues(alpha: 0.08),
+                        color: iconBgColor,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
-                        _getCategoryIcon(transaction.category?.name),
-                        color: accentColor,
+                        CategoryIconHelper.getIcon(transaction.category?.name),
+                        color: iconColor,
                         size: 16,
                       ),
                     ),
@@ -160,7 +119,7 @@ class TransactionItem extends StatelessWidget {
                       Text(
                         (isIncome ? "+" : "") + transaction.amount.formatSumCustom(roundUp: isRoundUp),
                         style: AppTextStyle.text15w600(
-                          color: accentColor,
+                          color: amountColor,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -175,6 +134,8 @@ class TransactionItem extends StatelessWidget {
       ),
     );
 
+    final horizontalPadding = edgeToEdge ? 0.0 : 16.0;
+
     return Dismissible(
       key: Key(transaction.id.toString()),
       confirmDismiss: (_) => _confirmDismiss(context),
@@ -184,13 +145,13 @@ class TransactionItem extends StatelessWidget {
           color: Colors.red.shade800,
           borderRadius: BorderRadius.circular(12),
         ),
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        margin: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 4),
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
         child: const Icon(Icons.delete_outline, color: Colors.white),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 4),
         child: cardContent,
       ),
     );
@@ -223,11 +184,10 @@ class TransactionItem extends StatelessWidget {
 
   Widget _description(BuildContext context) {
     if (transaction.description.isEmpty) return const SizedBox.shrink();
-    var chars = transaction.description.substring(0, min(transaction.description.length, 25));
-    chars = chars + (chars.length < transaction.description.length ? "..." : "");
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    // Используем Flutter overflow вместо ручной обрезки строки
     return Text(
-      chars,
+      transaction.description,
       style: AppTextStyle.text12w400(
         color: isDark ? Colors.white60 : Colors.black54,
       ),

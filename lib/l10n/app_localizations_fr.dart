@@ -521,5 +521,41 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get driveScopeError =>
-      'L\'accès à Google Drive n\'a pas été accordé. Déconnectez-vous et reconnectez-vous.';
+      "L'accès à Google Drive n'a pas été accordé. Déconnectez-vous et reconnectez-vous.";
+
+  @override
+  String get monthlySummary => 'Résumé mensuel';
+
+  @override
+  String get searchPlaceholder => 'Recherche par description, catégorie ou montant...';
+
+  @override
+  String get emptySearchTitle => 'Aucun résultat trouvé';
+
+  @override
+  String get emptySearchDesc =>
+      'Essayez de modifier votre recherche ou de réinitialiser les filtres.';
+
+  @override
+  String get emptyTransactionsTitle => 'Aucune transaction';
+
+  @override
+  String get emptyTransactionsDesc =>
+      'Aucune opération trouvée dans cette catégorie pour la période sélectionnée.';
+
+  @override
+  String get totalForPeriod => 'Total pour la période';
+
+  @override
+  String get dateToday => "Aujourd'hui";
+
+  @override
+  String get dateYesterday => 'Hier';
+
+  @override
+  String get emptyHistoryTitle => "L'historique est vide";
+
+  @override
+  String get emptyHistoryDesc =>
+      'Vos transactions récentes pour ce portefeuille apparaîtront ici.';
 }

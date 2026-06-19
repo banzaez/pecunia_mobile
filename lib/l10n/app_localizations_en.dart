@@ -517,4 +517,40 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get driveScopeError =>
       'Google Drive access was not granted. Sign out and sign in again.';
+
+  @override
+  String get monthlySummary => 'Monthly summary';
+
+  @override
+  String get searchPlaceholder => 'Search by description, category, or amount...';
+
+  @override
+  String get emptySearchTitle => 'No results found';
+
+  @override
+  String get emptySearchDesc =>
+      'Try changing your search query or clearing the filter.';
+
+  @override
+  String get emptyTransactionsTitle => 'No transactions';
+
+  @override
+  String get emptyTransactionsDesc =>
+      'No operations found in this category for the selected period.';
+
+  @override
+  String get totalForPeriod => 'Total for period';
+
+  @override
+  String get dateToday => 'Today';
+
+  @override
+  String get dateYesterday => 'Yesterday';
+
+  @override
+  String get emptyHistoryTitle => 'History is empty';
+
+  @override
+  String get emptyHistoryDesc =>
+      'Your recent transactions for this wallet will appear here.';
 }

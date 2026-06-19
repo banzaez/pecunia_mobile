@@ -1101,6 +1101,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Google Drive access was not granted. Sign out and sign in again.'**
   String get driveScopeError;
+
+  /// Summary label on the home screen header card.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly summary'**
+  String get monthlySummary;
+
+  /// Placeholder text for the transaction search field.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by description, category, or amount...'**
+  String get searchPlaceholder;
+
+  /// Title shown when search yields no results.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get emptySearchTitle;
+
+  /// Description shown when search yields no results.
+  ///
+  /// In en, this message translates to:
+  /// **'Try changing your search query or clearing the filter.'**
+  String get emptySearchDesc;
+
+  /// Title shown when a category has no transactions for the period.
+  ///
+  /// In en, this message translates to:
+  /// **'No transactions'**
+  String get emptyTransactionsTitle;
+
+  /// Description shown when a category has no transactions for the period.
+  ///
+  /// In en, this message translates to:
+  /// **'No operations found in this category for the selected period.'**
+  String get emptyTransactionsDesc;
+
+  /// Label for the total sum shown in the transactions screen summary card.
+  ///
+  /// In en, this message translates to:
+  /// **'Total for period'**
+  String get totalForPeriod;
+
+  /// Label for today in date headers.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get dateToday;
+
+  /// Label for yesterday in date headers.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get dateYesterday;
+
+  /// Title shown when transaction history is empty.
+  ///
+  /// In en, this message translates to:
+  /// **'History is empty'**
+  String get emptyHistoryTitle;
+
+  /// Description shown when transaction history is empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Your recent transactions for this wallet will appear here.'**
+  String get emptyHistoryDesc;
 }
 
 class _AppLocalizationsDelegate

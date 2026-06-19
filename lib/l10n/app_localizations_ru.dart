@@ -518,4 +518,40 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get driveScopeError =>
       'Доступ к Google Drive не предоставлен. Выйдите и войдите снова.';
+
+  @override
+  String get monthlySummary => 'Сводка за месяц';
+
+  @override
+  String get searchPlaceholder => 'Поиск по описанию, категории или сумме...';
+
+  @override
+  String get emptySearchTitle => 'Ничего не найдено';
+
+  @override
+  String get emptySearchDesc =>
+      'Попробуйте изменить поисковый запрос или сбросить фильтры.';
+
+  @override
+  String get emptyTransactionsTitle => 'Транзакции отсутствуют';
+
+  @override
+  String get emptyTransactionsDesc =>
+      'В этой категории за выбранный период не найдено ни одной операции.';
+
+  @override
+  String get totalForPeriod => 'Всего за период';
+
+  @override
+  String get dateToday => 'Сегодня';
+
+  @override
+  String get dateYesterday => 'Вчера';
+
+  @override
+  String get emptyHistoryTitle => 'История пуста';
+
+  @override
+  String get emptyHistoryDesc =>
+      'Здесь будут отображаться ваши недавние транзакции по этому кошельку.';
 }

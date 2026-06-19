@@ -517,4 +517,40 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get driveScopeError =>
       'Brak dostępu do Google Drive. Wyloguj się i zaloguj ponownie.';
+
+  @override
+  String get monthlySummary => 'Podsumowanie miesiąca';
+
+  @override
+  String get searchPlaceholder => 'Szukaj według opisu, kategorii lub kwoty...';
+
+  @override
+  String get emptySearchTitle => 'Nic nie znaleziono';
+
+  @override
+  String get emptySearchDesc =>
+      'Spróbuj zmienić zapytanie lub zresetować filtry.';
+
+  @override
+  String get emptyTransactionsTitle => 'Brak transakcji';
+
+  @override
+  String get emptyTransactionsDesc =>
+      'W tej kategorii w wybranym okresie nie znaleziono żadnych operacji.';
+
+  @override
+  String get totalForPeriod => 'Łącznie za okres';
+
+  @override
+  String get dateToday => 'Dzisiaj';
+
+  @override
+  String get dateYesterday => 'Wczoraj';
+
+  @override
+  String get emptyHistoryTitle => 'Historia jest pusta';
+
+  @override
+  String get emptyHistoryDesc =>
+      'Tutaj będą wyświetlane Twoje ostatnie transakcje dla tego portfela.';
 }

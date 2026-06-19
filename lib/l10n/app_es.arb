@@ -187,5 +187,16 @@
   "routeErrorTitle": "Página no encontrada",
   "routeErrorHome": "Ir al inicio",
   "walletDeleteLastError": "No se puede eliminar la última billetera",
-  "driveScopeError": "No se concedió acceso a Google Drive. Cierra sesión e inicia sesión de nuevo."
+  "driveScopeError": "No se concedió acceso a Google Drive. Cierra sesión e inicia sesión de nuevo.",
+  "monthlySummary": "Resumen mensual",
+  "searchPlaceholder": "Buscar por descripción, categoría o monto...",
+  "emptySearchTitle": "No se encontraron resultados",
+  "emptySearchDesc": "Intente cambiar el término de búsqueda o restablecer los filtros.",
+  "emptyTransactionsTitle": "No hay transacciones",
+  "emptyTransactionsDesc": "No se encontraron operaciones en esta categoría para el período seleccionado.",
+  "totalForPeriod": "Total del periodo",
+  "dateToday": "Hoy",
+  "dateYesterday": "Ayer",
+  "emptyHistoryTitle": "El historial está vacío",
+  "emptyHistoryDesc": "Aquí se mostrarán sus transacciones recientes para esta billetera."
 }

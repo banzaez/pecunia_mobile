@@ -187,5 +187,16 @@
   "routeErrorTitle": "Nie znaleziono strony",
   "routeErrorHome": "Strona główna",
   "walletDeleteLastError": "Nie można usunąć ostatniego portfela",
-  "driveScopeError": "Brak dostępu do Google Drive. Wyloguj się i zaloguj ponownie."
+  "driveScopeError": "Brak dostępu do Google Drive. Wyloguj się i zaloguj ponownie.",
+  "monthlySummary": "Podsumowanie miesiąca",
+  "searchPlaceholder": "Szukaj według opisu, kategorii lub kwoty...",
+  "emptySearchTitle": "Nic nie znaleziono",
+  "emptySearchDesc": "Spróbuj zmienić zapytanie lub zresetować filtry.",
+  "emptyTransactionsTitle": "Brak transakcji",
+  "emptyTransactionsDesc": "W tej kategorii w wybranym okresie nie znaleziono żadnych operacji.",
+  "totalForPeriod": "Łącznie za okres",
+  "dateToday": "Dzisiaj",
+  "dateYesterday": "Wczoraj",
+  "emptyHistoryTitle": "Historia jest pusta",
+  "emptyHistoryDesc": "Tutaj będą wyświetlane Twoje ostatnie transakcje dla tego portfela."
 }

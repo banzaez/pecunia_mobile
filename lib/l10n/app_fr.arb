@@ -187,5 +187,16 @@
   "routeErrorTitle": "Page introuvable",
   "routeErrorHome": "Accueil",
   "walletDeleteLastError": "Impossible de supprimer le dernier portefeuille",
-  "driveScopeError": "L'accès à Google Drive n'a pas été accordé. Déconnectez-vous et reconnectez-vous."
+  "driveScopeError": "L'accès à Google Drive n'a pas été accordé. Déconnectez-vous et reconnectez-vous.",
+  "monthlySummary": "Résumé mensuel",
+  "searchPlaceholder": "Recherche par description, catégorie ou montant...",
+  "emptySearchTitle": "Aucun résultat trouvé",
+  "emptySearchDesc": "Essayez de modifier votre recherche ou de réinitialiser les filtres.",
+  "emptyTransactionsTitle": "Aucune transaction",
+  "emptyTransactionsDesc": "Aucune opération trouvée dans cette catégorie pour la période sélectionnée.",
+  "totalForPeriod": "Total pour la période",
+  "dateToday": "Aujourd'hui",
+  "dateYesterday": "Hier",
+  "emptyHistoryTitle": "L'historique est vide",
+  "emptyHistoryDesc": "Vos transactions récentes pour ce portefeuille apparaîtront ici."
 }

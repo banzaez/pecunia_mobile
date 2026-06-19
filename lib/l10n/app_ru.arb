@@ -187,5 +187,16 @@
   "routeErrorTitle": "Страница не найдена",
   "routeErrorHome": "На главную",
   "walletDeleteLastError": "Нельзя удалить последний кошелёк",
-  "driveScopeError": "Доступ к Google Drive не предоставлен. Выйдите и войдите снова."
+  "driveScopeError": "Доступ к Google Drive не предоставлен. Выйдите и войдите снова.",
+  "monthlySummary": "Сводка за месяц",
+  "searchPlaceholder": "Поиск по описанию, категории или сумме...",
+  "emptySearchTitle": "Ничего не найдено",
+  "emptySearchDesc": "Попробуйте изменить поисковый запрос или сбросить фильтры.",
+  "emptyTransactionsTitle": "Транзакции отсутствуют",
+  "emptyTransactionsDesc": "В этой категории за выбранный период не найдено ни одной операции.",
+  "totalForPeriod": "Всего за период",
+  "dateToday": "Сегодня",
+  "dateYesterday": "Вчера",
+  "emptyHistoryTitle": "История пуста",
+  "emptyHistoryDesc": "Здесь будут отображаться ваши недавние транзакции по этому кошельку."
 }

@@ -188,5 +188,16 @@
   "routeErrorTitle": "Page not found",
   "routeErrorHome": "Go to home",
   "walletDeleteLastError": "Cannot delete the last wallet",
-  "driveScopeError": "Google Drive access was not granted. Sign out and sign in again."
+  "driveScopeError": "Google Drive access was not granted. Sign out and sign in again.",
+  "monthlySummary": "Monthly summary",
+  "searchPlaceholder": "Search by description, category, or amount...",
+  "emptySearchTitle": "No results found",
+  "emptySearchDesc": "Try changing your search query or clearing the filter.",
+  "emptyTransactionsTitle": "No transactions",
+  "emptyTransactionsDesc": "No operations found in this category for the selected period.",
+  "totalForPeriod": "Total for period",
+  "dateToday": "Today",
+  "dateYesterday": "Yesterday",
+  "emptyHistoryTitle": "History is empty",
+  "emptyHistoryDesc": "Your recent transactions for this wallet will appear here."
 }

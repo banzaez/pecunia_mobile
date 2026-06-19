@@ -187,5 +187,16 @@
   "routeErrorTitle": "Сторінку не знайдено",
   "routeErrorHome": "На головну",
   "walletDeleteLastError": "Неможливо видалити останній гаманець",
-  "driveScopeError": "Доступ до Google Drive не надано. Вийдіть і увійдіть знову."
+  "driveScopeError": "Доступ до Google Drive не надано. Вийдіть і увійдіть знову.",
+  "monthlySummary": "Зведення за місяць",
+  "searchPlaceholder": "Пошук за описом, категорією або сумою...",
+  "emptySearchTitle": "Нічого не знайдено",
+  "emptySearchDesc": "Спробуйте змінити пошуковий запит або скинути фільтри.",
+  "emptyTransactionsTitle": "Транзакції відсутні",
+  "emptyTransactionsDesc": "У цій категорії за вибраний період не знайдено жодної операції.",
+  "totalForPeriod": "Всього за період",
+  "dateToday": "Сьогодні",
+  "dateYesterday": "Вчора",
+  "emptyHistoryTitle": "Історія порожня",
+  "emptyHistoryDesc": "Тут відображатимуться ваші нещодавні транзакції для цього гаманця."
 }

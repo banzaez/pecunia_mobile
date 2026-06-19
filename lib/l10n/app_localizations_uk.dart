@@ -518,4 +518,40 @@ class AppLocalizationsUk extends AppLocalizations {
   @override
   String get driveScopeError =>
       'Доступ до Google Drive не надано. Вийдіть і увійдіть знову.';
+
+  @override
+  String get monthlySummary => 'Зведення за місяць';
+
+  @override
+  String get searchPlaceholder => 'Пошук за описом, категорією або сумою...';
+
+  @override
+  String get emptySearchTitle => 'Нічого не знайдено';
+
+  @override
+  String get emptySearchDesc =>
+      'Спробуйте змінити пошуковий запит або скинути фільтри.';
+
+  @override
+  String get emptyTransactionsTitle => 'Транзакції відсутні';
+
+  @override
+  String get emptyTransactionsDesc =>
+      'У цій категорії за вибраний період не знайдено жодної операції.';
+
+  @override
+  String get totalForPeriod => 'Всього за період';
+
+  @override
+  String get dateToday => 'Сьогодні';
+
+  @override
+  String get dateYesterday => 'Вчора';
+
+  @override
+  String get emptyHistoryTitle => 'Історія порожня';
+
+  @override
+  String get emptyHistoryDesc =>
+      'Тут відображатимуться ваші нещодавні транзакції для цього гаманця.';
 }
