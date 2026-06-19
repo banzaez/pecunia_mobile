@@ -26,11 +26,15 @@ class AnalyticsGraph extends StatelessWidget {
 
   // ----------ITEM------------------------------------------------------------------------------
 
-  Widget _badge({required String name, required Color color}) => Container(
+  Widget _badge({required BuildContext context, required String name, required Color color}) =>
+      Container(
         decoration: BoxDecoration(
           color: color,
-          border: AppBorderStyle.borderSideBox,
           borderRadius: AppBorderStyle.borderRadius,
+          border: Border.all(
+            color: Colors.black.withValues(alpha: 0.12),
+            width: 1,
+          ),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Text(name, style: AppTextStyle.text12w600(color: Colors.black)),
@@ -43,7 +47,11 @@ class AnalyticsGraph extends StatelessWidget {
       final item = data[index];
       return PieChartSectionData(
         color: background,
-        badgeWidget: _badge(name: item.category?.localizedName(l10n) ?? "", color: background),
+        badgeWidget: _badge(
+          context: context,
+          name: item.category?.localizedName(l10n) ?? "",
+          color: background,
+        ),
         badgePositionPercentageOffset: .98,
         radius: isTotal ?  item.total.isNegative ? 100 : 80 : 100,
         title: item.total.formatSum,

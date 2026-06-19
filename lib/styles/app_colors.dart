@@ -7,6 +7,9 @@ class AppColors {
   static const Color error = Colors.red;
   static const Color edit = Colors.red;
 
+  static const Color income = Color(0xFF3D9A5F);
+  static const Color expense = Color(0xFFC75C5C);
+
   static const MaterialColor primary = Colors.blue;
 
   static const Color borderColor = Colors.grey;

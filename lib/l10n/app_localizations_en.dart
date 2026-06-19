@@ -15,6 +15,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no => 'no';
 
   @override
+  String get bottomSheetClose => 'Close';
+
+  @override
   String get light => 'light';
 
   @override
@@ -368,6 +371,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingTranTitle => 'Edit';
+
+  @override
+  String get settingTranTitleNew => 'New transaction';
 
   @override
   String get settingTranSave => 'Save';

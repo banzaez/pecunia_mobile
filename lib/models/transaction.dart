@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:pecunia/models/finance_category.dart';
 import 'package:pecunia/util/sql_fun.dart';
-import 'package:pecunia/widgets/fields/category_field.dart';
+import 'package:pecunia/models/transaction_type.dart';
 
 part 'transaction.g.dart';
 

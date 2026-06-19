@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pecunia/models/finance_categories.dart';
 import 'package:pecunia/models/transaction.dart';
-import 'package:pecunia/provider/sql_provider.dart';
+import 'package:pecunia/data/sql/sql_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart' hide Transaction;
 
 void main() {

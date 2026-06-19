@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:pecunia/provider/sql_provider.dart';
+import 'package:pecunia/data/sql/sql_provider.dart';
 
 part 'sql_provider_ref.g.dart';
 

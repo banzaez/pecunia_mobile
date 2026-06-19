@@ -36,6 +36,7 @@ class DialogChooseWallet extends ConsumerWidget {
     return await appBottomSheet<Wallet>(
       context,
       SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

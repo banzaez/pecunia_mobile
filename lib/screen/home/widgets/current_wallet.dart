@@ -11,8 +11,9 @@ class CurrentWallet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final homeState = ref.watch(homeNotifierProvider);
-    final currentWallet = homeState.currentWallet;
+    final currentWallet = ref.watch(
+      homeNotifierProvider.select((s) => s.currentWallet),
+    );
     final l10n = AppLocalizations.of(context);
 
     return DialogChooseWallet(

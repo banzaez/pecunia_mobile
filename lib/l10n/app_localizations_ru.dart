@@ -15,6 +15,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get no => 'нет';
 
   @override
+  String get bottomSheetClose => 'Закрыть';
+
+  @override
   String get light => 'светлая';
 
   @override
@@ -368,6 +371,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get settingTranTitle => 'Редактирование';
+
+  @override
+  String get settingTranTitleNew => 'Новая транзакция';
 
   @override
   String get settingTranSave => 'Сохранить';

@@ -1,6 +1,6 @@
 import 'package:pecunia/models/analytics.dart';
 import 'package:pecunia/models/analytics_filter.dart';
-import 'package:pecunia/provider/sql_table_transactions.dart';
+import 'package:pecunia/data/sql/sql_table_transactions.dart';
 import 'package:pecunia/util/sql_fun.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 

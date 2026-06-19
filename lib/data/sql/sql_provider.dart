@@ -1,6 +1,6 @@
-import 'package:pecunia/provider/sql_analytics.dart';
-import 'package:pecunia/provider/sql_table_transactions.dart';
-import 'package:pecunia/provider/sql_table_wallets.dart';
+import 'package:pecunia/data/sql/sql_analytics.dart';
+import 'package:pecunia/data/sql/sql_table_transactions.dart';
+import 'package:pecunia/data/sql/sql_table_wallets.dart';
 import 'dart:io' as io;
 import 'package:sqflite/sqflite.dart' as sql;
 

@@ -7,6 +7,8 @@ import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/util/ext_datetime.dart';
 import 'package:pecunia/util/ext_double.dart';
+import 'package:pecunia/widgets/dialogs/confirm_delete_dialog.dart';
+import 'package:pecunia/widgets/icons/transaction_type_icon.dart';
 import 'package:pecunia/widgets/setting_transaction/setting_transaction.dart';
 
 class TransactionItem extends StatelessWidget {
@@ -28,10 +30,13 @@ class TransactionItem extends StatelessWidget {
     final content = Row(
       children: [
         CircleAvatar(
-          backgroundColor: Colors.white10,
-          child: transaction.amount > 0
-              ? const Icon(Icons.attach_money, color: Colors.green)
-              : const Icon(Icons.money_off, color: Colors.red),
+          backgroundColor: Colors.transparent,
+          radius: 20,
+          child: TransactionTypeIcon(
+            type: transaction.type,
+            size: 36,
+            compact: true,
+          ),
         ),
         AppSpaces.h24,
         Expanded(
@@ -116,29 +121,8 @@ class TransactionItem extends StatelessWidget {
   }
 
   Future<bool> _confirmDismiss(BuildContext context) async {
-    final l10n = AppLocalizations.of(context);
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(l10n.dialogDeleteTitle),
-        content: Text(l10n.dialogDeleteContent),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: Text(l10n.dialogDeleteCancel, style: AppTextStyle.text16w600()),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text(
-              l10n.dialogDeleteDelete,
-              style: AppTextStyle.text16w600(color: Colors.red),
-            ),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed != true) return false;
+    final confirmed = await showConfirmDeleteDialog(context);
+    if (!confirmed) return false;
     return onDelete();
   }
 }

@@ -22,10 +22,7 @@ class AppSwitch<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        decoration: BoxDecoration(
-          border: AppBorderStyle.borderSideBox,
-          borderRadius: AppBorderStyle.borderRadius,
-        ),
+        decoration: AppBorderStyle.fieldBox(context),
         height: 48,
         width: width ?? double.infinity,
         child: Row(

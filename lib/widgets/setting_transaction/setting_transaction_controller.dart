@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pecunia/models/finance_category.dart';
 import 'package:pecunia/models/transaction.dart';
-import 'package:pecunia/widgets/fields/category_field.dart';
+import 'package:pecunia/models/transaction_type.dart';
 import 'package:pecunia/widgets/fields/number_field.dart';
 
 /// Чистый ChangeNotifier — заменяет GetxController для SettingTransaction формы.

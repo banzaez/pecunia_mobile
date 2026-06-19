@@ -32,11 +32,8 @@ class CurrencyField extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            decoration: BoxDecoration(
-              border: AppBorderStyle.borderSideBox,
-              borderRadius: AppBorderStyle.borderRadius,
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 14),
+            decoration: AppBorderStyle.fieldBox(context),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             height: 48,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

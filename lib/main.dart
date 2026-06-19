@@ -5,7 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pecunia/firebase_options.dart';
 import 'package:pecunia/l10n/app_localizations.dart';
-import 'package:pecunia/provider/sql_provider.dart';
+import 'package:pecunia/data/sql/sql_provider.dart';
 import 'package:pecunia/providers/settings_notifier.dart';
 import 'package:pecunia/providers/sql_provider_ref.dart';
 import 'package:pecunia/router/app_router.dart';

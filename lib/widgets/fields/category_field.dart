@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/models/finance_categories.dart';
 import 'package:pecunia/models/finance_category.dart';
+import 'package:pecunia/models/transaction_type.dart';
 import 'package:pecunia/widgets/fields/dropdown_field.dart';
 
 class CategoryField extends StatelessWidget {
@@ -50,9 +51,3 @@ class CategoryField extends StatelessWidget {
       });
 }
 
-enum TransactionType {
-  income,
-  expense;
-
-  int get i => this == income ? 1 : -1;
-}

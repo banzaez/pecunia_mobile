@@ -1,54 +1,87 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pecunia/styles/app_border_style.dart';
 
-class BaseField extends TextFormField {
-  BaseField({
+class BaseField extends StatelessWidget {
+  const BaseField({
     super.key,
-    super.onChanged,
-    super.autofocus,
-    super.autofillHints,
-    super.focusNode,
-    super.enabled,
-    super.controller,
-    super.initialValue,
-    super.validator,
-    super.keyboardType,
-    super.inputFormatters,
-    super.minLines,
-    super.maxLength,
-    super.maxLines,
-    super.obscureText,
-    String? labelText,
-    String? hintText,
-    String? helperText,
-    String? prefixText,
-    Widget? prefixIcon,
-    Widget? suffixIcon,
-    String? errorText,
-    bool showLabel = true,
-  }) : super(
-          decoration: InputDecoration(
-            alignLabelWithHint: true,
-            contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            border: const OutlineInputBorder(
-              borderSide: AppBorderStyle.borderSide,
-              borderRadius: AppBorderStyle.borderRadius,
-            ),
-            enabledBorder: const OutlineInputBorder(
-              borderSide: AppBorderStyle.borderSideEnabled,
-              borderRadius: AppBorderStyle.borderRadius,
-            ),
-            errorBorder: const OutlineInputBorder(
-              borderSide: AppBorderStyle.borderSideError,
-              borderRadius: AppBorderStyle.borderRadius,
-            ),
-            prefixIcon: prefixIcon,
-            prefixText: prefixText,
-            suffixIcon: suffixIcon,
-            labelText: showLabel ? (labelText ?? hintText) : null,
-            hintText: hintText,
-            errorText: errorText,
-            helperText: helperText,
-          )
-        );
+    this.onChanged,
+    this.autofocus = false,
+    this.autofillHints,
+    this.focusNode,
+    this.enabled = true,
+    this.controller,
+    this.initialValue,
+    this.validator,
+    this.keyboardType,
+    this.inputFormatters,
+    this.minLines,
+    this.maxLength,
+    this.maxLines = 1,
+    this.obscureText = false,
+    this.labelText,
+    this.hintText,
+    this.helperText,
+    this.prefixText,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.errorText,
+    this.showLabel = true,
+  });
+
+  final ValueChanged<String>? onChanged;
+  final bool autofocus;
+  final Iterable<String>? autofillHints;
+  final FocusNode? focusNode;
+  final bool enabled;
+  final TextEditingController? controller;
+  final String? initialValue;
+  final FormFieldValidator<String>? validator;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
+  final int? minLines;
+  final int? maxLength;
+  final int? maxLines;
+  final bool obscureText;
+  final String? labelText;
+  final String? hintText;
+  final String? helperText;
+  final String? prefixText;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
+  final String? errorText;
+  final bool showLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
+
+    return TextFormField(
+        onChanged: onChanged,
+        autofocus: autofocus,
+        autofillHints: autofillHints,
+        focusNode: focusNode,
+        enabled: enabled,
+        controller: controller,
+        initialValue: initialValue,
+        validator: validator,
+        keyboardType: keyboardType,
+        inputFormatters: inputFormatters,
+        minLines: minLines,
+        maxLength: maxLength,
+        maxLines: maxLines,
+        obscureText: obscureText,
+        scrollPadding: EdgeInsets.only(bottom: keyboardInset + 96),
+        decoration: AppBorderStyle.inputDecoration(
+          context,
+          prefixIcon: prefixIcon,
+          prefixText: prefixText,
+          suffixIcon: suffixIcon,
+          labelText: showLabel ? (labelText ?? hintText) : null,
+          hintText: hintText,
+          errorText: errorText,
+          helperText: helperText,
+        ),
+      );
+  }
 }

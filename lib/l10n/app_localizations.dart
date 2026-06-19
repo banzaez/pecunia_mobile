@@ -118,6 +118,12 @@ abstract class AppLocalizations {
   /// **'no'**
   String get no;
 
+  /// No description provided for @bottomSheetClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get bottomSheetClose;
+
   /// No description provided for @light.
   ///
   /// In en, this message translates to:
@@ -813,6 +819,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit'**
   String get settingTranTitle;
+
+  /// No description provided for @settingTranTitleNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New transaction'**
+  String get settingTranTitleNew;
 
   /// No description provided for @settingTranSave.
   ///

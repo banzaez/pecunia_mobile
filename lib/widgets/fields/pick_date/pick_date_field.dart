@@ -35,7 +35,7 @@ class PickDateField extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 64),
+              padding: const EdgeInsets.only(bottom: 8),
               child: Wrap(
                 alignment: WrapAlignment.center,
                 children: _getValues(values: values),
@@ -46,8 +46,14 @@ class PickDateField extends StatelessWidget {
         onLongPress: initDate != null ? () => onChanged(initDate!) : null,
         child: Container(
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary : AppColors.backgroundContent(context),
+            color: isSelected ? AppColors.primary : AppBorderStyle.fillColor(Theme.of(context).brightness),
             borderRadius: AppBorderStyle.borderRadius,
+            border: Border.all(
+              color: isSelected
+                  ? AppColors.primary
+                  : AppBorderStyle.borderColor(Theme.of(context).brightness),
+              width: 1,
+            ),
           ),
           padding: const EdgeInsets.all(12),
           child: initDate == null

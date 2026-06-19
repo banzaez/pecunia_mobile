@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:pecunia/l10n/app_localizations.dart';
-import 'package:pecunia/models/analytics_filter.dart';
-import 'package:pecunia/router/app_router.dart';
 import 'package:pecunia/screen/analytics/analytics_controller.dart';
-import 'package:pecunia/screen/analytics/widgets/analytics_category_item.dart';
-import 'package:pecunia/screen/analytics/widgets/analytics_graph.dart';
-import 'package:pecunia/styles/app_text_style.dart';
-import 'package:pecunia/util/app_spaces.dart';
-import 'package:pecunia/util/ext_double.dart';
+import 'package:pecunia/screen/analytics/widgets/analytics_bottom_overlay.dart';
+import 'package:pecunia/screen/analytics/widgets/analytics_category_list.dart';
+import 'package:pecunia/screen/analytics/widgets/analytics_top_overlay.dart';
 import 'package:pecunia/widgets/custom_app_bar.dart';
-import 'package:pecunia/widgets/fields/app_switch.dart';
-import 'package:pecunia/widgets/fields/pick_date/pick_date.dart';
 
 class AnalyticsScreen extends ConsumerWidget {
   const AnalyticsScreen({super.key});
@@ -20,126 +13,59 @@ class AnalyticsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+
     return Scaffold(
+      extendBody: true,
       appBar: CustomAppBar(title: l10n.analyticsTitle),
-      body: _body(context, ref, l10n),
+      body: _body(context, ref),
     );
   }
 
-  // --------------------------------------------------------------------------------------------
+  Widget _body(BuildContext context, WidgetRef ref) {
+    final bottomSafe = MediaQuery.viewPaddingOf(context).bottom;
+    final hasCategories =
+        ref.watch(analyticsNotifierProvider.select((s) => s.category.isNotEmpty));
 
-  Widget _body(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
-    final state = ref.watch(analyticsNotifierProvider);
-    final locale = Localizations.localeOf(context).toString();
-    final periodStr = state.periodStr(locale);
+    const topFadeHeight = 24.0;
+    const graphHeight = 220.0;
+    const topTextHeight = 40.0;
+    const bottomContentHeight = 120.0;
+    const listInsetTrim = 12.0;
 
-    return Column(
-      children: [
-        state.category.isEmpty
-            ? Expanded(
-                child: Center(child: Text(l10n.analyticsCategoryEmpty(periodStr))),
-              )
-            : Expanded(
-                child: Column(
-                  children: [
-                    Text(l10n.analyticsCategoryPeriod(periodStr)),
-                    AppSpaces.v16,
-                    Flexible(
-                      flex: 3,
-                      child: Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          AnalyticsGraph(
-                            data: state.category,
-                            isTotal: state.filter == AnalyticsFilter.total,
-                          ),
-                          Positioned(
-                            right: 38,
-                            child: _amount(state, l10n),
-                          ),
-                        ],
-                      ),
-                    ),
-                    AppSpaces.v16,
-                    Expanded(flex: 4, child: _category(context, ref, state, l10n)),
-                    AppSpaces.v16,
-                  ],
-                ),
-              ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              AppSwitch(
-                onChange: (value) =>
-                    ref.read(analyticsNotifierProvider.notifier).setFilter(value),
-                values: List.generate(
-                  AnalyticsFilter.values.length,
-                  (i) => AppSwitchValue(
-                      label: AnalyticsFilter.values[i].label(l10n),
-                      value: AnalyticsFilter.values[i],
-                      color: i == 0
-                          ? Colors.green
-                          : i == 1
-                              ? Colors.red
-                              : null),
-                ),
-                value: state.filter,
-              ),
-              AppSpaces.v16,
-              PickDate(
-                onChanged: (value, type) =>
-                    ref.read(analyticsNotifierProvider.notifier).setDate(value!, type),
-                initDate: state.date,
-                enableTime: false,
-                isYearSelected: state.period == DateType.year,
-                isMonthSelected: state.period == DateType.month,
-                isDaySelected: state.period == DateType.day,
-                valuesYear: state.valuesYear,
-                valuesMonth: state.valuesMonth,
-                valuesDay: state.valuesDay,
-              ),
-            ],
-          ),
-        ),
-        AppSpaces.v64,
-      ],
-    );
-  }
+    final topContentHeight = hasCategories
+        ? topTextHeight + graphHeight + 20
+        : topTextHeight + 12;
+    final topOverlayHeight = topContentHeight + topFadeHeight * 0.5;
+    final bottomOverlayHeight = bottomContentHeight + 24 + bottomSafe + 8;
 
-  // --------------------------------------------------------------------------------------------
-
-  Widget _amount(AnalyticsState state, AppLocalizations l10n) => Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisSize: MainAxisSize.min,
+    return MediaQuery.removePadding(
+      context: context,
+      removeBottom: true,
+      child: Stack(
         children: [
-          Text("${l10n.analyticsTotalPeriod} ", style: AppTextStyle.text12w400()),
-          Text(state.total.formatSum, style: AppTextStyle.text18w400()),
+          Positioned.fill(
+            child: AnalyticsCategoryList(
+              topPadding: topOverlayHeight - listInsetTrim,
+              bottomPadding: bottomOverlayHeight - listInsetTrim,
+            ),
+          ),
+          const Positioned(
+            left: 0,
+            right: 0,
+            top: 0,
+            child: AnalyticsTopOverlay(
+              fadeHeight: topFadeHeight,
+              graphHeight: graphHeight,
+            ),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: AnalyticsBottomOverlay(bottomSafe: bottomSafe),
+          ),
         ],
-      );
-
-  Widget _category(
-    BuildContext context,
-    WidgetRef ref,
-    AnalyticsState state,
-    AppLocalizations l10n,
-  ) =>
-      ListView.builder(
-        itemCount: state.category.length,
-        itemBuilder: (_, index) {
-          final analytics = state.category[index];
-          return AnalyticsCategoryItem(
-            onTap: analytics.category?.id == null
-                ? null
-                : () {
-                    final args = ref
-                        .read(analyticsNotifierProvider.notifier)
-                        .buildDetailsArgs(analytics.category!.id);
-                    context.push(AppRoute.transactions.path, extra: args);
-                  },
-            analytics: analytics,
-            index: index,
-          );
-        },
-      );
+      ),
+    );
+  }
 }

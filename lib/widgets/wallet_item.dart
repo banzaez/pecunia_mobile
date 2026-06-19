@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/models/wallet.dart';
 import 'package:pecunia/providers/wallet_notifier.dart';
+import 'package:pecunia/widgets/dialogs/confirm_delete_dialog.dart';
 import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 
@@ -58,27 +59,6 @@ class WalletItem extends ConsumerWidget {
     await ref.read(walletNotifierProvider.notifier).deleteSQL(wallet.id);
   }
 
-  Future<bool?> _confirmDismiss(BuildContext context) async {
-    final l10n = AppLocalizations.of(context);
-    return await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(l10n.dialogDeleteTitle),
-        content: Text(l10n.dialogDeleteContent),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: Text(l10n.dialogDeleteCancel, style: AppTextStyle.text16w600()),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text(
-              l10n.dialogDeleteDelete,
-              style: AppTextStyle.text16w600(color: Colors.red),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  Future<bool?> _confirmDismiss(BuildContext context) =>
+      showConfirmDeleteDialog(context);
 }
