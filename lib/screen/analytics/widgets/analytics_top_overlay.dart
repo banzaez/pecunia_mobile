@@ -7,7 +7,6 @@ import 'package:pecunia/screen/analytics/widgets/analytics_graph.dart';
 import 'package:pecunia/screen/home/home_panel_style.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
-import 'package:pecunia/util/ext_double.dart';
 
 class AnalyticsTopOverlay extends ConsumerWidget {
   const AnalyticsTopOverlay({
@@ -43,35 +42,14 @@ class AnalyticsTopOverlay extends ConsumerWidget {
                   style: AppTextStyle.text14w400(),
                   textAlign: TextAlign.center,
                 ),
-                if (state.category.isNotEmpty) ...[
+                 if (state.category.isNotEmpty) ...[
                   AppSpaces.v8,
                   SizedBox(
                     height: graphHeight,
-                    child: Stack(
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        AnalyticsGraph(
-                          data: state.category,
-                          isTotal: state.filter == AnalyticsFilter.total,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 22, bottom: 8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                l10n.analyticsTotalPeriod,
-                                style: AppTextStyle.text12w400(),
-                              ),
-                              Text(
-                                state.total.formatSum,
-                                style: AppTextStyle.text18w400(),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    child: AnalyticsGraph(
+                      data: state.category,
+                      isTotal: state.filter == AnalyticsFilter.total,
+                      totalSum: state.total,
                     ),
                   ),
                 ],

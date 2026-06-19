@@ -123,6 +123,7 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
           endDate: state.interval.last,
         );
     if (gen != _refreshGeneration) return;
+    ref.read(selectedCategoryIndexProvider.notifier).reset();
     state = state.copyWith(category: result);
   }
 
@@ -160,11 +161,13 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
   }
 
   void setFilter(AnalyticsFilter value) {
+    ref.read(selectedCategoryIndexProvider.notifier).reset();
     state = state.copyWith(filter: value);
     _refreshAnalytics();
   }
 
   void setDate(DateTime value, DateType type) {
+    ref.read(selectedCategoryIndexProvider.notifier).reset();
     final prev = state.date;
     state = state.copyWith(date: value.startOfDay, period: type);
     final generation = ++_refreshGeneration;
@@ -184,6 +187,18 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
         endDate: state.interval.last,
       );
 }
+
+class SelectedCategoryIndex extends Notifier<int?> {
+  @override
+  int? build() => null;
+
+  void setIndex(int? value) => state = value;
+  void reset() => state = null;
+}
+
+final selectedCategoryIndexProvider = NotifierProvider<SelectedCategoryIndex, int?>(
+  SelectedCategoryIndex.new,
+);
 
 final analyticsNotifierProvider = NotifierProvider<AnalyticsNotifier, AnalyticsState>(
   AnalyticsNotifier.new,
