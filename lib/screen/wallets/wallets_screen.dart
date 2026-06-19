@@ -30,6 +30,7 @@ class _WalletsScreenState extends ConsumerState<WalletsScreen> {
       provider: walletNotifierProvider,
       selectError: (state) => (state as WalletState?)?.error,
       clearError: () => ref.read(walletNotifierProvider.notifier).clearError(),
+      formatError: formatWalletError,
     );
     return Scaffold(
       appBar: CustomAppBar(title: l10n.walletsTitle),

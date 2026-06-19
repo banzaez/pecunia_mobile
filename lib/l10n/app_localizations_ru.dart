@@ -505,4 +505,11 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get routeErrorHome => 'На главную';
+
+  @override
+  String get walletDeleteLastError => 'Нельзя удалить последний кошелёк';
+
+  @override
+  String get driveScopeError =>
+      'Доступ к Google Drive не предоставлен. Выйдите и войдите снова.';
 }

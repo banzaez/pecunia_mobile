@@ -39,6 +39,7 @@ class SQLTableWallets {
     List<Map<String, Object?>> maps = await _database.query(
       tableName,
       columns: null,
+      orderBy: '$columnSort ASC, $columnId ASC',
     );
 
     return maps.map((e) => Wallet.fromJson(e)).toList();

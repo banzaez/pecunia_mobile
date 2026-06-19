@@ -8,6 +8,7 @@ import 'package:pecunia/providers/wallet_notifier.dart';
 import 'package:pecunia/router/app_router.dart';
 import 'package:pecunia/screen/home/home_controller.dart';
 import 'package:pecunia/screen/home/widget/current_wallet.dart';
+import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/widgets/provider_error_listener.dart';
 import 'package:pecunia/widgets/setting_transaction/setting_transaction.dart';
@@ -20,7 +21,6 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
     final homeState = ref.watch(homeNotifierProvider);
     final isRoundUp = ref.watch(settingsNotifierProvider.select((s) => s.isRoundUp));
 
@@ -28,65 +28,66 @@ class HomeScreen extends ConsumerWidget {
       child: homeState.isInitializing
           ? const Material(child: Center(child: CircularProgressIndicator()))
           : Scaffold(
-              appBar: _appBar(context, ref, l10n, homeState, isRoundUp),
-              body: _body(isRoundUp),
+              extendBody: true,
+              appBar: _appBar(context, ref, homeState),
+              body: _body(context, ref, isRoundUp),
             ),
     );
   }
 
-  AppBar _appBar(
-    BuildContext context,
-    WidgetRef ref,
-    AppLocalizations l10n,
-    HomeState homeState,
-    bool isRoundUp,
-  ) {
-    final showBalance = homeState.currentWallet?.showBalance ?? false;
-    final total = ref.watch(
-      transactionNotifierProvider.select((s) => s.analyticsTotal),
-    );
+  AppBar _appBar(BuildContext context, WidgetRef ref, HomeState homeState) => AppBar(
+        leading: SettingWallet(update: homeState.currentWallet),
+        title: const CurrentWallet(),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () => context.push(AppRoute.profile.path),
+            icon: const Icon(Icons.account_box),
+          ),
+        ],
+      );
 
-    return AppBar(
-      leading: SettingWallet(update: homeState.currentWallet),
-      title: const CurrentWallet(),
-      centerTitle: true,
-      actions: [
-        IconButton(
-          onPressed: () => context.push(AppRoute.profile.path),
-          icon: const Icon(Icons.account_box),
-        ),
-      ],
-      bottom: PreferredSize(
-        preferredSize: Size.fromHeight(showBalance ? 158.0 : 64.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (showBalance)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 28),
-                child: TotalHeader(total: total, isRoundUp: isRoundUp),
-              ),
-            TextButton.icon(
-              onPressed: () => context.push(AppRoute.analytics.path),
-              icon: const Icon(Icons.query_stats),
-              label: Text(l10n.analyticsTitle, style: AppTextStyle.text16w400()),
+  Widget _body(BuildContext context, WidgetRef ref, bool isRoundUp) {
+    final bottomSafe = MediaQuery.viewPaddingOf(context).bottom;
+    const actionPanelContentHeight = 64.0;
+    const walletDotsHeight = 40.0;
+    const topFadeHeight = 24.0;
+    const listInsetTrim = 12.0;
+    final bottomOverlayHeight =
+        actionPanelContentHeight + walletDotsHeight + bottomSafe + 4;
+
+    final showBalance = ref.watch(homeNotifierProvider).currentWallet?.showBalance ?? false;
+    final topContentHeight = showBalance ? 148.0 : 56.0;
+    final topOverlayHeight = topContentHeight + topFadeHeight * 0.5;
+
+    return MediaQuery.removePadding(
+      context: context,
+      removeBottom: true,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: _TransactionList(
+              isRoundUp: isRoundUp,
+              topPadding: topOverlayHeight - listInsetTrim,
+              bottomPadding: bottomOverlayHeight - listInsetTrim,
             ),
-          ],
-        ),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            top: 0,
+            child: _HomeTopOverlay(fadeHeight: topFadeHeight),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: _HomeBottomOverlay(bottomSafe: bottomSafe),
+          ),
+        ],
       ),
     );
   }
-
-  Widget _body(bool isRoundUp) => Column(
-        children: [
-          Expanded(child: _TransactionList(isRoundUp: isRoundUp)),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: SettingTransaction(),
-          ),
-          const SizedBox(height: 32),
-        ],
-      );
 }
 
 class _HomeErrorListener extends ConsumerWidget {
@@ -102,6 +103,7 @@ class _HomeErrorListener extends ConsumerWidget {
       provider: walletNotifierProvider,
       selectError: (state) => (state as WalletState?)?.error,
       clearError: () => ref.read(walletNotifierProvider.notifier).clearError(),
+      formatError: formatWalletError,
     );
     listenProviderError(
       ref,
@@ -115,9 +117,15 @@ class _HomeErrorListener extends ConsumerWidget {
 }
 
 class _TransactionList extends ConsumerStatefulWidget {
-  const _TransactionList({required this.isRoundUp});
+  const _TransactionList({
+    required this.isRoundUp,
+    required this.topPadding,
+    required this.bottomPadding,
+  });
 
   final bool isRoundUp;
+  final double topPadding;
+  final double bottomPadding;
 
   @override
   ConsumerState<_TransactionList> createState() => _TransactionListState();
@@ -165,39 +173,165 @@ class _TransactionListState extends ConsumerState<_TransactionList> {
     );
 
     final transactionState = ref.watch(transactionNotifierProvider);
-    final homeState = ref.watch(homeNotifierProvider);
-    final wallets = ref.watch(walletNotifierProvider.select((s) => s.wallets));
-    final walletCount = wallets.length;
-    final currentIndex = wallets.indexWhere((e) => e.id == homeState.currentWallet?.id);
     final transactions = transactionState.transactions;
 
-    return Stack(
-      alignment: Alignment.bottomCenter,
+    return ListView.builder(
+      controller: _scrollController,
+      padding: EdgeInsets.only(
+        top: widget.topPadding,
+        bottom: widget.bottomPadding,
+      ),
+      clipBehavior: Clip.none,
+      itemCount: transactions.length + (transactionState.isLoadingMore ? 1 : 0),
+      itemBuilder: (_, index) {
+        if (index >= transactions.length) {
+          return const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+        final transaction = transactions[index];
+        return TransactionItem(
+          key: ValueKey(transaction.id),
+          transaction: transaction,
+          isRoundUp: widget.isRoundUp,
+          onDelete: () => _deleteTransaction(transaction.id),
+          edgeToEdge: true,
+        );
+      },
+    );
+  }
+}
+
+Color _homePanelColor(BuildContext context) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+  final baseColor = isDark ? Colors.black : Colors.white;
+  return baseColor.withValues(alpha: isDark ? 0.82 : 0.9);
+}
+
+class _HomeTopOverlay extends ConsumerWidget {
+  const _HomeTopOverlay({required this.fadeHeight});
+
+  final double fadeHeight;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final baseColor = isDark ? Colors.black : Colors.white;
+    final panelColor = _homePanelColor(context);
+    final showBalance = ref.watch(homeNotifierProvider).currentWallet?.showBalance ?? false;
+    final isRoundUp = ref.watch(settingsNotifierProvider.select((s) => s.isRoundUp));
+    final total = ref.watch(transactionNotifierProvider.select((s) => s.analyticsTotal));
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        ListView.builder(
-          controller: _scrollController,
-          itemCount: transactions.length + (transactionState.isLoadingMore ? 1 : 0),
-          itemBuilder: (_, index) {
-            if (index >= transactions.length) {
-              return const Padding(
-                padding: EdgeInsets.all(16),
-                child: Center(child: CircularProgressIndicator()),
-              );
-            }
-            final transaction = transactions[index];
-            return TransactionItem(
-              key: ValueKey(transaction.id),
-              transaction: transaction,
-              isRoundUp: widget.isRoundUp,
-              onDelete: () => _deleteTransaction(transaction.id),
-            );
-          },
+        ColoredBox(
+          color: panelColor,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (showBalance)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  child: TotalHeader(total: total, isRoundUp: isRoundUp),
+                ),
+              TextButton.icon(
+                onPressed: () => context.push(AppRoute.analytics.path),
+                icon: const Icon(Icons.query_stats),
+                label: Text(l10n.analyticsTitle, style: AppTextStyle.text16w400()),
+              ),
+            ],
+          ),
         ),
-        _WalletDots(
-          walletCount: walletCount,
-          currentIndex: currentIndex,
-          onSwipe: (offset) =>
-              ref.read(homeNotifierProvider.notifier).swipeWallet(offset),
+        DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                panelColor,
+                baseColor.withValues(alpha: 0.0),
+              ],
+            ),
+          ),
+          child: SizedBox(height: fadeHeight, width: double.infinity),
+        ),
+      ],
+    );
+  }
+}
+
+class _HomeBottomOverlay extends ConsumerWidget {
+  const _HomeBottomOverlay({required this.bottomSafe});
+
+  final double bottomSafe;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final baseColor = isDark ? Colors.black : Colors.white;
+    final panelColor = _homePanelColor(context);
+
+    final homeState = ref.watch(homeNotifierProvider);
+    final wallets = ref.watch(walletNotifierProvider.select((s) => s.wallets));
+    final currentIndex = wallets.indexWhere((e) => e.id == homeState.currentWallet?.id);
+
+    final barButtonColor = isDark ? const Color(0xFF2C2C2C) : const Color(0xFFD9D9D9);
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                baseColor.withValues(alpha: 0.0),
+                panelColor,
+              ],
+            ),
+          ),
+          child: _WalletDots(
+            walletCount: wallets.length,
+            currentIndex: currentIndex,
+            onSwipe: (offset) =>
+                ref.read(homeNotifierProvider.notifier).swipeWallet(offset),
+          ),
+        ),
+        ColoredBox(
+          color: panelColor,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: bottomSafe),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+              child: Theme(
+                data: Theme.of(context).copyWith(
+                  elevatedButtonTheme: ElevatedButtonThemeData(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: barButtonColor,
+                      foregroundColor: AppColors.primary,
+                      elevation: 0,
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      textStyle: AppTextStyle.text16w400(),
+                    ),
+                  ),
+                  iconButtonTheme: IconButtonThemeData(
+                    style: IconButton.styleFrom(
+                      backgroundColor: barButtonColor,
+                      foregroundColor: AppColors.primary,
+                    ),
+                  ),
+                ),
+                child: const SettingTransaction(),
+              ),
+            ),
+          ),
         ),
       ],
     );
@@ -222,8 +356,7 @@ class _WalletDots extends StatelessWidget {
           onSwipe(dx.sign.toInt());
         },
         child: Container(
-          color: Colors.transparent,
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           width: double.infinity,
           child: Wrap(
             alignment: WrapAlignment.center,

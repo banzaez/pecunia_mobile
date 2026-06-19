@@ -504,4 +504,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get routeErrorHome => 'Go to home';
+
+  @override
+  String get walletDeleteLastError => 'Cannot delete the last wallet';
+
+  @override
+  String get driveScopeError =>
+      'Google Drive access was not granted. Sign out and sign in again.';
 }

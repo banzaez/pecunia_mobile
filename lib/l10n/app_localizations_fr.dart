@@ -508,4 +508,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get routeErrorHome => 'Accueil';
+
+  @override
+  String get walletDeleteLastError =>
+      'Impossible de supprimer le dernier portefeuille';
+
+  @override
+  String get driveScopeError =>
+      'L\'accès à Google Drive n\'a pas été accordé. Déconnectez-vous et reconnectez-vous.';
 }

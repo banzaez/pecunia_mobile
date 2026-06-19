@@ -1077,6 +1077,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Go to home'**
   String get routeErrorHome;
+
+  /// No description provided for @walletDeleteLastError.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot delete the last wallet'**
+  String get walletDeleteLastError;
+
+  /// No description provided for @driveScopeError.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Drive access was not granted. Sign out and sign in again.'**
+  String get driveScopeError;
 }
 
 class _AppLocalizationsDelegate

@@ -42,11 +42,7 @@ class WalletItem extends ConsumerWidget {
             : null,
         trailing: isEditing
             ? IconButton(
-                onPressed: () => _confirmDismiss(context).then((value) {
-                  if (value == true) {
-                    ref.read(walletNotifierProvider.notifier).deleteSQL(wallet.id);
-                  }
-                }),
+                onPressed: () => _onDelete(context, ref),
                 icon: const Icon(Icons.close, color: AppColors.edit),
               )
             : null,
@@ -55,6 +51,12 @@ class WalletItem extends ConsumerWidget {
   }
 
   // --------------------------------------------------------------------------------------------
+
+  Future<void> _onDelete(BuildContext context, WidgetRef ref) async {
+    final confirmed = await _confirmDismiss(context);
+    if (confirmed != true) return;
+    await ref.read(walletNotifierProvider.notifier).deleteSQL(wallet.id);
+  }
 
   Future<bool?> _confirmDismiss(BuildContext context) async {
     final l10n = AppLocalizations.of(context);

@@ -201,6 +201,9 @@ class _TransferSheetState extends ConsumerState<_TransferSheet> {
     await ref
         .read(transactionNotifierProvider.notifier)
         .addTransferSQL(fromTransaction, toTransaction);
-    if (context.mounted) Navigator.of(context).pop(true);
+
+    if (ref.read(transactionNotifierProvider).error != null) return;
+    if (!context.mounted) return;
+    Navigator.of(context).pop(true);
   }
 }

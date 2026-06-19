@@ -183,5 +183,7 @@
   "startupErrorRetry": "Spróbuj ponownie",
   "dataLoadError": "Nie udało się załadować danych",
   "routeErrorTitle": "Nie znaleziono strony",
-  "routeErrorHome": "Strona główna"
+  "routeErrorHome": "Strona główna",
+  "walletDeleteLastError": "Nie można usunąć ostatniego portfela",
+  "driveScopeError": "Brak dostępu do Google Drive. Wyloguj się i zaloguj ponownie."
 }

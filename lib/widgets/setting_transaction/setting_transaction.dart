@@ -21,10 +21,8 @@ class SettingTransaction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: 32),
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Row(
+    padding: const EdgeInsets.symmetric(horizontal: 8),
+    child: Row(
         children: [
           Expanded(
             child: ElevatedButton(
@@ -43,8 +41,7 @@ class SettingTransaction extends StatelessWidget {
           ),
         ],
       ),
-    ),
-  );
+    );
 
   static Future<void> setting(
     BuildContext context,

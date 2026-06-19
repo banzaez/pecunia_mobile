@@ -183,5 +183,7 @@
   "startupErrorRetry": "Réessayer",
   "dataLoadError": "Échec du chargement des données",
   "routeErrorTitle": "Page introuvable",
-  "routeErrorHome": "Accueil"
+  "routeErrorHome": "Accueil",
+  "walletDeleteLastError": "Impossible de supprimer le dernier portefeuille",
+  "driveScopeError": "L'accès à Google Drive n'a pas été accordé. Déconnectez-vous et reconnectez-vous."
 }

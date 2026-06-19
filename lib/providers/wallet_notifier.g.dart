@@ -41,7 +41,7 @@ final class WalletNotifierProvider
   }
 }
 
-String _$walletNotifierHash() => r'6a457874df0359735318832fb02036c952ba72b5';
+String _$walletNotifierHash() => r'3acff803eafd5b1a15aa7262b77a272ab082b1cd';
 
 abstract class _$WalletNotifier extends $Notifier<WalletState> {
   WalletState build();

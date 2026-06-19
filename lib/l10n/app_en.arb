@@ -184,5 +184,7 @@
   "startupErrorRetry": "Retry",
   "dataLoadError": "Failed to load data",
   "routeErrorTitle": "Page not found",
-  "routeErrorHome": "Go to home"
+  "routeErrorHome": "Go to home",
+  "walletDeleteLastError": "Cannot delete the last wallet",
+  "driveScopeError": "Google Drive access was not granted. Sign out and sign in again."
 }

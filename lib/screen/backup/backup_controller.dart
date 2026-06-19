@@ -169,6 +169,10 @@ class BackupNotifier extends Notifier<BackupState> {
 
   void clearSnack() => state = state.copyWith(clearSnack: true);
 
+  void showMessage(String message, {bool isError = false}) {
+    state = state.copyWith(snackMessage: message, isError: isError);
+  }
+
   Future<void> createCloudBackup() async {
     final googleState = ref.read(googleNotifierProvider);
     if (!googleState.hasDrive || googleState.client == null) return;

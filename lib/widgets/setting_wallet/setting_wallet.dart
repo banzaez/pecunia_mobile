@@ -141,7 +141,7 @@ class _SettingWalletSheetState extends ConsumerState<_SettingWalletSheet> {
     );
   }
 
-  void _save() {
+  void _save() async {
     final l10n = AppLocalizations.of(context);
     if (!_ctrl.isOk(
       l10n.settingWalletErrorName,
@@ -151,14 +151,17 @@ class _SettingWalletSheetState extends ConsumerState<_SettingWalletSheet> {
     }
     _ctrl.updateValues();
 
+    final navigator = Navigator.of(context);
     final notifier = ref.read(walletNotifierProvider.notifier);
     final wallet = _ctrl.wallet;
     if (wallet.id == 0) {
-      notifier.addSQL(wallet);
+      await notifier.addSQL(wallet);
     } else {
-      notifier.updateSQL(wallet);
+      await notifier.updateSQL(wallet);
     }
 
-    Navigator.of(context).pop();
+    if (ref.read(walletNotifierProvider).error != null) return;
+
+    navigator.pop();
   }
 }

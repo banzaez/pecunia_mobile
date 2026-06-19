@@ -505,4 +505,11 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get routeErrorHome => 'На головну';
+
+  @override
+  String get walletDeleteLastError => 'Неможливо видалити останній гаманець';
+
+  @override
+  String get driveScopeError =>
+      'Доступ до Google Drive не надано. Вийдіть і увійдіть знову.';
 }

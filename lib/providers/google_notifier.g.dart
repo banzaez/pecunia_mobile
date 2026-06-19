@@ -94,7 +94,7 @@ final class GoogleDriveNotifierProvider
 }
 
 String _$googleDriveNotifierHash() =>
-    r'f2c13164c25bdedd93266ab656b7818f88fda1d0';
+    r'dcf6d0a6ee68a29e5398e22ef15a49d7d5684f59';
 
 abstract class _$GoogleDriveNotifier extends $Notifier<GoogleDriveState> {
   GoogleDriveState build();

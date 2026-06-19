@@ -504,4 +504,11 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get routeErrorHome => 'Strona główna';
+
+  @override
+  String get walletDeleteLastError => 'Nie można usunąć ostatniego portfela';
+
+  @override
+  String get driveScopeError =>
+      'Brak dostępu do Google Drive. Wyloguj się i zaloguj ponownie.';
 }

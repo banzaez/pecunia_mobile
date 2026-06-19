@@ -129,12 +129,14 @@ class AnalyticsScreen extends ConsumerWidget {
         itemBuilder: (_, index) {
           final analytics = state.category[index];
           return AnalyticsCategoryItem(
-            onTap: () {
-              final args = ref
-                  .read(analyticsNotifierProvider.notifier)
-                  .buildDetailsArgs(analytics.category?.id ?? 0);
-              context.push(AppRoute.transactions.path, extra: args);
-            },
+            onTap: analytics.category?.id == null
+                ? null
+                : () {
+                    final args = ref
+                        .read(analyticsNotifierProvider.notifier)
+                        .buildDetailsArgs(analytics.category!.id);
+                    context.push(AppRoute.transactions.path, extra: args);
+                  },
             analytics: analytics,
             index: index,
           );

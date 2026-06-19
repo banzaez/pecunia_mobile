@@ -506,4 +506,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get routeErrorHome => 'Ir al inicio';
+
+  @override
+  String get walletDeleteLastError =>
+      'No se puede eliminar la última billetera';
+
+  @override
+  String get driveScopeError =>
+      'No se concedió acceso a Google Drive. Cierra sesión e inicia sesión de nuevo.';
 }

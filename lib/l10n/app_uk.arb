@@ -183,5 +183,7 @@
   "startupErrorRetry": "Повторити",
   "dataLoadError": "Не вдалося завантажити дані",
   "routeErrorTitle": "Сторінку не знайдено",
-  "routeErrorHome": "На головну"
+  "routeErrorHome": "На головну",
+  "walletDeleteLastError": "Неможливо видалити останній гаманець",
+  "driveScopeError": "Доступ до Google Drive не надано. Вийдіть і увійдіть знову."
 }

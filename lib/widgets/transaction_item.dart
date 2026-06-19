@@ -15,50 +15,65 @@ class TransactionItem extends StatelessWidget {
     required this.transaction,
     required this.isRoundUp,
     required this.onDelete,
+    this.edgeToEdge = false,
   });
 
   final Transaction transaction;
   final bool isRoundUp;
   final Future<bool> Function() onDelete;
+  final bool edgeToEdge;
 
   @override
   Widget build(BuildContext context) {
+    final content = Row(
+      children: [
+        CircleAvatar(
+          backgroundColor: Colors.white10,
+          child: transaction.amount > 0
+              ? const Icon(Icons.attach_money, color: Colors.green)
+              : const Icon(Icons.money_off, color: Colors.red),
+        ),
+        AppSpaces.h24,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _label(context),
+              Text(
+                transaction.amount.formatSumCustom(roundUp: isRoundUp),
+                style: AppTextStyle.text16w400(),
+              ),
+              _description(),
+            ],
+          ),
+        ),
+        _date(context),
+      ],
+    );
+
     return GestureDetector(
       onTap: () => SettingTransaction.setting(context, transaction.type, transaction),
       child: Dismissible(
         key: Key(transaction.id.toString()),
         confirmDismiss: (_) => _confirmDismiss(context),
         onDismissed: (_) {},
-        background: Container(color: Colors.red),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: Colors.white10,
-                child: transaction.amount > 0
-                    ? const Icon(Icons.attach_money, color: Colors.green)
-                    : const Icon(Icons.money_off, color: Colors.red),
-              ),
-              AppSpaces.h24,
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _label(context),
-                    Text(
-                      transaction.amount.formatSumCustom(roundUp: isRoundUp),
-                      style: AppTextStyle.text16w400(),
-                    ),
-                    _description(),
-                  ],
-                ),
-              ),
-              _date(context),
-            ],
-          ),
+        background: const ColoredBox(
+          color: Colors.red,
+          child: SizedBox(width: double.infinity),
         ),
+        child: edgeToEdge
+            ? Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: content,
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.all(16),
+                child: content,
+              ),
       ),
     );
   }

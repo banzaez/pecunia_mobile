@@ -74,26 +74,32 @@ class TransactionNotifier extends _$TransactionNotifier {
   Future<void> refreshAll() async {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
-      await Future.wait([_refreshTransactions(), _refreshTotal()]);
-      state = state.copyWith(isLoading: false);
+      final sql = ref.read(sqlProviderProvider).transactions;
+      final walletId = state.walletId;
+
+      final results = await Future.wait<Object>([
+        sql.selectByWalletId(
+          walletId,
+          limit: TransactionState.pageSize,
+          offset: 0,
+        ),
+        sql.countByWalletId(walletId),
+        sql.selectTotalByWallet(walletId),
+      ]);
+
+      final list = results[0] as List<Transaction>;
+      final total = results[1] as int;
+      final analyticsTotal = results[2] as AnalyticsTotal;
+
+      state = state.copyWith(
+        isLoading: false,
+        transactions: list,
+        hasMore: list.length < total,
+        analyticsTotal: analyticsTotal,
+      );
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
-  }
-
-  Future<void> _refreshTransactions() async {
-    final sql = ref.read(sqlProviderProvider).transactions;
-    final walletId = state.walletId;
-    final list = await sql.selectByWalletId(
-      walletId,
-      limit: TransactionState.pageSize,
-      offset: 0,
-    );
-    final total = await sql.countByWalletId(walletId);
-    state = state.copyWith(
-      transactions: list,
-      hasMore: list.length < total,
-    );
   }
 
   Future<void> loadMore() async {
@@ -111,11 +117,10 @@ class TransactionNotifier extends _$TransactionNotifier {
         limit: TransactionState.pageSize,
         offset: offset,
       );
-      final total = await sql.countByWalletId(state.walletId);
       final merged = [...state.transactions, ...list];
       state = state.copyWith(
         transactions: merged,
-        hasMore: merged.length < total,
+        hasMore: list.length >= TransactionState.pageSize,
         isLoadingMore: false,
       );
     } catch (e) {
@@ -123,14 +128,6 @@ class TransactionNotifier extends _$TransactionNotifier {
     } finally {
       _loadMoreInFlight = false;
     }
-  }
-
-  Future<void> _refreshTotal() async {
-    final total = await ref
-        .read(sqlProviderProvider)
-        .transactions
-        .selectTotalByWallet(state.walletId);
-    state = state.copyWith(analyticsTotal: total);
   }
 
   Future<void> addSQL(Transaction transaction) async {

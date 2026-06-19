@@ -79,11 +79,31 @@ class SettingsNotifier extends _$SettingsNotifier {
       currency = _currencyService.findByCode(currencyCode);
     }
 
-    // Read theme
-    final themeModeIndex = prefs.getInt(_themeModeKey) ?? ThemeMode.dark.index;
-    final themeMode = ThemeMode.values[themeModeIndex];
+    // Read theme (string with legacy int migration)
+    final themeMode = _readThemeMode(prefs);
 
     return SettingsState(locale: locale, currency: currency, themeMode: themeMode);
+  }
+
+  ThemeMode _readThemeMode(SharedPreferences prefs) {
+    final themeName = prefs.getString(_themeModeKey);
+    if (themeName != null) {
+      return ThemeMode.values.firstWhere(
+        (mode) => mode.name == themeName,
+        orElse: () => ThemeMode.dark,
+      );
+    }
+
+    final legacyIndex = prefs.getInt(_themeModeKey);
+    if (legacyIndex != null &&
+        legacyIndex >= 0 &&
+        legacyIndex < ThemeMode.values.length) {
+      final mode = ThemeMode.values[legacyIndex];
+      prefs.setString(_themeModeKey, mode.name);
+      return mode;
+    }
+
+    return ThemeMode.dark;
   }
 
   // -----------LOCALE----------------------------------------------------------
@@ -112,7 +132,7 @@ class SettingsNotifier extends _$SettingsNotifier {
   // -----------THEME----------------------------------------------------------
 
   void setThemeMode(ThemeMode themeMode) {
-    _prefs.setInt(_themeModeKey, themeMode.index);
+    _prefs.setString(_themeModeKey, themeMode.name);
     state = state.copyWith(themeMode: themeMode);
   }
 }

@@ -61,6 +61,20 @@ class BackupScreen extends ConsumerWidget {
     });
   }
 
+  void _listenDriveError(BuildContext context, WidgetRef ref) {
+    ref.listen<GoogleDriveState>(googleDriveNotifierProvider, (prev, next) {
+      final error = next.error;
+      if (error == null || error == prev?.error) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error),
+          backgroundColor: Colors.red,
+        ),
+      );
+    });
+  }
+
   // --------------------------------------------------------------------------------------------
 
   Widget _body(BuildContext context, WidgetRef ref, AppLocalizations l10n) =>
@@ -129,6 +143,8 @@ class BackupScreen extends ConsumerWidget {
     AppLocalizations l10n,
   ) {
     final google = ref.watch(googleNotifierProvider);
+    _listenDriveError(context, ref);
+
     return Expanded(
       child: Column(
         children: [
@@ -176,7 +192,15 @@ class BackupScreen extends ConsumerWidget {
               l10n: l10n,
               onConfirm: () => ref
                   .read(googleDriveNotifierProvider.notifier)
-                  .deleteFile(id, onSuccess: () {}, onError: (e) {}),
+                  .deleteFile(
+                    id,
+                    onSuccess: () => ref
+                        .read(backupNotifierProvider.notifier)
+                        .showMessage('__deleted__'),
+                    onError: (_) => ref
+                        .read(backupNotifierProvider.notifier)
+                        .showMessage('__error__', isError: true),
+                  ),
               title: l10n.backupCloudDialogDelete,
               content: l10n.backupCloudDialogDeleteContent,
             );
@@ -205,8 +229,19 @@ class BackupScreen extends ConsumerWidget {
     AppLocalizations l10n,
     GoogleAuthState google,
   ) {
-    if (!google.isSignedIn || !google.hasDrive || google.client == null) {
+    if (!google.isSignedIn) {
       return const SizedBox.shrink();
+    }
+
+    if (!google.hasDrive || google.client == null) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Text(
+          l10n.driveScopeError,
+          style: AppTextStyle.text14w400(color: Colors.red),
+          textAlign: TextAlign.center,
+        ),
+      );
     }
 
     final driveState = ref.watch(googleDriveNotifierProvider);
@@ -225,6 +260,14 @@ class BackupScreen extends ConsumerWidget {
                       .createCloudBackup(),
                   child: Text(l10n.backupCreateCloudRecovery),
                 ),
+          if (driveState.error != null) ...[
+            AppSpaces.v16,
+            Text(
+              driveState.error!,
+              style: AppTextStyle.text14w400(color: Colors.red),
+              textAlign: TextAlign.center,
+            ),
+          ],
           AppSpaces.v32,
           driveFiles.isEmpty
               ? Text(

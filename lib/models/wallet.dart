@@ -7,7 +7,14 @@ part 'wallet.g.dart';
 
 @JsonSerializable()
 class Wallet {
-  static bool _valueToBool(int value) => value == 1 ? true : false;
+  static bool boolFromSql(dynamic value) {
+    if (value == null) return true;
+    if (value is bool) return value;
+    if (value is num) return value.toInt() == 1;
+    return true;
+  }
+
+  static int boolToSql(bool value) => value ? 1 : 0;
 
   @JsonKey(name: "_id")
   int id;
@@ -17,9 +24,9 @@ class Wallet {
   @JsonKey(fromJson: toCurrency, toJson: fromCurrency)
   Currency? currency;
   String description;
-  @JsonKey(defaultValue: true, fromJson: _valueToBool)
+  @JsonKey(defaultValue: true, fromJson: boolFromSql, toJson: boolToSql)
   bool showBalance;
-  @JsonKey(defaultValue: true, fromJson: _valueToBool)
+  @JsonKey(defaultValue: true, fromJson: boolFromSql, toJson: boolToSql)
   bool isRoundUp;
 
   Wallet({
