@@ -33,6 +33,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get homeButtonExpense => 'gasto';
 
   @override
+  String get homeWalletSwipeHint => 'Desliza para cambiar de cartera';
+
+  @override
   String get profileTitle => 'Configuración de perfil';
 
   @override

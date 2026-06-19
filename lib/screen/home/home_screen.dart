@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/providers/settings_notifier.dart';
 import 'package:pecunia/router/app_router.dart';
 import 'package:pecunia/screen/home/home_controller.dart';
@@ -10,6 +11,7 @@ import 'package:pecunia/screen/home/widgets/home_error_listener.dart';
 import 'package:pecunia/screen/home/widgets/home_top_overlay.dart';
 import 'package:pecunia/screen/home/widgets/home_transaction_list.dart';
 import 'package:pecunia/widgets/setting_wallet/setting_wallet.dart';
+import 'package:pecunia/screen/home/widgets/home_header_button.dart';
 import 'package:pecunia/widgets/list_edge_fade.dart';
 
 
@@ -31,17 +33,34 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  AppBar _appBar(BuildContext context, HomeState homeState) => AppBar(
-        leading: SettingWallet(update: homeState.currentWallet),
-        title: const CurrentWallet(),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () => context.push(AppRoute.profile.path),
-            icon: const Icon(Icons.account_box),
+  AppBar _appBar(BuildContext context, HomeState homeState) {
+    final l10n = AppLocalizations.of(context);
+
+    return AppBar(
+      toolbarHeight: 64,
+      leadingWidth: 56,
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 8),
+        child: Center(
+          child: SettingWallet(update: homeState.currentWallet),
+        ),
+      ),
+      title: const CurrentWallet(),
+      centerTitle: true,
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 12),
+          child: Center(
+            child: HomeHeaderButton(
+              icon: Icons.person_outline_rounded,
+              tooltip: l10n.profileTitle,
+              onPressed: () => context.push(AppRoute.profile.path),
+            ),
           ),
-        ],
-      );
+        ),
+      ],
+    );
+  }
 }
 
 class HomeScreenBody extends StatelessWidget {
@@ -64,8 +83,8 @@ class HomeScreenBody extends StatelessWidget {
     final topOverlayHeight = topContentHeight + topFadeHeight * 0.5;
 
     final systemBottom = MediaQuery.viewPaddingOf(context).bottom;
-    final bottomPadding = 140.0 + systemBottom;
-    const bottomFadeHeight = 110.0;
+    final bottomPadding = 188.0 + systemBottom;
+    const bottomFadeHeight = 200.0;
 
     return Stack(
       children: [

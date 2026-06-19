@@ -134,13 +134,23 @@ class TransactionItem extends StatelessWidget {
       ),
     );
 
-    final horizontalPadding = edgeToEdge ? 0.0 : 16.0;
+    const horizontalPadding = 16.0;
 
     return Dismissible(
       key: Key(transaction.id.toString()),
+      direction: DismissDirection.endToStart,
       confirmDismiss: (_) => _confirmDismiss(context),
       onDismissed: (_) {},
-      background: Container(
+      background: const SizedBox.shrink(),
+      secondaryBackground: _deleteBackground(horizontalPadding),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 4),
+        child: cardContent,
+      ),
+    );
+  }
+
+  Widget _deleteBackground(double horizontalPadding) => Container(
         decoration: BoxDecoration(
           color: Colors.red.shade800,
           borderRadius: BorderRadius.circular(12),
@@ -149,13 +159,7 @@ class TransactionItem extends StatelessWidget {
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
         child: const Icon(Icons.delete_outline, color: Colors.white),
-      ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 4),
-        child: cardContent,
-      ),
-    );
-  }
+      );
 
   Widget _label(BuildContext context) {
     final l10n = AppLocalizations.of(context);

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pecunia/models/analytics_total.dart';
 import 'package:pecunia/models/transaction.dart';
@@ -89,12 +87,13 @@ class HomeNotifier extends Notifier<HomeState> {
 
   // -----------SWIPE-----------------------------------------------------------
 
-  void swipeWallet(int offset) {
+  /// [direction]: -1 — предыдущий кошелёк, +1 — следующий.
+  void stepWallet(int direction) {
+    if (direction == 0) return;
     final wallets = ref.read(walletNotifierProvider).wallets;
     if (wallets.isEmpty) return;
-    var index = currentIndex - offset;
-    index = max(0, index);
-    index = min(index, wallets.length - 1);
+    final index = (currentIndex + direction).clamp(0, wallets.length - 1);
+    if (index == currentIndex) return;
     selectWallet(wallets[index]);
   }
 }

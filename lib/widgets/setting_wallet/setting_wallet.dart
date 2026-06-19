@@ -4,6 +4,7 @@ import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/models/wallet.dart';
 import 'package:pecunia/providers/settings_notifier.dart';
 import 'package:pecunia/styles/app_text_style.dart';
+import 'package:pecunia/screen/home/widgets/home_header_button.dart';
 import 'package:pecunia/widgets/app_bottom_sheet.dart';
 import 'package:pecunia/widgets/setting_wallet/setting_wallet_sheet.dart';
 
@@ -22,9 +23,10 @@ class SettingWallet extends ConsumerWidget {
             style: AppTextStyle.text14w400(),
           ),
         )
-      : IconButton(
+      : HomeHeaderButton(
+          icon: Icons.tune_rounded,
+          tooltip: AppLocalizations.of(context).settingWalletTitleUpdate,
           onPressed: () => _setting(context, ref),
-          icon: const Icon(Icons.settings),
         );
 
   Future<void> _setting(BuildContext context, WidgetRef ref) async {

@@ -8,6 +8,7 @@
   "labelCategory": "catégorie",
   "homeButtonIncome": "revenu",
   "homeButtonExpense": "dépense",
+  "homeWalletSwipeHint": "Glissez pour changer de portefeuille",
   "profileTitle": "Paramètres du profil",
   "profileMyWallets": "mes portefeuilles",
   "profileTheme": "thème",

@@ -16,6 +16,9 @@ import 'package:pecunia/widgets/transfer/transfer_sheet.dart';
 class HomeBottomOverlay extends ConsumerWidget {
   const HomeBottomOverlay({super.key});
 
+  static const _panelRadius = 28.0;
+  static const _iconSize = 44.0;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -26,82 +29,111 @@ class HomeBottomOverlay extends ConsumerWidget {
     );
     final wallets = ref.watch(walletNotifierProvider.select((s) => s.wallets));
     final currentIndex = wallets.indexWhere((e) => e.id == currentWalletId);
+    final hasMultipleWallets = wallets.length > 1;
 
     final l10n = AppLocalizations.of(context);
     final borderColor = isDark
-        ? Colors.white.withValues(alpha: 0.08)
-        : Colors.black.withValues(alpha: 0.05);
+        ? Colors.white.withValues(alpha: 0.1)
+        : Colors.black.withValues(alpha: 0.06);
 
-    final floatingActionBar = Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      decoration: BoxDecoration(
-        color: panelColor.withValues(alpha: 0.45),
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: borderColor),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.06),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
-          ),
-        ],
+    void stepWallet(int direction) =>
+        ref.read(homeNotifierProvider.notifier).stepWallet(direction);
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        20,
+        0,
+        20,
+        HomeBottomLayout.bottomInset(context),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(30),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _actionButton(
-                  context,
-                  icon: Icons.remove_circle_outline_rounded,
-                  label: l10n.homeButtonExpense,
-                  color: const Color(0xFFC62828),
-                  isDark: isDark,
-                  onTap: () => SettingTransaction.setting(
-                    context,
-                    TransactionType.expense,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(_panelRadius),
+          border: Border.all(color: borderColor),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: isDark ? 0.28 : 0.08),
+              blurRadius: 24,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(_panelRadius),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+            child: ColoredBox(
+              color: panelColor.withValues(alpha: isDark ? 0.58 : 0.68),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (hasMultipleWallets) ...[
+                    WalletDots(
+                      walletCount: wallets.length,
+                      currentIndex: currentIndex,
+                      onStep: stepWallet,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Divider(
+                        height: 1,
+                        thickness: 0.5,
+                        color: borderColor,
+                      ),
+                    ),
+                  ],
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      10,
+                      hasMultipleWallets ? 8 : 14,
+                      10,
+                      14,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: _actionButton(
+                            context,
+                            icon: Icons.remove_rounded,
+                            label: l10n.homeButtonExpense,
+                            color: const Color(0xFFC62828),
+                            isDark: isDark,
+                            onTap: () => SettingTransaction.setting(
+                              context,
+                              TransactionType.expense,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: _transferButton(
+                            context,
+                            isDark: isDark,
+                            onTap: () =>
+                                appBottomSheet(context, const TransferSheet()),
+                          ),
+                        ),
+                        Expanded(
+                          child: _actionButton(
+                            context,
+                            icon: Icons.add_rounded,
+                            label: l10n.homeButtonIncome,
+                            color: const Color(0xFF2E7D32),
+                            isDark: isDark,
+                            onTap: () => SettingTransaction.setting(
+                              context,
+                              TransactionType.income,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                _centralButton(
-                  context,
-                  isDark: isDark,
-                  onTap: () => appBottomSheet(context, const TransferSheet()),
-                ),
-                _actionButton(
-                  context,
-                  icon: Icons.add_circle_outline_rounded,
-                  label: l10n.homeButtonIncome,
-                  color: const Color(0xFF2E7D32),
-                  isDark: isDark,
-                  onTap: () => SettingTransaction.setting(
-                    context,
-                    TransactionType.income,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
-
-    return Padding(
-      padding: EdgeInsets.only(bottom: HomeBottomLayout.bottomInset(context)),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          WalletDots(
-            walletCount: wallets.length,
-            currentIndex: currentIndex,
-            onSwipe: (offset) =>
-                ref.read(homeNotifierProvider.notifier).swipeWallet(offset),
-          ),
-          floatingActionBar,
-        ],
       ),
     );
   }
@@ -114,39 +146,45 @@ class HomeBottomOverlay extends ConsumerWidget {
     required bool isDark,
     required VoidCallback onTap,
   }) {
-    return Expanded(
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(16),
-          splashColor: color.withValues(alpha: 0.1),
-          highlightColor: color.withValues(alpha: 0.05),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(icon, color: color, size: 22),
-                const SizedBox(height: 4),
-                Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: AppTextStyle.text12w600(
-                    color: isDark ? Colors.white70 : Colors.black87,
-                  ),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(18),
+        splashColor: color.withValues(alpha: 0.12),
+        highlightColor: color.withValues(alpha: 0.06),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: _iconSize,
+                height: _iconSize,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: isDark ? 0.18 : 0.12),
+                  shape: BoxShape.circle,
                 ),
-              ],
-            ),
+                child: Icon(icon, color: color, size: 24),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: AppTextStyle.text12w600(
+                  color: isDark ? Colors.white70 : Colors.black87,
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _centralButton(
+  Widget _transferButton(
     BuildContext context, {
     required bool isDark,
     required VoidCallback onTap,
@@ -159,29 +197,42 @@ class HomeBottomOverlay extends ConsumerWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        customBorder: const CircleBorder(),
-        child: Container(
-          width: 56,
-          height: 56,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: gradientColors,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF3F51B5).withValues(alpha: 0.3),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+        borderRadius: BorderRadius.circular(18),
+        splashColor: const Color(0xFF3F51B5).withValues(alpha: 0.12),
+        highlightColor: const Color(0xFF3F51B5).withValues(alpha: 0.06),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: _iconSize,
+                height: _iconSize,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: gradientColors,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF3F51B5).withValues(alpha: 0.28),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.compare_arrows_rounded,
+                  color: Colors.white,
+                  size: 24,
+                ),
               ),
+              const SizedBox(height: 6),
+              // Заглушка под подпись — выравнивает ряд с боковыми кнопками.
+              const SizedBox(height: 16),
             ],
-          ),
-          child: const Icon(
-            Icons.compare_arrows_rounded,
-            color: Colors.white,
-            size: 26,
           ),
         ),
       ),

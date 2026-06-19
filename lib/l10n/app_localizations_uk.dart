@@ -33,6 +33,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get homeButtonExpense => 'витрата';
 
   @override
+  String get homeWalletSwipeHint => 'Свайп для перемикання гаманців';
+
+  @override
   String get profileTitle => 'Налаштування профілю';
 
   @override

@@ -16,6 +16,8 @@
   "@homeButtonIncome": {},
   "homeButtonExpense": "expense",
   "@homeButtonExpense": {},
+  "homeWalletSwipeHint": "Swipe to switch wallets",
+  "@homeWalletSwipeHint": {},
   "profileTitle": "Profile settings",
   "@profileTitle": {},
   "profileMyWallets": "my wallets",

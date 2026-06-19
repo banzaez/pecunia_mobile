@@ -33,6 +33,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get homeButtonExpense => 'wydatek';
 
   @override
+  String get homeWalletSwipeHint => 'Przesuń, aby zmienić portfel';
+
+  @override
   String get profileTitle => 'Ustawienia profilu';
 
   @override

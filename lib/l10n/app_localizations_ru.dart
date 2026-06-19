@@ -33,6 +33,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get homeButtonExpense => 'расход';
 
   @override
+  String get homeWalletSwipeHint => 'Свайп для переключения кошельков';
+
+  @override
   String get profileTitle => 'Настройки профиля';
 
   @override

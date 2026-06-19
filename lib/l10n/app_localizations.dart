@@ -154,6 +154,12 @@ abstract class AppLocalizations {
   /// **'expense'**
   String get homeButtonExpense;
 
+  /// No description provided for @homeWalletSwipeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe to switch wallets'**
+  String get homeWalletSwipeHint;
+
   /// No description provided for @profileTitle.
   ///
   /// In en, this message translates to:

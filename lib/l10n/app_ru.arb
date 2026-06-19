@@ -8,6 +8,7 @@
   "labelCategory": "категория",
   "homeButtonIncome": "доход",
   "homeButtonExpense": "расход",
+  "homeWalletSwipeHint": "Свайп для переключения кошельков",
   "profileTitle": "Настройки профиля",
   "profileMyWallets": "мои кошельки",
   "profileTheme": "тема",

@@ -8,6 +8,7 @@
   "labelCategory": "categoría",
   "homeButtonIncome": "ingreso",
   "homeButtonExpense": "gasto",
+  "homeWalletSwipeHint": "Desliza para cambiar de cartera",
   "profileTitle": "Configuración de perfil",
   "profileMyWallets": "mis billeteras",
   "profileTheme": "tema",

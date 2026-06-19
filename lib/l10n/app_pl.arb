@@ -8,6 +8,7 @@
   "labelCategory": "kategoria",
   "homeButtonIncome": "dochód",
   "homeButtonExpense": "wydatek",
+  "homeWalletSwipeHint": "Przesuń, aby zmienić portfel",
   "profileTitle": "Ustawienia profilu",
   "profileMyWallets": "moje portfele",
   "profileTheme": "motyw",
