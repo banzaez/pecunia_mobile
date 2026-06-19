@@ -20,7 +20,6 @@ class HomeBottomOverlay extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final baseColor = appOverlayBaseColor(context);
     final panelColor = appPanelColor(context);
 
     final currentWalletId =
@@ -87,23 +86,11 @@ class HomeBottomOverlay extends ConsumerWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                baseColor.withValues(alpha: 0.0),
-                panelColor.withValues(alpha: 0.6),
-              ],
-            ),
-          ),
-          child: WalletDots(
-            walletCount: wallets.length,
-            currentIndex: currentIndex,
-            onSwipe: (offset) =>
-                ref.read(homeNotifierProvider.notifier).swipeWallet(offset),
-          ),
+        WalletDots(
+          walletCount: wallets.length,
+          currentIndex: currentIndex,
+          onSwipe: (offset) =>
+              ref.read(homeNotifierProvider.notifier).swipeWallet(offset),
         ),
         floatingActionBar,
       ],

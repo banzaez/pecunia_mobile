@@ -10,6 +10,7 @@ import 'package:pecunia/screen/home/widgets/home_error_listener.dart';
 import 'package:pecunia/screen/home/widgets/home_top_overlay.dart';
 import 'package:pecunia/screen/home/widgets/home_transaction_list.dart';
 import 'package:pecunia/widgets/setting_wallet/setting_wallet.dart';
+import 'package:pecunia/widgets/list_edge_fade.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -47,9 +48,11 @@ class HomeScreen extends ConsumerWidget {
     const actionPanelContentHeight = 64.0;
     const walletDotsHeight = 40.0;
     const topFadeHeight = 24.0;
+    const bottomFadeExtension = 36.0;
     const listInsetTrim = 12.0;
     final bottomOverlayHeight =
         actionPanelContentHeight + walletDotsHeight + bottomSafe + 4;
+    final bottomScrimHeight = bottomOverlayHeight + bottomFadeExtension;
 
     final showBalance = homeState.currentWallet?.showBalance ?? false;
     final topContentHeight = showBalance ? 148.0 : 56.0;
@@ -64,7 +67,17 @@ class HomeScreen extends ConsumerWidget {
             child: HomeTransactionList(
               isRoundUp: isRoundUp,
               topPadding: topOverlayHeight - listInsetTrim,
-              bottomPadding: bottomOverlayHeight - listInsetTrim,
+              bottomPadding: bottomScrimHeight - listInsetTrim,
+            ),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            height: bottomScrimHeight,
+            child: ListEdgeFade(
+              height: bottomScrimHeight,
+              forBottomNav: true,
             ),
           ),
           const Positioned(
