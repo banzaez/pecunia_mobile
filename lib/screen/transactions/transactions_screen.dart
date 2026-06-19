@@ -11,6 +11,8 @@ import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/util/category_icon_helper.dart';
 import 'package:pecunia/util/ext_double.dart';
 import 'package:pecunia/widgets/custom_app_bar.dart';
+import 'package:pecunia/styles/app_colors.dart';
+import 'package:pecunia/widgets/empty_state_view.dart';
 import 'package:pecunia/widgets/staggered_fade_in.dart';
 import 'package:pecunia/widgets/transaction_item.dart';
 
@@ -25,6 +27,7 @@ class TransactionsScreen extends ConsumerStatefulWidget {
 
 class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
   bool _isLoading = true;
+  String? _loadError;
   List<Transaction> _transactions = [];
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
@@ -50,19 +53,32 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
   }
 
   Future<void> _loadTransactions() async {
-    final list = await ref
-        .read(transactionNotifierProvider.notifier)
-        .selectByWalletIdAndCategoryAndByPeriod(
-          widget.args.walletId,
-          widget.args.categoryId,
-          widget.args.startDate,
-          widget.args.endDate,
-        );
-    if (mounted) {
-      setState(() {
-        _transactions = list;
-        _isLoading = false;
-      });
+    setState(() {
+      _isLoading = true;
+      _loadError = null;
+    });
+    try {
+      final list = await ref
+          .read(transactionNotifierProvider.notifier)
+          .selectByWalletIdAndCategoryAndByPeriod(
+            widget.args.walletId,
+            widget.args.categoryId,
+            widget.args.startDate,
+            widget.args.endDate,
+          );
+      if (mounted) {
+        setState(() {
+          _transactions = list;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _loadError = e.toString();
+        });
+      }
     }
   }
 
@@ -108,6 +124,29 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
   Widget _list(bool isRoundUp, AppLocalizations l10n) {
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_loadError != null) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                _loadError!,
+                style: AppTextStyle.text14w400(),
+                textAlign: TextAlign.center,
+              ),
+              AppSpaces.v16,
+              ElevatedButton(
+                onPressed: _loadTransactions,
+                child: Text(l10n.startupErrorRetry),
+              ),
+            ],
+          ),
+        ),
+      );
     }
 
     if (_transactions.isEmpty) {
@@ -299,75 +338,11 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
     );
   }
 
-  Widget _emptyState(AppLocalizations l10n, {required bool isSearchEmpty}) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    final accentColor = isSearchEmpty ? const Color(0xFF9E9E9E) : const Color(0xFF3F51B5);
-
-    return Center(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Glowing Illustration Icon
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      accentColor.withValues(alpha: 0.15),
-                      accentColor.withValues(alpha: 0.05),
-                    ],
-                  ),
-                  border: Border.all(
-                    color: accentColor.withValues(alpha: 0.25),
-                    width: 1.5,
-                  ),
-                  boxShadow: isDark ? null : [
-                    BoxShadow(
-                      color: accentColor.withValues(alpha: 0.04),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
-                    )
-                  ],
-                ),
-                child: Center(
-                  child: Icon(
-                    isSearchEmpty ? Icons.search_off_rounded : Icons.receipt_long_rounded,
-                    color: isDark ? Colors.white70 : accentColor,
-                    size: 32,
-                  ),
-                ),
-              ),
-              AppSpaces.v24,
-              // Main message
-              Text(
-                isSearchEmpty ? l10n.emptySearchTitle : l10n.emptyTransactionsTitle,
-                style: AppTextStyle.text15w600(
-                  color: isDark ? Colors.white : Colors.black87,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              AppSpaces.v8,
-              // Helpful subtitle
-              Text(
-                isSearchEmpty ? l10n.emptySearchDesc : l10n.emptyTransactionsDesc,
-                style: AppTextStyle.text12w400(
-                  color: isDark ? Colors.white38 : Colors.black38,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  Widget _emptyState(AppLocalizations l10n, {required bool isSearchEmpty}) =>
+      EmptyStateView(
+        icon: isSearchEmpty ? Icons.search_off_rounded : Icons.receipt_long_rounded,
+        title: isSearchEmpty ? l10n.emptySearchTitle : l10n.emptyTransactionsTitle,
+        subtitle: isSearchEmpty ? l10n.emptySearchDesc : l10n.emptyTransactionsDesc,
+        accentColor: isSearchEmpty ? Colors.grey : AppColors.accentIndigo,
+      );
 }

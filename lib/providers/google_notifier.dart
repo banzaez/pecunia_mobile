@@ -9,6 +9,7 @@ import 'package:googleapis/drive/v3.dart' as drive_api;
 import 'package:googleapis_auth/googleapis_auth.dart' as auth show AuthClient;
 import 'package:pecunia/providers/sql_provider_ref.dart';
 import 'package:pecunia/util/ext_datetime.dart';
+import 'package:pecunia/util/google_drive_errors.dart';
 
 part 'google_notifier.g.dart';
 
@@ -97,7 +98,15 @@ class GoogleNotifier extends _$GoogleNotifier {
     return const GoogleAuthState();
   }
 
-  Future<void> signIn() async => _googleSignIn.attemptLightweightAuthentication();
+  Future<void> signIn() async {
+    try {
+      final account = await _googleSignIn.authenticate(scopeHint: _scopes);
+      state = state.copyWith(currentUser: account);
+      await _checkAuthorization(account);
+    } on GoogleSignInException catch (e) {
+      debugPrint('Sign in error: $e');
+    }
+  }
 
   Future<void> signOut() async {
     try {
@@ -162,7 +171,7 @@ class GoogleDriveNotifier extends _$GoogleDriveNotifier {
       );
       state = state.copyWith(files: driveFiles.files ?? [], isLoading: false);
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: 'Ошибка при чтении файлов: $e');
+      state = state.copyWith(isLoading: false, error: GoogleDriveErrors.read);
     }
   }
 
@@ -192,7 +201,7 @@ class GoogleDriveNotifier extends _$GoogleDriveNotifier {
       await readFiles();
       onSuccess();
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: 'Ошибка при создании файла: $e');
+      state = state.copyWith(isLoading: false, error: GoogleDriveErrors.create);
       onError(e.toString());
     }
   }
@@ -218,8 +227,10 @@ class GoogleDriveNotifier extends _$GoogleDriveNotifier {
       await readFiles();
       onSuccess();
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: 'Ошибка при удалении файла: $e');
+      state = state.copyWith(isLoading: false, error: GoogleDriveErrors.delete);
       onError(e.toString());
     }
   }
+
+  void clearError() => state = state.copyWith(clearError: true);
 }

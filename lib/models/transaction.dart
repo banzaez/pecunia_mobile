@@ -46,5 +46,6 @@ class Transaction {
 
   @override
   String toString() =>
-      "id: $id, walletId: $walletId, amount: $amount, category: $category, createdAt: $createdAt, createdAt";
+      'Transaction(id: $id, walletId: $walletId, amount: $amount, '
+      'category: ${category?.name}, createdAt: $createdAt)';
 }

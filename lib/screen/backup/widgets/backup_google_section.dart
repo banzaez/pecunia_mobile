@@ -67,18 +67,21 @@ class _DriveFileList extends ConsumerWidget {
 
     final driveState = ref.watch(googleDriveNotifierProvider);
     final driveFiles = driveState.files;
+    final isBackupBusy = ref.watch(backupNotifierProvider.select((s) => s.isLoading));
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
           AppSpaces.v24,
-          driveState.isLoading
+          driveState.isLoading || isBackupBusy
               ? const CircularProgressIndicator()
               : ElevatedButton(
-                  onPressed: () => ref
-                      .read(backupNotifierProvider.notifier)
-                      .createCloudBackup(),
+                  onPressed: isBackupBusy
+                      ? null
+                      : () => ref
+                          .read(backupNotifierProvider.notifier)
+                          .createCloudBackup(),
                   child: Text(l10n.backupCreateCloudRecovery),
                 ),
           if (driveState.error != null) ...[
@@ -121,6 +124,7 @@ class _DriveFileItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final isBackupBusy = ref.watch(backupNotifierProvider.select((s) => s.isLoading));
 
     return Container(
       decoration: BoxDecoration(
@@ -134,7 +138,9 @@ class _DriveFileItem extends ConsumerWidget {
           Text(name, style: AppTextStyle.text12w600(color: Colors.white)),
           const Spacer(),
           IconButton(
-            onPressed: () => showConfirmDialog(
+            onPressed: isBackupBusy
+                ? null
+                : () => showConfirmDialog(
               context,
               title: l10n.backupCloudDialogDelete,
               content: l10n.backupCloudDialogDeleteContent,
@@ -153,7 +159,9 @@ class _DriveFileItem extends ConsumerWidget {
             icon: Icon(Icons.delete, color: Colors.red.shade400),
           ),
           IconButton(
-            onPressed: () => showConfirmDialog(
+            onPressed: isBackupBusy
+                ? null
+                : () => showConfirmDialog(
               context,
               title: l10n.backupCloudDialogRecovery,
               content: l10n.backupCloudDialogRecoveryContent,

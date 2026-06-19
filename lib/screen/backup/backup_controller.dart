@@ -81,12 +81,18 @@ class BackupNotifier extends Notifier<BackupState> {
       final backupPath = await sqlProvider.createBackupSnapshot();
       final backupFile = File(backupPath);
 
-      await FilePicker.saveFile(
+      final savedPath = await FilePicker.saveFile(
         fileName: "pecunia_backup_${DateTime.now().toFormat("yyyyMMdd")}.db",
         bytes: await backupFile.readAsBytes(),
       );
 
       if (await backupFile.exists()) await backupFile.delete();
+
+      if (savedPath == null) {
+        state = state.copyWith(isLoading: false, snackMessage: '__cancelled__', isError: false);
+        return;
+      }
+
       state = state.copyWith(isLoading: false, snackMessage: '__saved__', isError: false);
     } catch (e) {
       state = state.copyWith(isLoading: false, snackMessage: '__error__', isError: true);
@@ -134,7 +140,7 @@ class BackupNotifier extends Notifier<BackupState> {
     try {
       final driveNotifier = ref.read(googleDriveNotifierProvider.notifier);
       final mediaStream = await driveNotifier.getFileMedia(fileId);
-      if (mediaStream == null) throw Exception('Файл не найден');
+      if (mediaStream == null) throw StateError('missing file');
 
       final tempDir = await Directory.systemTemp.createTemp('pecunia_cloud_restore');
       tempFile = File('${tempDir.path}/restore.db');

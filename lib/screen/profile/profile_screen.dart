@@ -18,6 +18,8 @@ import 'package:url_launcher/url_launcher.dart';
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
+  static final Future<PackageInfo> _packageInfoFuture = PackageInfo.fromPlatform();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
@@ -29,14 +31,21 @@ class ProfileScreen extends ConsumerWidget {
 
   // --------------------------------------------------------------------------------------------
 
-  Widget _body(BuildContext context, WidgetRef ref, AppLocalizations l10n) => Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _settings(context, ref, l10n),
-          _buttons(context, l10n),
-          const SwitchLanguage(),
-          _support(context, l10n),
-        ],
+  Widget _body(BuildContext context, WidgetRef ref, AppLocalizations l10n) =>
+      SingleChildScrollView(
+        child: SizedBox(
+          height: MediaQuery.sizeOf(context).height -
+              (MediaQuery.paddingOf(context).top + kToolbarHeight),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _settings(context, ref, l10n),
+              _buttons(context, l10n),
+              const SwitchLanguage(),
+              _support(context, l10n),
+            ],
+          ),
+        ),
       );
 
   // --------------------------------------------------------------------------------------------
@@ -92,13 +101,13 @@ class ProfileScreen extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           TextButton(
-            onPressed: _launchUrl,
+            onPressed: () => _launchUrl(context),
             child: const Text(AppConstants.supportEmail),
           ),
           Text(l10n.profileSupport, style: AppTextStyle.text12w400(color: AppColors.disable)),
           AppSpaces.v16,
           FutureBuilder(
-            future: PackageInfo.fromPlatform(),
+            future: _packageInfoFuture,
             builder: (_, snapshot) => snapshot.hasData
                 ? Text(
                     "${snapshot.data!.packageName} ${snapshot.data!.version}",
@@ -109,10 +118,12 @@ class ProfileScreen extends ConsumerWidget {
         ],
       );
 
-  Future<void> _launchUrl() async {
+  Future<void> _launchUrl(BuildContext context) async {
     final Uri url = Uri.parse("mailto:${AppConstants.supportEmail}");
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
+    if (!await launchUrl(url) && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).error)),
+      );
     }
   }
 }

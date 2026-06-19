@@ -72,7 +72,20 @@ class TransactionNotifier extends _$TransactionNotifier {
   // -----------SQL------------------------------------------------------------
 
   Future<void> refreshAll() async {
-    state = state.copyWith(isLoading: true, clearError: true);
+    await _syncCurrentWallet(showLoading: true);
+  }
+
+  /// Перезагружает первую страницу списка и итоги без полного сброса пагинации
+  /// при мутациях, затрагивающих текущий кошелёк.
+  Future<void> _syncCurrentWallet({bool showLoading = false}) async {
+    if (state.walletId <= 0) return;
+
+    if (showLoading) {
+      state = state.copyWith(isLoading: true, clearError: true);
+    } else {
+      state = state.copyWith(clearError: true);
+    }
+
     try {
       final sql = ref.read(sqlProviderProvider).transactions;
       final walletId = state.walletId;
@@ -101,6 +114,11 @@ class TransactionNotifier extends _$TransactionNotifier {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
+
+  bool _affectsCurrentWallet(int walletId) => walletId == state.walletId;
+
+  bool _transferAffectsCurrentWallet(Transaction from, Transaction to) =>
+      _affectsCurrentWallet(from.walletId) || _affectsCurrentWallet(to.walletId);
 
   Future<void> loadMore() async {
     if (!state.hasMore || state.isLoadingMore || state.isLoading || _loadMoreInFlight) {
@@ -131,47 +149,66 @@ class TransactionNotifier extends _$TransactionNotifier {
   }
 
   Future<void> addSQL(Transaction transaction) async {
-    state = state.copyWith(isLoading: true, clearError: true);
+    final showLoading = state.transactions.isEmpty;
+    if (showLoading) {
+      state = state.copyWith(isLoading: true, clearError: true);
+    } else {
+      state = state.copyWith(clearError: true);
+    }
     try {
       if (transaction.walletId == 0) transaction.walletId = state.walletId;
       await ref.read(sqlProviderProvider).transactions.add(value: transaction);
-      await refreshAll();
+      if (_affectsCurrentWallet(transaction.walletId)) {
+        await _syncCurrentWallet();
+      } else if (showLoading) {
+        state = state.copyWith(isLoading: false);
+      }
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
   Future<void> updateSQL(Transaction transaction) async {
-    state = state.copyWith(isLoading: true, clearError: true);
+    state = state.copyWith(clearError: true);
     try {
       if (transaction.walletId == 0) transaction.walletId = state.walletId;
       await ref.read(sqlProviderProvider).transactions.update(value: transaction);
-      await refreshAll();
+      if (_affectsCurrentWallet(transaction.walletId) ||
+          state.transactions.any((t) => t.id == transaction.id)) {
+        await _syncCurrentWallet();
+      }
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
+      state = state.copyWith(error: e.toString());
     }
   }
 
   Future<void> deleteSQL(int id) async {
-    state = state.copyWith(isLoading: true, clearError: true);
+    final affectsList = state.transactions.any((t) => t.id == id);
+    if (affectsList) {
+      state = state.copyWith(clearError: true);
+    }
     try {
       await ref.read(sqlProviderProvider).transactions.delete(id: id);
-      await refreshAll();
+      if (affectsList) {
+        await _syncCurrentWallet();
+      }
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
+      state = state.copyWith(error: e.toString());
     }
   }
 
   Future<void> addTransferSQL(Transaction from, Transaction to) async {
-    state = state.copyWith(isLoading: true, clearError: true);
+    state = state.copyWith(clearError: true);
     try {
       await ref
           .read(sqlProviderProvider)
           .transactions
           .addBatch(values: [from, to]);
-      await refreshAll();
+      if (_transferAffectsCurrentWallet(from, to)) {
+        await _syncCurrentWallet();
+      }
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
+      state = state.copyWith(error: e.toString());
     }
   }
 

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/models/analytics_filter.dart';
 import 'package:pecunia/screen/analytics/analytics_controller.dart';
-import 'package:pecunia/screen/home/home_panel_style.dart';
+import 'package:pecunia/styles/app_panel_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/widgets/fields/app_switch.dart';
 import 'package:pecunia/widgets/fields/pick_date/pick_date.dart';
@@ -25,8 +25,8 @@ class AnalyticsBottomOverlay extends ConsumerWidget {
     final valuesYear = ref.watch(analyticsNotifierProvider.select((s) => s.valuesYear));
     final valuesMonth = ref.watch(analyticsNotifierProvider.select((s) => s.valuesMonth));
     final valuesDay = ref.watch(analyticsNotifierProvider.select((s) => s.valuesDay));
-    final baseColor = homeOverlayBaseColor(context);
-    final panelColor = homePanelColor(context);
+    final baseColor = appOverlayBaseColor(context);
+    final panelColor = appPanelColor(context);
 
     return Column(
       mainAxisSize: MainAxisSize.min,

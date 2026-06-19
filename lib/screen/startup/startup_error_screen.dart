@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/styles/app_text_style.dart';
+import 'package:pecunia/styles/app_themes.dart';
+import 'package:pecunia/styles/app_system_ui.dart';
 
 class StartupErrorScreen extends StatelessWidget {
   const StartupErrorScreen({super.key, required this.message, required this.onRetry});
@@ -13,8 +15,11 @@ class StartupErrorScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: AppThemes.darkTheme,
+      darkTheme: AppThemes.darkTheme,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      builder: AppSystemUi.wrap,
       home: Scaffold(
         body: SafeArea(
           child: Padding(

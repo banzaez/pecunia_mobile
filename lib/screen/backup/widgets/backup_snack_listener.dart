@@ -5,6 +5,7 @@ import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/providers/google_notifier.dart';
 import 'package:pecunia/router/app_router.dart';
 import 'package:pecunia/screen/backup/backup_controller.dart';
+import 'package:pecunia/util/google_drive_errors.dart';
 
 class BackupSnackListener extends ConsumerWidget {
   const BackupSnackListener({super.key, required this.child});
@@ -24,8 +25,14 @@ class BackupSnackListener extends ConsumerWidget {
         '__restored__' => l10n.backupRestoredSuccess,
         '__deleted__' => l10n.backupDeletedSuccess,
         '__format_error__' => l10n.backupErrorMsg,
+        '__cancelled__' => l10n.backupCancelled,
         _ => l10n.error,
       };
+
+      if (msg == '__cancelled__') {
+        ref.read(backupNotifierProvider.notifier).clearSnack();
+        return;
+      }
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -45,12 +52,20 @@ class BackupSnackListener extends ConsumerWidget {
       final error = next.error;
       if (error == null || error == prev?.error) return;
 
+      final text = switch (error) {
+        GoogleDriveErrors.read => l10n.driveErrorRead,
+        GoogleDriveErrors.create => l10n.driveErrorCreate,
+        GoogleDriveErrors.delete => l10n.driveErrorDelete,
+        _ => error,
+      };
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(error),
+          content: Text(text),
           backgroundColor: Colors.red,
         ),
       );
+      ref.read(googleDriveNotifierProvider.notifier).clearError();
     });
 
     return child;

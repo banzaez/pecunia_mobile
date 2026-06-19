@@ -49,10 +49,13 @@ class _WalletsScreenState extends ConsumerState<WalletsScreen> {
               children: [
                 const SettingWallet(),
                 TextButton.icon(
-                  onPressed: () => setState(() => _isEditing = true),
-                  icon: const Icon(Icons.edit, color: AppColors.edit),
+                  onPressed: () => setState(() => _isEditing = !_isEditing),
+                  icon: Icon(
+                    _isEditing ? Icons.check : Icons.edit,
+                    color: AppColors.edit,
+                  ),
                   label: Text(
-                    l10n.profileEdit,
+                    _isEditing ? l10n.transferDone : l10n.profileEdit,
                     style: AppTextStyle.text14w600(color: AppColors.edit),
                   ),
                 ),

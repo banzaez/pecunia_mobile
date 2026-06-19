@@ -11,12 +11,14 @@ import 'package:pecunia/providers/sql_provider_ref.dart';
 import 'package:pecunia/router/app_router.dart';
 import 'package:pecunia/screen/startup/startup_error_screen.dart';
 import 'package:pecunia/styles/app_themes.dart';
+import 'package:pecunia/styles/app_system_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:intl/intl.dart';
 
 Future<void> startApp() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await AppSystemUi.configure();
 
   final bootstrap = await _bootstrap();
 
@@ -82,6 +84,7 @@ class MyApp extends ConsumerWidget {
       theme: AppThemes.theme,
       darkTheme: AppThemes.darkTheme,
       themeMode: settings.themeMode,
+      builder: AppSystemUi.wrap,
       locale: settings.locale,
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: const [

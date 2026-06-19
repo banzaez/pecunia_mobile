@@ -54,6 +54,7 @@
       "period": { "type": "String" }
     }
   },
+  "analyticsCategoryEmptyDesc": "Add transactions or select another period to see detailed analytics charts.",
   "analyticsIncome": "income",
   "analyticsExpenses": "expenses",
   "analyticsTotal": "total",
@@ -172,6 +173,8 @@
   "driveErrorRead": "Error reading Drive files",
   "driveErrorDelete": "Error deleting Drive file",
   "driveErrorDownload": "Error downloading from Drive",
+  "driveErrorCreate": "Error uploading backup to Drive",
+  "backupCancelled": "Backup save cancelled",
   "backupErrorMsg": "The selected file is not in \"db\" format",
   "labelSubcategory": "subcategory",
   "signOutWithGoogle": "Sign out with Google",

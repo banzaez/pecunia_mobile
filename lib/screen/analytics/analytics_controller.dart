@@ -88,11 +88,25 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
 
   @override
   AnalyticsState build() {
-    ref.listen(transactionNotifierProvider, (prev, next) {
-      if (next.walletId > 0 && prev?.walletId != next.walletId) {
-        _refreshAll();
-      }
-    });
+    ref.listen(
+      transactionNotifierProvider.select(
+        (s) => (
+          s.walletId,
+          s.analyticsTotal.total,
+          s.analyticsTotal.income,
+          s.analyticsTotal.expense,
+        ),
+      ),
+      (prev, next) {
+        if (next.$1 <= 0) return;
+        if (prev == null) return;
+        if (prev.$1 != next.$1) {
+          _refreshAll();
+        } else if (prev.$2 != next.$2 || prev.$3 != next.$3 || prev.$4 != next.$4) {
+          _refreshAnalytics();
+        }
+      },
+    );
 
     final walletId = ref.read(transactionNotifierProvider).walletId;
     if (walletId > 0) {
@@ -197,21 +211,50 @@ class AnalyticsNotifier extends Notifier<AnalyticsState> {
   void setFilter(AnalyticsFilter value) {
     if (state.filter == value) return;
     ref.read(selectedCategoryIndexProvider.notifier).reset();
-    state = state.copyWith(filter: value, clearError: true);
-    _refreshAnalytics();
+    state = state.copyWith(filter: value, isLoading: true, clearError: true);
+    final generation = ++_refreshGeneration;
+    _applyFilterChange(generation);
+  }
+
+  Future<void> _applyFilterChange(int generation) async {
+    try {
+      await _refreshAnalytics(generation);
+    } finally {
+      if (generation == _refreshGeneration) {
+        state = state.copyWith(isLoading: false);
+      }
+    }
   }
 
   void setDate(DateTime value, DateType type) {
     ref.read(selectedCategoryIndexProvider.notifier).reset();
     final prev = state.date;
-    state = state.copyWith(date: value.startOfDay, period: type);
+    state = state.copyWith(
+      date: value.startOfDay,
+      period: type,
+      isLoading: true,
+      clearError: true,
+    );
     final generation = ++_refreshGeneration;
-    _refreshAnalytics(generation);
-    if (value.year != prev.year) {
-      _loadAvailableMonths(generation);
-      _loadAvailableDays(generation);
-    } else if (value.month != prev.month) {
-      _loadAvailableDays(generation);
+    _applyDateChange(generation, value, prev);
+  }
+
+  Future<void> _applyDateChange(int generation, DateTime value, DateTime prev) async {
+    try {
+      await _refreshAnalytics(generation);
+      if (generation != _refreshGeneration) return;
+      if (value.year != prev.year) {
+        await Future.wait([
+          _loadAvailableMonths(generation),
+          _loadAvailableDays(generation),
+        ]);
+      } else if (value.month != prev.month) {
+        await _loadAvailableDays(generation);
+      }
+    } finally {
+      if (generation == _refreshGeneration) {
+        state = state.copyWith(isLoading: false);
+      }
     }
   }
 

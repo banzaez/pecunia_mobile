@@ -3,11 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pecunia/models/transaction.dart';
 import 'package:pecunia/providers/transaction_notifier.dart';
 import 'package:pecunia/screen/home/home_controller.dart';
+import 'package:pecunia/styles/app_colors.dart';
 import 'package:pecunia/styles/app_text_style.dart';
-import 'package:pecunia/util/app_spaces.dart';
 import 'package:pecunia/util/ext_datetime.dart';
 import 'package:pecunia/util/ext_double.dart';
 import 'package:pecunia/l10n/app_localizations.dart';
+import 'package:pecunia/widgets/empty_state_view.dart';
 import 'package:pecunia/widgets/staggered_fade_in.dart';
 import 'package:pecunia/widgets/transaction_item.dart';
 
@@ -179,71 +180,12 @@ class _HomeTransactionListState extends ConsumerState<HomeTransactionList> {
     );
   }
 
-  Widget _emptyState(AppLocalizations l10n, bool isDark) {
-    final accentColor = const Color(0xFF3F51B5);
-    return Center(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      accentColor.withValues(alpha: 0.15),
-                      accentColor.withValues(alpha: 0.05),
-                    ],
-                  ),
-                  border: Border.all(
-                    color: accentColor.withValues(alpha: 0.25),
-                    width: 1.5,
-                  ),
-                  boxShadow: isDark ? null : [
-                    BoxShadow(
-                      color: accentColor.withValues(alpha: 0.04),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
-                    )
-                  ],
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.receipt_long_rounded,
-                    color: isDark ? Colors.white70 : accentColor,
-                    size: 32,
-                  ),
-                ),
-              ),
-              AppSpaces.v24,
-              Text(
-                l10n.emptyHistoryTitle,
-                style: AppTextStyle.text15w600(
-                  color: isDark ? Colors.white : Colors.black87,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              AppSpaces.v8,
-              Text(
-                l10n.emptyHistoryDesc,
-                style: AppTextStyle.text12w400(
-                  color: isDark ? Colors.white38 : Colors.black38,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  Widget _emptyState(AppLocalizations l10n) => EmptyStateView(
+        icon: Icons.receipt_long_rounded,
+        title: l10n.emptyHistoryTitle,
+        subtitle: l10n.emptyHistoryDesc,
+        accentColor: AppColors.accentIndigo,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -262,14 +204,21 @@ class _HomeTransactionListState extends ConsumerState<HomeTransactionList> {
     final isLoadingMore = ref.watch(
       transactionNotifierProvider.select((s) => s.isLoadingMore),
     );
+    final isLoading = ref.watch(
+      transactionNotifierProvider.select((s) => s.isLoading),
+    );
 
     final l10n = AppLocalizations.of(context);
     final locale = Localizations.localeOf(context).languageCode;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
+    if (isLoading && transactions.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     if (transactions.isEmpty) {
-      return _emptyState(l10n, isDark);
+      return _emptyState(l10n);
     }
 
     final listItems = _buildHomeList(transactions);

@@ -138,8 +138,12 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String analyticsCategoryEmpty(String period) {
-    return 'brak analizy za okres $period roku';
+    return 'brak analizy za okres $period';
   }
+
+  @override
+  String get analyticsCategoryEmptyDesc =>
+      'Dodaj transakcje lub wybierz inny okres, aby zobaczyć szczegółowe wykresy analityczne.';
 
   @override
   String get analyticsIncome => 'dochody';
@@ -463,6 +467,12 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get driveErrorDownload => 'Błąd pobierania z Drive';
+
+  @override
+  String get driveErrorCreate => 'Błąd przesyłania kopii zapasowej do Drive';
+
+  @override
+  String get backupCancelled => 'Zapisywanie kopii zapasowej anulowane';
 
   @override
   String get backupErrorMsg => 'Wybrany plik nie jest w formacie \"db\"';

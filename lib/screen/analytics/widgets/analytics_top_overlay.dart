@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pecunia/l10n/app_localizations.dart';
-import 'package:pecunia/models/analytics_filter.dart';
 import 'package:pecunia/screen/analytics/analytics_controller.dart';
 import 'package:pecunia/screen/analytics/widgets/analytics_graph.dart';
-import 'package:pecunia/screen/home/home_panel_style.dart';
+import 'package:pecunia/styles/app_panel_style.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
 
@@ -29,8 +28,8 @@ class AnalyticsTopOverlay extends ConsumerWidget {
     final periodStr = ref.watch(
       analyticsNotifierProvider.select((s) => s.periodStr(locale)),
     );
-    final baseColor = homeOverlayBaseColor(context);
-    final panelColor = homePanelColor(context);
+    final baseColor = appOverlayBaseColor(context);
+    final panelColor = appPanelColor(context);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -68,7 +67,7 @@ class AnalyticsTopOverlay extends ConsumerWidget {
                             },
                             child: AnalyticsGraph(
                               data: category,
-                              isTotal: filter == AnalyticsFilter.total,
+                              filter: filter,
                               totalSum: total,
                             ),
                           ),

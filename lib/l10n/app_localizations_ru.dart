@@ -139,8 +139,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String analyticsCategoryEmpty(String period) {
-    return 'аналитики за период $period года нет';
+    return 'нет аналитики за период $period';
   }
+
+  @override
+  String get analyticsCategoryEmptyDesc =>
+      'Добавьте транзакции или выберите другой период для построения детальных графиков аналитики.';
 
   @override
   String get analyticsIncome => 'доходы';
@@ -464,6 +468,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get driveErrorDownload => 'Ошибка загрузки из облака';
+
+  @override
+  String get driveErrorCreate => 'Ошибка загрузки резервной копии в облако';
+
+  @override
+  String get backupCancelled => 'Сохранение резервной копии отменено';
 
   @override
   String get backupErrorMsg => 'Выбранный файл не в формате \"db\"';

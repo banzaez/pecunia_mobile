@@ -5,6 +5,7 @@ import 'package:pecunia/models/analytics.dart';
 import 'package:pecunia/screen/analytics/analytics_controller.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/app_spaces.dart';
+import 'package:pecunia/util/category_icon_helper.dart';
 import 'package:pecunia/util/ext_double.dart';
 
 class AnalyticsCategoryItem extends ConsumerWidget {
@@ -15,6 +16,7 @@ class AnalyticsCategoryItem extends ConsumerWidget {
     required this.index,
     this.totalSum,
     this.categoryColor,
+    this.matchingSubcategories = const [],
   });
 
   final VoidCallback? onTap;
@@ -22,75 +24,17 @@ class AnalyticsCategoryItem extends ConsumerWidget {
   final int index;
   final double? totalSum;
   final Color? categoryColor;
-
-  IconData _getCategoryIcon(String? name) {
-    if (name == null) return Icons.category_rounded;
-    final lower = name.toLowerCase();
-    
-    if (lower.contains('salary')) return Icons.payments_rounded;
-    if (lower.contains('bonus')) return Icons.card_giftcard_rounded;
-    if (lower.contains('gift')) return Icons.card_giftcard_rounded;
-    if (lower.contains('invest')) return Icons.trending_up_rounded;
-    if (lower.contains('rent')) return Icons.home_work_rounded;
-    if (lower.contains('freelance')) return Icons.laptop_mac_rounded;
-    if (lower.contains('dividend')) return Icons.account_balance_wallet_rounded;
-    if (lower.contains('cashback')) return Icons.monetization_on_rounded;
-    if (lower.contains('income')) return Icons.arrow_downward_rounded;
-    
-    if (lower.contains('food') || lower.contains('restaurant') || lower.contains('cafe')) return Icons.restaurant_rounded;
-    if (lower.contains('grocer')) return Icons.local_grocery_store_rounded;
-    if (lower.contains('publictransport') || lower.contains('bus') || lower.contains('metro')) return Icons.directions_bus_rounded;
-    if (lower.contains('fuel')) return Icons.local_gas_station_rounded;
-    if (lower.contains('parking')) return Icons.local_parking_rounded;
-    if (lower.contains('transport') || lower.contains('auto') || lower.contains('car')) return Icons.directions_car_rounded;
-    if (lower.contains('utilities') || lower.contains('utility')) return Icons.water_drop_rounded;
-    if (lower.contains('repair') || lower.contains('maintenance')) return Icons.build_rounded;
-    if (lower.contains('housing') || lower.contains('mortgage')) return Icons.home_rounded;
-    if (lower.contains('clothing') || lower.contains('footwear') || lower.contains('shop')) return Icons.checkroom_rounded;
-    if (lower.contains('medicine') || lower.contains('doctor') || lower.contains('health')) return Icons.medical_services_rounded;
-    if (lower.contains('insurance')) return Icons.security_rounded;
-    if (lower.contains('movie') || lower.contains('theater') || lower.contains('entertainment') || lower.contains('hobby')) return Icons.sports_esports_rounded;
-    if (lower.contains('travel') || lower.contains('vacation')) return Icons.flight_takeoff_rounded;
-    if (lower.contains('sport') || lower.contains('fitness') || lower.contains('gym')) return Icons.fitness_center_rounded;
-    if (lower.contains('education') || lower.contains('course') || lower.contains('learn')) return Icons.school_rounded;
-    if (lower.contains('loan') || lower.contains('debt')) return Icons.money_off_rounded;
-    if (lower.contains('pet') || lower.contains('vet')) return Icons.pets_rounded;
-    if (lower.contains('charity')) return Icons.favorite_rounded;
-    if (lower.contains('internet') || lower.contains('communication') || lower.contains('phone')) return Icons.wifi_rounded;
-    if (lower.contains('transfer')) return Icons.swap_horiz_rounded;
-    
-    return Icons.category_rounded;
-  }
-
-  int? _getParentCategoryId(int subcategoryId) {
-    if (subcategoryId >= 100 && subcategoryId <= 999) {
-      return subcategoryId ~/ 10;
-    }
-    return null;
-  }
+  final List<Analytics> matchingSubcategories;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final isIncome = analytics.total > 0;
-    final accentColor = isIncome ? const Color(0xFF2E7D32) : const Color(0xFFC62828); // generic green/red
-    
-    // Check if this item is selected
+    final accentColor = isIncome ? const Color(0xFF2E7D32) : const Color(0xFFC62828);
+
     final selectedIndex = ref.watch(selectedCategoryIndexProvider);
     final isSelected = selectedIndex == index;
-    
-    // Watch detailed subcategories from notifier
-    final subcategories = ref.watch(analyticsNotifierProvider.select((s) => s.subcategory));
-    
-    // Filter subcategories that belong to this category
-    final parentId = analytics.category?.id;
-    final matchingSubcategories = parentId == null 
-        ? <Analytics>[]
-        : subcategories.where((subcat) => 
-            subcat.category?.id != null && _getParentCategoryId(subcat.category!.id) == parentId
-          ).toList();
 
-    // Use categoryColor from chart if available, otherwise fallback to accentColor
     final displayColor = categoryColor ?? accentColor;
     
     final theme = Theme.of(context);
@@ -165,7 +109,7 @@ class AnalyticsCategoryItem extends ConsumerWidget {
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
-                            _getCategoryIcon(analytics.category?.name),
+                            CategoryIconHelper.getIcon(analytics.category?.name),
                             color: displayColor,
                             size: 16,
                           ),
@@ -279,7 +223,7 @@ class AnalyticsCategoryItem extends ConsumerWidget {
                               children: [
                                 const SizedBox(width: 4),
                                 Icon(
-                                  _getCategoryIcon(subcat.category?.name),
+                                  CategoryIconHelper.getIcon(subcat.category?.name),
                                   color: displayColor.withValues(alpha: 0.7),
                                   size: 13,
                                 ),

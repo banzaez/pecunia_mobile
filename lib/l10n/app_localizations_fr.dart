@@ -140,8 +140,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String analyticsCategoryEmpty(String period) {
-    return 'aucune analyse pour la période de l\'année $period';
+    return 'aucune analyse pour la période $period';
   }
+
+  @override
+  String get analyticsCategoryEmptyDesc =>
+      'Ajoutez des transactions ou sélectionnez une autre période pour afficher des graphiques détaillés.';
 
   @override
   String get analyticsIncome => 'revenus';
@@ -467,6 +471,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get driveErrorDownload => 'Erreur de téléchargement depuis Drive';
 
   @override
+  String get driveErrorCreate =>
+      'Erreur lors de l\'envoi de la sauvegarde vers Drive';
+
+  @override
+  String get backupCancelled => 'Enregistrement de la sauvegarde annulé';
+
+  @override
   String get backupErrorMsg =>
       'Le fichier sélectionné n\'est pas au format \"db\"';
 
@@ -521,13 +532,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get driveScopeError =>
-      "L'accès à Google Drive n'a pas été accordé. Déconnectez-vous et reconnectez-vous.";
+      'L\'accès à Google Drive n\'a pas été accordé. Déconnectez-vous et reconnectez-vous.';
 
   @override
   String get monthlySummary => 'Résumé mensuel';
 
   @override
-  String get searchPlaceholder => 'Recherche par description, catégorie ou montant...';
+  String get searchPlaceholder =>
+      'Recherche par description, catégorie ou montant...';
 
   @override
   String get emptySearchTitle => 'Aucun résultat trouvé';
@@ -547,13 +559,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get totalForPeriod => 'Total pour la période';
 
   @override
-  String get dateToday => "Aujourd'hui";
+  String get dateToday => 'Aujourd\'hui';
 
   @override
   String get dateYesterday => 'Hier';
 
   @override
-  String get emptyHistoryTitle => "L'historique est vide";
+  String get emptyHistoryTitle => 'L\'historique est vide';
 
   @override
   String get emptyHistoryDesc =>

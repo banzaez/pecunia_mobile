@@ -47,12 +47,13 @@
       "period": { "type": "String" }
     }
   },
-  "analyticsCategoryEmpty": "brak analizy za okres {period} roku",
+  "analyticsCategoryEmpty": "brak analizy za okres {period}",
   "@analyticsCategoryEmpty": {
     "placeholders": {
       "period": { "type": "String" }
     }
   },
+  "analyticsCategoryEmptyDesc": "Dodaj transakcje lub wybierz inny okres, aby zobaczyć szczegółowe wykresy analityczne.",
   "analyticsIncome": "dochody",
   "analyticsExpenses": "wydatki",
   "analyticsTotal": "razem",
@@ -171,6 +172,8 @@
   "driveErrorRead": "Błąd odczytu plików Drive",
   "driveErrorDelete": "Błąd usunięcia pliku Drive",
   "driveErrorDownload": "Błąd pobierania z Drive",
+  "driveErrorCreate": "Błąd przesyłania kopii zapasowej do Drive",
+  "backupCancelled": "Zapisywanie kopii zapasowej anulowane",
   "backupErrorMsg": "Wybrany plik nie jest w formacie \"db\"",
   "labelSubcategory": "podkategoria",
   "signOutWithGoogle": "Wyloguj się z Google",

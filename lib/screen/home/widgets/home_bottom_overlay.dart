@@ -5,7 +5,7 @@ import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/models/transaction_type.dart';
 import 'package:pecunia/providers/wallet_notifier.dart';
 import 'package:pecunia/screen/home/home_controller.dart';
-import 'package:pecunia/screen/home/home_panel_style.dart';
+import 'package:pecunia/styles/app_panel_style.dart';
 import 'package:pecunia/screen/home/widgets/wallet_dots.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/widgets/app_bottom_sheet.dart';
@@ -20,12 +20,13 @@ class HomeBottomOverlay extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final baseColor = homeOverlayBaseColor(context);
-    final panelColor = homePanelColor(context);
+    final baseColor = appOverlayBaseColor(context);
+    final panelColor = appPanelColor(context);
 
-    final homeState = ref.watch(homeNotifierProvider);
+    final currentWalletId =
+        ref.watch(homeNotifierProvider.select((s) => s.currentWallet?.id));
     final wallets = ref.watch(walletNotifierProvider.select((s) => s.wallets));
-    final currentIndex = wallets.indexWhere((e) => e.id == homeState.currentWallet?.id);
+    final currentIndex = wallets.indexWhere((e) => e.id == currentWalletId);
 
     final l10n = AppLocalizations.of(context);
     final borderColor = isDark

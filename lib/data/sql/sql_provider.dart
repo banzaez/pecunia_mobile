@@ -1,3 +1,4 @@
+import 'package:pecunia/data/sql/sql_migrations.dart';
 import 'package:pecunia/data/sql/sql_analytics.dart';
 import 'package:pecunia/data/sql/sql_table_transactions.dart';
 import 'package:pecunia/data/sql/sql_table_wallets.dart';
@@ -23,61 +24,17 @@ class SQLProvider {
   Future<void> init() async {
     isLoading = true;
 
-    // Get a location using getDatabasesPath
     final dir = await sql.getDatabasesPath();
     _databasePath = '$dir/$filename';
 
-    // // Delete the database
-    // await sql.deleteDatabase(path);
-
-    // open the database
     final db = await sql.openDatabase(
       _databasePath,
-      version: 1,
+      version: SqlMigrations.currentVersion,
       onConfigure: (db) async {
         await db.execute('PRAGMA foreign_keys = ON');
       },
-      onCreate: (sql.Database db, int version) async {
-        await db.execute(
-          "CREATE TABLE ${SQLTableWallets.tableName} ("
-          "${SQLTableWallets.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,"
-          "${SQLTableWallets.columnName} TEXT(100) DEFAULT 'New' NOT NULL,"
-          "${SQLTableWallets.columnCategoryId} INTEGER,"
-          "${SQLTableWallets.columnCurrency} TEXT(10) DEFAULT 'USD' NOT NULL,"
-          "${SQLTableWallets.columnDescription} TEXT(250) DEFAULT '' NOT NULL,"
-          "${SQLTableWallets.columnShowBalance} BOOLEAN DEFAULT '1' NOT NULL,"
-          "${SQLTableWallets.columnRound} BOOLEAN DEFAULT '1' NOT NULL,"
-          "${SQLTableWallets.columnSort} INTEGER DEFAULT '0' NOT NULL)",
-        );
-
-        await db.execute(
-          "CREATE TABLE ${SQLTableTransactions.tableName} ("
-          "${SQLTableTransactions.columnId} INTEGER PRIMARY KEY AUTOINCREMENT,"
-          "${SQLTableTransactions.columnWalletId} INTEGER NOT NULL REFERENCES ${SQLTableWallets.tableName}(${SQLTableWallets.columnId}) ON DELETE CASCADE,"
-          "${SQLTableTransactions.columnAmount} DOUBLE NOT NULL,"
-          "${SQLTableTransactions.columnCategoryId} INTEGER NOT NULL,"
-          "${SQLTableTransactions.columnSubCategoryId} INTEGER,"
-          "${SQLTableTransactions.columnCreatedAt} TEXT DEFAULT CURRENT_TIMESTAMP,"
-          "${SQLTableTransactions.columnDescription} TEXT(250) NOT NULL)",
-        );
-
-        await db.execute(
-          "CREATE INDEX idx_transactions_wallet_id "
-          "ON ${SQLTableTransactions.tableName} (${SQLTableTransactions.columnWalletId})",
-        );
-
-        await db.execute(
-          "CREATE INDEX idx_transactions_created_at "
-          "ON ${SQLTableTransactions.tableName} (${SQLTableTransactions.columnCreatedAt})",
-        );
-
-        await db.execute(
-          "INSERT INTO ${SQLTableWallets.tableName} DEFAULT VALUES",
-        );
-      },
-      onUpgrade: (db, oldVersion, newVersion) async {
-        // Example: if (oldVersion < 2) { await db.execute('ALTER TABLE ...'); }
-      },
+      onCreate: (db, _) => SqlMigrations.onCreate(db),
+      onUpgrade: SqlMigrations.onUpgrade,
     );
 
     _database = db;

@@ -12,6 +12,7 @@ class BackupLocalSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final state = ref.watch(backupNotifierProvider);
+    final isBusy = state.isLoading;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -28,7 +29,7 @@ class BackupLocalSection extends ConsumerWidget {
         SizedBox(
           width: 256,
           child: ElevatedButton(
-            onPressed: () => ref.read(backupNotifierProvider.notifier).archiving(),
+            onPressed: isBusy ? null : () => ref.read(backupNotifierProvider.notifier).archiving(),
             child: Text(l10n.backupArchiving),
           ),
         ),
@@ -36,10 +37,14 @@ class BackupLocalSection extends ConsumerWidget {
         SizedBox(
           width: 256,
           child: ElevatedButton(
-            onPressed: () => ref.read(backupNotifierProvider.notifier).recovery(),
+            onPressed: isBusy ? null : () => ref.read(backupNotifierProvider.notifier).recovery(),
             child: Text(l10n.backupRecovery),
           ),
         ),
+        if (isBusy) ...[
+          AppSpaces.v16,
+          const CircularProgressIndicator(),
+        ],
       ],
     );
   }

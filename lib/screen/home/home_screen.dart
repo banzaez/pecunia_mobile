@@ -25,7 +25,7 @@ class HomeScreen extends ConsumerWidget {
           : Scaffold(
               extendBody: true,
               appBar: _appBar(context, homeState),
-              body: _body(context, ref, isRoundUp),
+              body: _body(context, ref, isRoundUp, homeState),
             ),
     );
   }
@@ -42,7 +42,7 @@ class HomeScreen extends ConsumerWidget {
         ],
       );
 
-  Widget _body(BuildContext context, WidgetRef ref, bool isRoundUp) {
+  Widget _body(BuildContext context, WidgetRef ref, bool isRoundUp, HomeState homeState) {
     final bottomSafe = MediaQuery.viewPaddingOf(context).bottom;
     const actionPanelContentHeight = 64.0;
     const walletDotsHeight = 40.0;
@@ -51,7 +51,7 @@ class HomeScreen extends ConsumerWidget {
     final bottomOverlayHeight =
         actionPanelContentHeight + walletDotsHeight + bottomSafe + 4;
 
-    final showBalance = ref.watch(homeNotifierProvider).currentWallet?.showBalance ?? false;
+    final showBalance = homeState.currentWallet?.showBalance ?? false;
     final topContentHeight = showBalance ? 148.0 : 56.0;
     final topOverlayHeight = topContentHeight + topFadeHeight * 0.5;
 

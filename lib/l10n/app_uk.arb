@@ -47,12 +47,13 @@
       "period": { "type": "String" }
     }
   },
-  "analyticsCategoryEmpty": "аналітики за період {period} року немає",
+  "analyticsCategoryEmpty": "немає аналітики за період {period}",
   "@analyticsCategoryEmpty": {
     "placeholders": {
       "period": { "type": "String" }
     }
   },
+  "analyticsCategoryEmptyDesc": "Додайте транзакції або виберіть інший період для побудови детальних графіків аналітики.",
   "analyticsIncome": "доходи",
   "analyticsExpenses": "витрати",
   "analyticsTotal": "загалом",
@@ -171,6 +172,8 @@
   "driveErrorRead": "Помилка читання файлів у хмарі",
   "driveErrorDelete": "Помилка видалення файлу у хмарі",
   "driveErrorDownload": "Помилка завантаження з хмари",
+  "driveErrorCreate": "Помилка завантаження резервної копії в хмару",
+  "backupCancelled": "Збереження резервної копії скасовано",
   "backupErrorMsg": "Обраний файл не у форматі \"db\"",
   "labelSubcategory": "підкатегорія",
   "signOutWithGoogle": "Вийти з Google",

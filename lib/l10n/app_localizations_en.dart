@@ -143,6 +143,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get analyticsCategoryEmptyDesc =>
+      'Add transactions or select another period to see detailed analytics charts.';
+
+  @override
   String get analyticsIncome => 'income';
 
   @override
@@ -465,6 +469,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get driveErrorDownload => 'Error downloading from Drive';
 
   @override
+  String get driveErrorCreate => 'Error uploading backup to Drive';
+
+  @override
+  String get backupCancelled => 'Backup save cancelled';
+
+  @override
   String get backupErrorMsg => 'The selected file is not in \"db\" format';
 
   @override
@@ -522,7 +532,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get monthlySummary => 'Monthly summary';
 
   @override
-  String get searchPlaceholder => 'Search by description, category, or amount...';
+  String get searchPlaceholder =>
+      'Search by description, category, or amount...';
 
   @override
   String get emptySearchTitle => 'No results found';

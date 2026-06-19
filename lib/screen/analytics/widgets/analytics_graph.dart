@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/models/analytics.dart';
+import 'package:pecunia/models/analytics_filter.dart';
 import 'package:pecunia/screen/analytics/analytics_controller.dart';
+import 'package:pecunia/screen/analytics/analytics_palette.dart';
 import 'package:pecunia/styles/app_text_style.dart';
 import 'package:pecunia/util/ext_double.dart';
 
@@ -11,12 +13,12 @@ class AnalyticsGraph extends ConsumerStatefulWidget {
   const AnalyticsGraph({
     super.key,
     required this.data,
-    required this.isTotal,
+    required this.filter,
     required this.totalSum,
   });
 
   final List<Analytics> data;
-  final bool isTotal;
+  final AnalyticsFilter filter;
   final double totalSum;
 
   @override
@@ -34,24 +36,23 @@ class _AnalyticsGraphState extends ConsumerState<AnalyticsGraph> {
 
     final selectedIndex = ref.watch(selectedCategoryIndexProvider);
 
-    // If an item is selected, display its details in the center, otherwise the grand total.
-    final bool hasSelection = selectedIndex != null && selectedIndex >= 0 && selectedIndex < widget.data.length;
-    final String centerLabel = hasSelection 
-        ? (widget.data[selectedIndex].category?.localizedName(l10n) ?? "").toUpperCase()
+    final bool hasSelection =
+        selectedIndex != null && selectedIndex >= 0 && selectedIndex < widget.data.length;
+    final String centerLabel = hasSelection
+        ? (widget.data[selectedIndex].category?.localizedName(l10n) ?? '').toUpperCase()
         : l10n.analyticsTotalPeriod.toUpperCase();
-        
-    final double targetValue = hasSelection 
-        ? widget.data[selectedIndex].total
-        : widget.totalSum;
 
-    // Track begin/end values for animating amount transitions
+    final double targetValue =
+        hasSelection ? widget.data[selectedIndex].total : widget.totalSum;
+
     final double beginValue = _oldValue ?? targetValue;
     _oldValue = targetValue;
 
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        PieChart(
+    return RepaintBoundary(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          PieChart(
           key: ValueKey(widget.data.length),
           PieChartData(
             borderData: FlBorderData(show: false),
@@ -64,21 +65,22 @@ class _AnalyticsGraphState extends ConsumerState<AnalyticsGraph> {
                     pieTouchResponse.touchedSection == null) {
                   return;
                 }
-                final touchedSectionIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
-                if (touchedSectionIndex >= 0 && touchedSectionIndex < widget.data.length) {
-                  // Only respond on tap/click
+                final touchedSectionIndex =
+                    pieTouchResponse.touchedSection!.touchedSectionIndex;
+                if (touchedSectionIndex >= 0 &&
+                    touchedSectionIndex < widget.data.length) {
                   if (event is FlTapUpEvent) {
                     final current = ref.read(selectedCategoryIndexProvider);
                     ref.read(selectedCategoryIndexProvider.notifier).setIndex(
-                        current == touchedSectionIndex ? null : touchedSectionIndex);
+                          current == touchedSectionIndex ? null : touchedSectionIndex,
+                        );
                   }
                 }
               },
             ),
-            sections: _graphItem(context, selectedIndex),
+            sections: _graphItem(selectedIndex),
           ),
         ),
-        // Central summary text with Odometer animation
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
@@ -95,7 +97,7 @@ class _AnalyticsGraphState extends ConsumerState<AnalyticsGraph> {
               ),
               const SizedBox(height: 4),
               TweenAnimationBuilder<double>(
-                key: ValueKey(centerLabel), // Animates values smoothly when selection transitions
+                key: ValueKey(centerLabel),
                 duration: const Duration(milliseconds: 350),
                 curve: Curves.easeOutCubic,
                 tween: Tween<double>(begin: beginValue, end: targetValue),
@@ -115,49 +117,19 @@ class _AnalyticsGraphState extends ConsumerState<AnalyticsGraph> {
           ),
         ),
       ],
+      ),
     );
   }
 
-  List<PieChartSectionData> _graphItem(BuildContext context, int? selectedIndex) {
-    final bool isIncome = widget.data.isNotEmpty && widget.data.first.total > 0;
-    
-    // Modern palettes with beautiful, professional color matching
-    final palette = widget.isTotal 
-        ? [
-            const Color(0xFF3F51B5), // Indigo
-            const Color(0xFF673AB7), // Deep Purple
-            const Color(0xFF00BCD4), // Cyan
-            const Color(0xFF03A9F4), // Light Blue
-            const Color(0xFFE91E63), // Pink
-            const Color(0xFF9C27B0), // Purple
-            const Color(0xFF2196F3), // Blue
-          ]
-        : isIncome 
-            ? [
-                const Color(0xFF2E7D32), // Emerald
-                const Color(0xFF00796B), // Teal
-                const Color(0xFF4CAF50), // Green
-                const Color(0xFF009688), // Mint
-                const Color(0xFF81C784), // Light Green
-                const Color(0xFF66BB6A), 
-              ]
-            : [
-                const Color(0xFFC62828), // Deep Red
-                const Color(0xFFD84315), // Deep Orange
-                const Color(0xFFE64A19), // Orange Red
-                const Color(0xFFF4511E), // Coral
-                const Color(0xFFE57373), // Rose
-                const Color(0xFFF57C00), // Orange
-              ];
+  List<PieChartSectionData> _graphItem(int? selectedIndex) {
+    final palette = AnalyticsPalette.forFilter(widget.filter);
 
     return List.generate(widget.data.length, (index) {
-      final color = palette[index % palette.length];
+      final color = AnalyticsPalette.colorAt(palette, index);
       final item = widget.data[index];
       final isTouched = index == selectedIndex;
-      
-      // Enlarge the sector on touch
       final radius = isTouched ? 24.0 : 16.0;
-      
+
       return PieChartSectionData(
         color: isTouched ? color : color.withValues(alpha: 0.85),
         showTitle: false,

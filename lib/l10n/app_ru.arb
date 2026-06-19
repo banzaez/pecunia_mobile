@@ -47,12 +47,13 @@
       "period": { "type": "String" }
     }
   },
-  "analyticsCategoryEmpty": "аналитики за период {period} года нет",
+  "analyticsCategoryEmpty": "нет аналитики за период {period}",
   "@analyticsCategoryEmpty": {
     "placeholders": {
       "period": { "type": "String" }
     }
   },
+  "analyticsCategoryEmptyDesc": "Добавьте транзакции или выберите другой период для построения детальных графиков аналитики.",
   "analyticsIncome": "доходы",
   "analyticsExpenses": "расходы",
   "analyticsTotal": "суммарно",
@@ -171,6 +172,8 @@
   "driveErrorRead": "Ошибка чтения файлов в облаке",
   "driveErrorDelete": "Ошибка удаления файла в облаке",
   "driveErrorDownload": "Ошибка загрузки из облака",
+  "driveErrorCreate": "Ошибка загрузки резервной копии в облако",
+  "backupCancelled": "Сохранение резервной копии отменено",
   "backupErrorMsg": "Выбранный файл не в формате \"db\"",
   "labelSubcategory": "подкатегория",
   "signOutWithGoogle": "Выйти из Google",

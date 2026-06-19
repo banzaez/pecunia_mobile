@@ -3,11 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/router/app_router.dart';
+import 'package:pecunia/models/analytics.dart';
 import 'package:pecunia/screen/analytics/analytics_controller.dart';
 import 'package:pecunia/screen/analytics/analytics_palette.dart';
 import 'package:pecunia/screen/analytics/widgets/analytics_category_item.dart';
-import 'package:pecunia/styles/app_text_style.dart';
-import 'package:pecunia/util/app_spaces.dart';
+import 'package:pecunia/styles/app_colors.dart';
+import 'package:pecunia/widgets/empty_state_view.dart';
 
 class AnalyticsCategoryList extends ConsumerWidget {
   const AnalyticsCategoryList({
@@ -22,82 +23,22 @@ class AnalyticsCategoryList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final state = ref.watch(analyticsNotifierProvider);
-    final category = state.category;
-    final filter = state.filter;
+    final category = ref.watch(analyticsNotifierProvider.select((s) => s.category));
+    final subcategory = ref.watch(analyticsNotifierProvider.select((s) => s.subcategory));
+    final filter = ref.watch(analyticsNotifierProvider.select((s) => s.filter));
     final locale = Localizations.localeOf(context).toString();
-    final periodStr = state.periodStr(locale);
+    final periodStr = ref.watch(
+      analyticsNotifierProvider.select((s) => s.periodStr(locale)),
+    );
 
-    if (state.category.isEmpty) {
-      final isDark = Theme.of(context).brightness == Brightness.dark;
-      final accentColor = const Color(0xFF3F51B5); // Sleek Indigo
-      
+    if (category.isEmpty) {
       return Padding(
         padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Glowing Illustration Icon
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          accentColor.withValues(alpha: 0.15),
-                          accentColor.withValues(alpha: 0.05),
-                        ],
-                      ),
-                      border: Border.all(
-                        color: accentColor.withValues(alpha: 0.25),
-                        width: 1.5,
-                      ),
-                      boxShadow: isDark ? null : [
-                        BoxShadow(
-                          color: accentColor.withValues(alpha: 0.04),
-                          blurRadius: 20,
-                          offset: const Offset(0, 8),
-                        )
-                      ],
-                    ),
-                    child: Center(
-                      child: Icon(
-                        Icons.analytics_outlined,
-                        color: isDark ? Colors.white70 : accentColor,
-                        size: 32,
-                      ),
-                    ),
-                  ),
-                  AppSpaces.v24,
-                  // Main message
-                  Text(
-                    l10n.analyticsCategoryEmpty(periodStr),
-                    style: AppTextStyle.text15w600(
-                      color: isDark ? Colors.white : Colors.black87,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  AppSpaces.v8,
-                  // Helpful subtitle
-                  Text(
-                    "Добавьте транзакции или выберите другой период для построения детальных графиков аналитики.",
-                    style: AppTextStyle.text12w400(
-                      color: isDark ? Colors.white38 : Colors.black38,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-          ),
+        child: EmptyStateView(
+          icon: Icons.analytics_outlined,
+          title: l10n.analyticsCategoryEmpty(periodStr),
+          subtitle: l10n.analyticsCategoryEmptyDesc,
+          accentColor: AppColors.accentIndigo,
         ),
       );
     }
@@ -105,6 +46,7 @@ class AnalyticsCategoryList extends ConsumerWidget {
     final totals = category.map((item) => item.total).toList();
     final totalSum = totals.fold<double>(0, (sum, value) => sum + value.abs());
     final palette = AnalyticsPalette.forFilter(filter, totals);
+    final subcategoryByParent = _groupSubcategories(subcategory);
 
     return ListView.builder(
       padding: EdgeInsets.only(
@@ -129,8 +71,28 @@ class AnalyticsCategoryList extends ConsumerWidget {
           index: index,
           totalSum: totalSum,
           categoryColor: AnalyticsPalette.colorAt(palette, index),
+          matchingSubcategories: subcategoryByParent[analytics.category?.id] ?? const [],
         );
       },
     );
+  }
+
+  static Map<int, List<Analytics>> _groupSubcategories(List<Analytics> subcategories) {
+    final map = <int, List<Analytics>>{};
+    for (final subcat in subcategories) {
+      final id = subcat.category?.id;
+      if (id == null) continue;
+      final parentId = _parentCategoryId(id);
+      if (parentId == null) continue;
+      map.putIfAbsent(parentId, () => []).add(subcat);
+    }
+    return map;
+  }
+
+  static int? _parentCategoryId(int subcategoryId) {
+    if (subcategoryId >= 100 && subcategoryId <= 999) {
+      return subcategoryId ~/ 10;
+    }
+    return null;
   }
 }

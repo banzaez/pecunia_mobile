@@ -47,12 +47,13 @@
       "period": { "type": "String" }
     }
   },
-  "analyticsCategoryEmpty": "aucune analyse pour la période de l'année {period}",
+  "analyticsCategoryEmpty": "aucune analyse pour la période {period}",
   "@analyticsCategoryEmpty": {
     "placeholders": {
       "period": { "type": "String" }
     }
   },
+  "analyticsCategoryEmptyDesc": "Ajoutez des transactions ou sélectionnez une autre période pour afficher des graphiques détaillés.",
   "analyticsIncome": "revenus",
   "analyticsExpenses": "dépenses",
   "analyticsTotal": "total",
@@ -171,6 +172,8 @@
   "driveErrorRead": "Erreur de lecture des fichiers Drive",
   "driveErrorDelete": "Erreur de suppression du fichier Drive",
   "driveErrorDownload": "Erreur de téléchargement depuis Drive",
+  "driveErrorCreate": "Erreur lors de l'envoi de la sauvegarde vers Drive",
+  "backupCancelled": "Enregistrement de la sauvegarde annulé",
   "backupErrorMsg": "Le fichier sélectionné n'est pas au format \"db\"",
   "labelSubcategory": "sous-catégorie",
   "signOutWithGoogle": "Se déconnecter de Google",

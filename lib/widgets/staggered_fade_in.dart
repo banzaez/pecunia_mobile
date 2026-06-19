@@ -11,12 +11,15 @@ class StaggeredFadeIn extends StatefulWidget {
     required this.index,
     this.maxDelay = const Duration(milliseconds: 300),
     this.delayPerItem = const Duration(milliseconds: 40),
+    this.maxAnimatedIndex = 15,
   });
 
   final Widget child;
   final int index;
   final Duration maxDelay;
   final Duration delayPerItem;
+  /// Анимация только для первых N элементов — снижает нагрузку при пагинации.
+  final int maxAnimatedIndex;
 
   @override
   State<StaggeredFadeIn> createState() => _StaggeredFadeInState();
@@ -68,6 +71,10 @@ class _StaggeredFadeInState extends State<StaggeredFadeIn>
 
   @override
   Widget build(BuildContext context) {
+    if (widget.index >= widget.maxAnimatedIndex) {
+      return widget.child;
+    }
+
     return FadeTransition(
       opacity: _opacityAnimation,
       child: SlideTransition(

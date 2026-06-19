@@ -139,8 +139,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String analyticsCategoryEmpty(String period) {
-    return 'no hay análisis para el período del año $period';
+    return 'no hay análisis para el período $period';
   }
+
+  @override
+  String get analyticsCategoryEmptyDesc =>
+      'Añade transacciones o selecciona otro período para ver gráficos analíticos detallados.';
 
   @override
   String get analyticsIncome => 'ingresos';
@@ -466,6 +470,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get driveErrorDownload => 'Error al descargar de Drive';
 
   @override
+  String get driveErrorCreate => 'Error al subir la copia de seguridad a Drive';
+
+  @override
+  String get backupCancelled => 'Guardado de copia de seguridad cancelado';
+
+  @override
   String get backupErrorMsg =>
       'El archivo seleccionado no está en formato \"db\"';
 
@@ -525,7 +535,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get monthlySummary => 'Resumen mensual';
 
   @override
-  String get searchPlaceholder => 'Buscar por descripción, categoría o monto...';
+  String get searchPlaceholder =>
+      'Buscar por descripción, categoría o monto...';
 
   @override
   String get emptySearchTitle => 'No se encontraron resultados';
