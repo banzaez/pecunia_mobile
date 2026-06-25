@@ -1,9 +1,7 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pecunia/firebase_options.dart';
 import 'package:pecunia/l10n/app_localizations.dart';
 import 'package:pecunia/data/sql/sql_provider.dart';
 import 'package:pecunia/providers/settings_notifier.dart';
@@ -28,13 +26,12 @@ Future<void> startApp() async {
         if (bootstrap.sqlProvider != null)
           sqlProviderProvider.overrideWithValue(bootstrap.sqlProvider!),
         if (bootstrap.sharedPreferences != null)
-          sharedPreferencesProvider.overrideWithValue(bootstrap.sharedPreferences!),
+          sharedPreferencesProvider.overrideWithValue(
+            bootstrap.sharedPreferences!,
+          ),
       ],
       child: bootstrap.error != null
-          ? StartupErrorScreen(
-              message: bootstrap.error!,
-              onRetry: startApp,
-            )
+          ? StartupErrorScreen(message: bootstrap.error!, onRetry: startApp)
           : const MyApp(),
     ),
   );
@@ -43,7 +40,11 @@ Future<void> startApp() async {
 Future<void> main() async => startApp();
 
 class _BootstrapResult {
-  const _BootstrapResult({this.sqlProvider, this.sharedPreferences, this.error});
+  const _BootstrapResult({
+    this.sqlProvider,
+    this.sharedPreferences,
+    this.error,
+  });
 
   final SQLProvider? sqlProvider;
   final SharedPreferences? sharedPreferences;
@@ -52,8 +53,6 @@ class _BootstrapResult {
 
 Future<_BootstrapResult> _bootstrap() async {
   try {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
     final sqlProvider = SQLProvider();
     await sqlProvider.init();
 
@@ -75,7 +74,8 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingsNotifierProvider);
-    final resolvedLocale = settings.locale ?? PlatformDispatcher.instance.locale;
+    final resolvedLocale =
+        settings.locale ?? PlatformDispatcher.instance.locale;
     Intl.defaultLocale = resolvedLocale.toString();
 
     return MaterialApp.router(

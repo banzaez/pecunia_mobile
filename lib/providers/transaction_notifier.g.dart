@@ -42,7 +42,7 @@ final class TransactionNotifierProvider
 }
 
 String _$transactionNotifierHash() =>
-    r'3424d90363f210a96b1f2a6d8252b8e55e3612a3';
+    r'5c760125f3d9f7b322d30da385989c654ffc794c';
 
 abstract class _$TransactionNotifier extends $Notifier<TransactionState> {
   TransactionState build();
